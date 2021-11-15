@@ -1,0 +1,5 @@
+PRODUTO	QUANTIDADE EM ESTOQUE
+
+produto1	20
+produto2	30
+produto3	2
