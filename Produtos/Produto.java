@@ -1,3 +1,5 @@
+package Produtos;
+
 public abstract class Produto {
     protected float preco;
     protected String nome;

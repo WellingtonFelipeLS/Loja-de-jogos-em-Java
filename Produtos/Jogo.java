@@ -1,3 +1,5 @@
+package Produtos;
+
 public class Jogo extends Produto{
 
     public Jogo(float preco, String nome, String tipo, int estoque, String IDProduto) {

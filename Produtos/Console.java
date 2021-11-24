@@ -1,3 +1,5 @@
+package Produtos;
+
 public class Console extends Produto{
 
     public Console(float preco, String nome, String tipo, int estoque, String IDProduto) {

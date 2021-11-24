@@ -1,3 +1,5 @@
+package Produtos;
+
 public class Acessorios extends Produto{
     public Acessorios(float preco, String nome, String tipo, int estoque, String IDProduto) {
         super(preco, nome, tipo, estoque, IDProduto);
