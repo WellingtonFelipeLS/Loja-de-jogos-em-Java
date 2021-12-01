@@ -1,22 +1,29 @@
 package Produtos;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 public class Jogo extends Produto{
+    private Set<String> generos;
 
-    public Jogo(float preco, String nome, String tipo, int estoque, String IDProduto) {
-        super(preco, nome, tipo, estoque, IDProduto);
+    public Jogo(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma, Set<String> generos) {
+        super(nome, preco, qntNoEstoque,  descricao, plataforma);
+        this.generos = new TreeSet<String>(generos);
     }
 
     @Override
-    public void Venda(int quantidade) {
-        if (estoque >= quantidade) {
-            estoque -= quantidade;
-        } else {
-            System.out.println("Estoque inferior à quantidade informada. Estoque = " + estoque);
-        }
+    public boolean equals(Produto outro) {
+		if(!(outro instanceof Jogo))
+			return false;
+
+		if(super.equals(outro) && generos.equals(((Jogo)outro).getGeneros()))
+			return true;
+		
+		return false;
     }
 
-    @Override
-    public void AumentarEstoque(int quantidade) {
-        estoque += quantidade;
-    }
+    public Set<String> getGeneros() {
+		return generos;
+	}
+
 }

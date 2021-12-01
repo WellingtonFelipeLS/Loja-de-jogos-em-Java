@@ -1,21 +1,76 @@
 package Produtos;
 
-public abstract class Produto {
-    protected float preco;
-    protected String nome;
-    protected String tipo;
-    protected int estoque;
-    protected String IDProduto;
+import java.io.Serializable;
+import java.util.Set;
+import java.util.TreeSet;
 
-    public Produto(float preco, String nome, String tipo, int estoque, String IDProduto) {
-        this.preco = preco;
+import ClassesUtilitarias.IdGenerator;
+
+public abstract class Produto implements Serializable{
+    private String nome;
+	private float preco;
+    private String id;
+    private String descricao;
+    private Set<String> plataforma;
+	private boolean cadastroAtivo;
+	private int qntNoEstoque;
+
+    public Produto(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma) {
         this.nome = nome;
-        this.tipo = tipo;
-        this.estoque = estoque;
-        this.IDProduto = IDProduto;
+		setPreco(preco);
+		setQntNoEstoque(qntNoEstoque);
+        this.descricao = descricao;
+        this.plataforma = new TreeSet<String>(plataforma);
+		this.id = IdGenerator.gerarId();
+		this.cadastroAtivo = true;
     }
 
-    public abstract void Venda(int quantidade);
-    public abstract void AumentarEstoque (int quantidade);
+    public boolean equals(Produto outro) {
+        if (nome.equals(outro.getNome()) && plataforma.equals(outro.getPlataforma()))
+			return true;
 
+        return false;
+    }
+
+	public void setPreco(float preco) {
+		//Exception para valor negativo
+		this.preco = preco;
+	}
+
+	public void setCadastroAtivo(boolean cadastroAtivo) {
+		this.cadastroAtivo = cadastroAtivo;
+	}
+
+	public void setQntNoEstoque(int qntNoEstoque) {
+		//Exception para valor negativo
+		this.qntNoEstoque = qntNoEstoque;
+	}
+
+	public String getNome() {
+        return nome;
+    }
+
+    public float getPreco() {
+        return preco;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public Set<String> getPlataforma() {
+		return plataforma;
+	}
+
+	public boolean getCadastroAtivo() {
+		return cadastroAtivo;
+	}
+
+	public int getQntNoEstoque() {
+		return qntNoEstoque;
+	}
 }
