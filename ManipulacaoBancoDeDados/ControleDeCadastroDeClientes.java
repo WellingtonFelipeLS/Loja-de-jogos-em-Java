@@ -11,7 +11,7 @@ import ClassesUtilitarias.CharIOMaster;
 import ClassesUtilitarias.Cliente;
 
 public class ControleDeCadastroDeClientes {
-	private static final String caminhoPastaBancoDeDados = "Projeto POO" + System.getProperty("file.separator") + "BancoDeDados";
+	private static final String caminhoPastaBancoDeDados = "Projeto-POO-2021.1" + System.getProperty("file.separator") + "BancoDeDados";
 	private static final String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientes.txt";
 	private static final String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientesTemp.txt";
 	private static final String separadorDeinformacoes = "/";
