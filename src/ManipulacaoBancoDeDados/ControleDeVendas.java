@@ -15,7 +15,7 @@ import ClassesUtilitarias.IOMaster;
 import ClassesUtilitarias.ObjectIOMaster;
 
 public class ControleDeVendas {
-	private static final String caminhoPastaBancoDeDados = "Projeto-POO-2021.1" + System.getProperty("file.separator") + "BancoDeDados";
+	private static final String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
 	private static final String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendas.ser";
 	private static final String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendasTemp.ser";
 

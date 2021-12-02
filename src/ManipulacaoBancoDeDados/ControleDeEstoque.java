@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Set;
 
 public class ControleDeEstoque {
-	private static final String caminhoPastaBancoDeDados = "Projeto-POO-2021.1" + System.getProperty("file.separator") + "BancoDeDados";
+	private static final String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
 	private static final String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "Estoque.ser";
 	private static final String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "EstoqueTemp.ser";
 
