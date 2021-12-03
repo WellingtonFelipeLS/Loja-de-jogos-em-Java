@@ -22,7 +22,7 @@ public class InterfaceGrafica implements MouseListener{
 		JPanel painelSuperior = criarPainelSuperior();
 		JPanel painelPrincipal = criarPainelPrincipal();
 		JTextField caixaDeBusca = criarCaixaDeBusca();
-		JButton botaoDeBusca = criarBotaoDeBusca();
+		JButton botaoDeBusca = criarBotaoDeBusca(caixaDeBusca);
 		JButton botaoDoCarrinho = criarBotaoDoCarrinho();
 		JButton botaoDeCompra = criarBotaoDeComprar();
 
@@ -143,13 +143,13 @@ public class InterfaceGrafica implements MouseListener{
 		return searchField;
 	}
 
-	private JButton criarBotaoDeBusca() {
+	private JButton criarBotaoDeBusca(JTextField caixaDeBusca) {
 		//searchButton
         JButton searchButton = new JButton( "pesquisar" );
         searchButton.addActionListener(new ActionListener() {
-            @Override
+			@Override
             public void actionPerformed(ActionEvent e) {
-                // abrir janela do produto do searchField
+				new ProductWindow(caixaDeBusca.getText(), novaVenda);
             }
         });
 

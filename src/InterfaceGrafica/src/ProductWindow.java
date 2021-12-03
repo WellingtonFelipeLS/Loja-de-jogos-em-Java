@@ -17,77 +17,6 @@ import Produtos.Produto;
 
 public class ProductWindow {
 
-	private JFrame criarInterfaceDoProduto(String name) {
-		//productFrame
-		JFrame productFrame = new JFrame(name);
-		productFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE);
-		productFrame.setLocation(740, 0);
-		productFrame.setPreferredSize(new Dimension(240, 480));
-
-		return productFrame;
-	}
-
-	private JPanel criarPainelPrincipal() {
-		//mainPanel
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setBackground(Color.GRAY);
-
-		return mainPanel;
-	}
-
-	private JTextArea criarEspacoParaADescricao(String descricao) {
-		//DescriptionText
-		JTextArea descriptionLabel = new JTextArea(descricao);
-		descriptionLabel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-		descriptionLabel.setEditable(false);
-		descriptionLabel.setLineWrap(true);
-		descriptionLabel.setWrapStyleWord(true);
-		descriptionLabel.setColumns(20);
-		descriptionLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-
-		return descriptionLabel;
-	}
-
-	private BufferedImage procurarImagemDoProduto(String name) throws IOException{
-		BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource("/InterfaceGrafica"
-                    + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
-		BufferedImage imageResized = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = imageResized.createGraphics();
- 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g2.drawImage(image, 0, 0, 200, 200, null);
-		g2.dispose();
-
-		return imageResized;
-	}
-
-	private JButton criarBotaoDeCancelar(JFrame interfaceDoProduto) {
-		//cancelButton
-		JButton cancelButton = new JButton("Cancelar");
-		cancelButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
-			}
-		});
-
-		return cancelButton;
-	}
-
-	private JButton criarBotaoDeAdicionarAoCarrinho(String name, JTextField quantityField, Venda novaVenda) {
-		//addCarButton
-		JButton addCarButton = new JButton("Adicionar");
-		addCarButton.setEnabled(false);
-		addCarButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				novaVenda.adicionarProdutoAoCarrinho(name, Integer.parseInt(quantityField.getText()));
-			}
-		});
-
-		return addCarButton;
-	}
-
     ProductWindow(String name, Venda novaVenda) {
         
 		JFrame interfaceDoProduto = criarInterfaceDoProduto(name);
@@ -189,5 +118,76 @@ public class ProductWindow {
 		}catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
+	}
+
+	private JFrame criarInterfaceDoProduto(String name) {
+		//productFrame
+		JFrame productFrame = new JFrame(name);
+		productFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE);
+		productFrame.setLocation(740, 0);
+		productFrame.setPreferredSize(new Dimension(240, 480));
+
+		return productFrame;
+	}
+
+	private JPanel criarPainelPrincipal() {
+		//mainPanel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBackground(Color.GRAY);
+
+		return mainPanel;
+	}
+
+	private JTextArea criarEspacoParaADescricao(String descricao) {
+		//DescriptionText
+		JTextArea descriptionLabel = new JTextArea(descricao);
+		descriptionLabel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+		descriptionLabel.setEditable(false);
+		descriptionLabel.setLineWrap(true);
+		descriptionLabel.setWrapStyleWord(true);
+		descriptionLabel.setColumns(20);
+		descriptionLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+		return descriptionLabel;
+	}
+
+	private BufferedImage procurarImagemDoProduto(String name) throws IOException{
+		BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource("/InterfaceGrafica"
+                    + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
+		BufferedImage imageResized = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = imageResized.createGraphics();
+ 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2.drawImage(image, 0, 0, 200, 200, null);
+		g2.dispose();
+
+		return imageResized;
+	}
+
+	private JButton criarBotaoDeCancelar(JFrame interfaceDoProduto) {
+		//cancelButton
+		JButton cancelButton = new JButton("Cancelar");
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
+			}
+		});
+
+		return cancelButton;
+	}
+
+	private JButton criarBotaoDeAdicionarAoCarrinho(String name, JTextField quantityField, Venda novaVenda) {
+		//addCarButton
+		JButton addCarButton = new JButton("Adicionar");
+		addCarButton.setEnabled(false);
+		addCarButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				novaVenda.adicionarProdutoAoCarrinho(name, Integer.parseInt(quantityField.getText()));
+			}
+		});
+
+		return addCarButton;
 	}
 }
