@@ -48,22 +48,27 @@ public class InterfaceGrafica implements MouseListener{
 
         int x = 0, y = 0, ultimo = 0;
         JLabel[] listaJLabel = new JLabel[0];
-        //JLabel[] listaJLabelNome = new JLabel[0];
+        JLabel[] listaJLabelNome = new JLabel[0];
         for (Produto i: listaJogos) {
             gbc.gridx = x;
             gbc.gridy = y;
             try {
                 if (listaJLabel.length == ultimo) {
+
                     JLabel[] listaAux = new JLabel[ultimo + 1];
                     System.arraycopy(listaJLabel, 0, listaAux, 0, listaJLabel.length);
                     listaJLabel = listaAux;
+
+                    listaAux = new JLabel[ultimo + 1];
+                    System.arraycopy(listaJLabelNome, 0, listaAux, 0, listaJLabelNome.length);
+                    listaJLabelNome = listaAux;
                 }
                 listaJLabel[ultimo] = getImage(i.getNome());
                 painelPrincipal.add(listaJLabel[ultimo], gbc);
-                ultimo += 1;
 
                 gbc.gridy = y + 1;
-                painelPrincipal.add(new JLabel(i.getNome()), gbc);
+                listaJLabelNome[ultimo] = new JLabel(i.getNome());
+                painelPrincipal.add(listaJLabelNome[ultimo], gbc);
                 if (x % 4 == 0 && x != 0) {
                     x = 0;
                     y += 2;
@@ -73,16 +78,22 @@ public class InterfaceGrafica implements MouseListener{
             } catch (IOException ex) {
                 System.out.println("Error " + i.getNome());
             }
+            ultimo += 1;
         }
 
         x = 0;
-
+/*
         for (JLabel i: listaJLabel) {
             i.addMouseListener(this);
             x+=1;
             i.setToolTipText("label" + x);
         }
-
+*/
+        for (int i = 0; i < listaJLabel.length; i++) {
+            listaJLabel[i].setName(listaJLabelNome[i].getText());
+            listaJLabel[i].addMouseListener(this);
+            listaJLabel[i].setToolTipText(listaJLabel[i].getName());
+        }
 
         interfacePrincipal.pack();
         interfacePrincipal.setVisible( true );
@@ -198,13 +209,12 @@ public class InterfaceGrafica implements MouseListener{
 
 	@Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("Click");
-        //abrir jframe correspondente
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        ProductWindow productWindow = new ProductWindow(((JLabel)e.getSource()).getName());
     }
 
     @Override
