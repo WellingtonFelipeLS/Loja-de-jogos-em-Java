@@ -3,167 +3,191 @@ package InterfaceGrafica.src;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import ClassesUtilitarias.Venda;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+import ManipulacaoBancoDeDados.ControleDeEstoque;
+import Produtos.Produto;
+
 public class ProductWindow {
 
-    ProductWindow(String name) {
-        //productFrame
-        JFrame productFrame = new JFrame(name);
-        productFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE);
-        productFrame.setLocation(740, 0);
-        productFrame.setPreferredSize(new Dimension(240, 480));
+	private JFrame criarInterfaceDoProduto(String name) {
+		//productFrame
+		JFrame productFrame = new JFrame(name);
+		productFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE);
+		productFrame.setLocation(740, 0);
+		productFrame.setPreferredSize(new Dimension(240, 480));
 
-        //mainPanel
+		return productFrame;
+	}
+
+	private JPanel criarPainelPrincipal() {
+		//mainPanel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setBackground(Color.GRAY);
-        GridBagConstraints gbc = new GridBagConstraints();
+
+		return mainPanel;
+	}
+
+	private JTextArea criarEspacoParaADescricao(String descricao) {
+		//DescriptionText
+		JTextArea descriptionLabel = new JTextArea(descricao);
+		descriptionLabel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+		descriptionLabel.setEditable(false);
+		descriptionLabel.setLineWrap(true);
+		descriptionLabel.setWrapStyleWord(true);
+		descriptionLabel.setColumns(20);
+		descriptionLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+		return descriptionLabel;
+	}
+
+	private BufferedImage procurarImagemDoProduto(String name) throws IOException{
+		BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource("/InterfaceGrafica"
+                    + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
+		BufferedImage imageResized = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = imageResized.createGraphics();
+ 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2.drawImage(image, 0, 0, 200, 200, null);
+		g2.dispose();
+
+		return imageResized;
+	}
+
+	private JButton criarBotaoDeCancelar(JFrame interfaceDoProduto) {
+		//cancelButton
+		JButton cancelButton = new JButton("Cancelar");
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
+			}
+		});
+
+		return cancelButton;
+	}
+
+	private JButton criarBotaoDeAdicionarAoCarrinho(String name, JTextField quantityField, Venda novaVenda) {
+		//addCarButton
+		JButton addCarButton = new JButton("Adicionar");
+		addCarButton.setEnabled(false);
+		addCarButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				novaVenda.adicionarProdutoAoCarrinho(name, Integer.parseInt(quantityField.getText()));
+			}
+		});
+
+		return addCarButton;
+	}
+
+    ProductWindow(String name, Venda novaVenda) {
+        
+		JFrame interfaceDoProduto = criarInterfaceDoProduto(name);
+		JPanel painelPrincipal = criarPainelPrincipal();
+
+        
+        interfaceDoProduto.add(painelPrincipal, BorderLayout.CENTER);
+
+		GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
-        productFrame.add(mainPanel, BorderLayout.CENTER);
 
         //imageLabel
         try {
-            BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource("/InterfaceGrafica"
-                    + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
-            BufferedImage imageResized = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = imageResized.createGraphics();
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.drawImage(image, 0, 0, 200, 200, null);
-            g2.dispose();
+            JLabel imageLabel = new JLabel(new ImageIcon(procurarImagemDoProduto(name)));
+			painelPrincipal.add(imageLabel);
 
-            JLabel imageLabel = new JLabel(new ImageIcon(imageResized));
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            mainPanel.add(imageLabel);
-        } catch (IOException ex) {
-            System.out.println("Error productWindow " + name);
-        }
-    /*
-        try {
-            BufferedReader buffRead = new BufferedReader(new FileReader("src/BancoDeDados/RegistroDeClientes.txt"));
-            String[] linha = buffRead.readLine().split("/");
-            while (linha != null) {
-                for (String palavra: linha) {
-                    System.out.println(palavra);
-                }
-                try {
-                    linha = buffRead.readLine().split("/");
-                } catch (NullPointerException ex) {
-                    linha = null;
-                }
+			gbc.gridx = 0;
+			gbc.gridy = 0;
 
-            }
-            buffRead.close();
-        } catch (IOException ex) {
-        System.out.println("Error");
-    }
-    */
-        //DescriptionText
-        JTextArea descriptionLabel = new JTextArea("Aqui é onde fica a descrição do produto. Testando a descrição do" +
-                " produto para ver se tudo está cabendo no layout.");
-        descriptionLabel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        descriptionLabel.setEditable(false);
-        descriptionLabel.setLineWrap(true);
-        descriptionLabel.setWrapStyleWord(true);
-        descriptionLabel.setColumns(20);
-        descriptionLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        gbc.gridy += 1;
-        mainPanel.add(descriptionLabel, gbc);
-        gbc.gridy += 1;
+			Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(name);
 
+			JTextArea espacoDaDescricao = criarEspacoParaADescricao(produto.getDescricao()); 
 
-        //priceLabel1 e 2
-        JLabel priceLabel1 = new JLabel("Preço unitário: ");
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        mainPanel.add(priceLabel1, gbc);
-        JLabel priceLabel2 = new JLabel("200");
-        gbc.anchor = GridBagConstraints.LINE_END;
-        mainPanel.add(priceLabel2, gbc);
+			gbc.gridy += 1;
 
-        //quantityLabel
-        JLabel quantityLabel = new JLabel("Quantidade:");
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gbc.gridy = 3;
-        mainPanel.add(quantityLabel, gbc);
+			painelPrincipal.add(espacoDaDescricao, gbc);
 
-        //quantityField
-        JTextField quantityField = new JTextField();
-        quantityField.setColumns(5);
+			gbc.gridy += 1;
 
-        gbc.anchor = GridBagConstraints.LINE_END;
-        mainPanel.add(quantityField, gbc);
+			//priceLabel1 e 2
+        	JLabel textoPrecoUnitario = new JLabel("Preço unitário: ");
+        	gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        	painelPrincipal.add(textoPrecoUnitario, gbc);
+        	JLabel valorPrecoUnitario = new JLabel(String.valueOf(produto.getPreco()));
+        	gbc.anchor = GridBagConstraints.LINE_END;
+        	painelPrincipal.add(valorPrecoUnitario, gbc);
 
-        //priceProductLabel1 e 2
-        JLabel priceProductLabel1 = new JLabel("Preço total:");
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gbc.gridy = 4;
-        mainPanel.add(priceProductLabel1, gbc);
-        JLabel priceProductLabel2 = new JLabel("Digite uma quantidade.");
-        gbc.anchor = GridBagConstraints.FIRST_LINE_END;
-        mainPanel.add(priceProductLabel2, gbc);
+			//quantityLabel
+			JLabel textoQuantidade = new JLabel("Quantidade:");
+			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+			gbc.gridy = 3;
+			painelPrincipal.add(textoQuantidade, gbc);
 
+			//quantityField
+			JTextField campoDaQuantidade = new JTextField();
+			campoDaQuantidade.setColumns(5);
 
+			gbc.anchor = GridBagConstraints.LINE_END;
+			painelPrincipal.add(campoDaQuantidade, gbc);
 
-        //cancelButton
-        JButton cancelButton = new JButton("Cancelar");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                productFrame.dispatchEvent(new WindowEvent(productFrame, WindowEvent.WINDOW_CLOSING));
-            }
-        });
-        gbc.gridy = 5;
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        mainPanel.add(cancelButton, gbc);
+			//priceProductLabel1 e 2
+			JLabel textoPrecoTotal = new JLabel("Preço total:");
+			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+			gbc.gridy = 4;
+			painelPrincipal.add(textoPrecoTotal, gbc);
+			JLabel textoCampoDaQuantidade = new JLabel("Digite uma quantidade.");
+			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
+			painelPrincipal.add(textoPrecoTotal, gbc);
 
-        //addCarButton
-        JButton addCarButton = new JButton("Adicionar");
-        addCarButton.setEnabled(false);
-        addCarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                productFrame.dispatchEvent(new WindowEvent(productFrame, WindowEvent.WINDOW_CLOSING));
-            }
+			JButton botaoDeCancelar = criarBotaoDeCancelar(interfaceDoProduto);
+			gbc.gridy = 5;
+			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+			painelPrincipal.add(botaoDeCancelar, gbc);
+
+			
+			JButton botaoDeAdiconarAoCarrinho = criarBotaoDeAdicionarAoCarrinho(name, campoDaQuantidade, novaVenda);
+			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
+			painelPrincipal.add(botaoDeAdiconarAoCarrinho, gbc);
+
+			campoDaQuantidade.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {
+
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					try {
+
+						int numero = Integer.parseInt(campoDaQuantidade.getText());
+						textoCampoDaQuantidade.setText(Float.toString(numero * Float.parseFloat(valorPrecoUnitario.getText())));
+						botaoDeAdiconarAoCarrinho.setEnabled(true);
+
+					} catch (NumberFormatException ex) {
+						textoCampoDaQuantidade.setText("Quantidade inválida!");
+						campoDaQuantidade.setText("");
+						botaoDeAdiconarAoCarrinho.setEnabled(false);
+					}
+				}
         });
 
-        gbc.anchor = GridBagConstraints.FIRST_LINE_END;
-        mainPanel.add(addCarButton, gbc);
-
-        quantityField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                try {
-                    int numero = Integer.parseInt(quantityField.getText());
-                    if (numero > 0) {
-                        priceProductLabel2.setText(Integer.toString(numero * Integer.parseInt(priceLabel2.getText())));
-                        addCarButton.setEnabled(true);
-                    } else {
-                        priceProductLabel2.setText("Quantidade inválida!");
-                        addCarButton.setEnabled(false);
-                    }
-                } catch (NumberFormatException ex) {
-                    priceProductLabel2.setText("Quantidade inválida!");
-                    addCarButton.setEnabled(false);
-                }
-            }
-        });
-
-        productFrame.pack();
-        productFrame.setVisible(true);
-    }
+			interfaceDoProduto.pack();
+			interfaceDoProduto.setVisible(true);
+		}catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 }

@@ -10,16 +10,20 @@ import ManipulacaoBancoDeDados.ControleDeEstoque;
 
 import java.util.Hashtable;
 
-public abstract class Venda implements Serializable{
+public class Venda implements Serializable{
 	private Cliente cliente;
 	private String idVenda;
 	private Date dataDaCompra;
 	private Map<String, Integer> carrinho;
 
-	public Venda(Cliente cliente) {
-		this.cliente = cliente;
+	public Venda() {
+		this.cliente = new Cliente();
 		this.carrinho = new Hashtable<String, Integer>();
 		this.idVenda = IdGenerator.gerarId();
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public Cliente getCliente() {
@@ -30,14 +34,15 @@ public abstract class Venda implements Serializable{
 		this.dataDaCompra = dataDaCompra;
 	}
 
-	/*private final float calcularValorTotal(){
-		int valorTotal = 0;
+	public void limparCarrinho() {
+		this.carrinho.clear();
+	}
 
-		for(String nomeDoProduto : carrinho.keySet())
-			valorTotal += carrinho.get(nomeDoProduto);
-		
-		return valorTotal;
-	}*/
+	public void limparDadosDaVenda() {
+		this.cliente = new Cliente();
+		limparCarrinho();
+		this.idVenda = IdGenerator.gerarId();
+	}
 
 	public final void adicionarProdutoAoCarrinho(String nomeDoProduto, int qnt) {
 		carrinho.put(nomeDoProduto, Integer.valueOf(qnt));
@@ -77,7 +82,7 @@ public abstract class Venda implements Serializable{
 		float precoTotal = 0f;
 		for(String nomeDoProduto : carrinho.keySet()) {
 			int qntVendidaDoProduto = carrinho.get(nomeDoProduto).intValue();
-			float precoUnitario = ControleDeEstoque.buscarPrecoNoEstoque(nomeDoProduto);
+			float precoUnitario = ControleDeEstoque.procurarProdutoNoEstoque(nomeDoProduto).getPreco();
 			System.out.printf("%-20s %5d %10.2f %10.2f\n", nomeDoProduto, qntVendidaDoProduto, precoUnitario, precoUnitario * qntVendidaDoProduto);
 
 			qntTotal += qntVendidaDoProduto;

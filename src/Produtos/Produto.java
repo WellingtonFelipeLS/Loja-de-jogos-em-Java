@@ -15,15 +15,15 @@ public abstract class Produto implements Serializable{
 	private boolean cadastroAtivo;
 	private int qntNoEstoque;
 
-    public Produto(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma) {
-        this.nome = nome;
+	public Produto(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma) {
+		this.nome = nome;
 		setPreco(preco);
 		setQntNoEstoque(qntNoEstoque);
-        this.descricao = descricao;
-        this.plataforma = new TreeSet<String>(plataforma);
+		this.descricao = descricao;
+		this.plataforma = new TreeSet<String>(plataforma);
 		this.id = IdGenerator.gerarId();
 		this.cadastroAtivo = true;
-    }
+	}
 
     public boolean equals(Produto outro) {
         if (nome.equals(outro.getNome()) && plataforma.equals(outro.getPlataforma()))

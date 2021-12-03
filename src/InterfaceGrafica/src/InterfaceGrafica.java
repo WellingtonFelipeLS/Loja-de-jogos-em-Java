@@ -11,9 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
-public class InterfaceGrafica implements MouseListener{
+import ClassesUtilitarias.Venda;
 
+public class InterfaceGrafica implements MouseListener{
+	private Venda novaVenda;
     InterfaceGrafica() {
+		this.novaVenda = new Venda();
+
 		JFrame interfacePrincipal = criarInterfacePrincipal();
 		JPanel painelSuperior = criarPainelSuperior();
 		JPanel painelPrincipal = criarPainelPrincipal();
@@ -82,13 +86,6 @@ public class InterfaceGrafica implements MouseListener{
         }
 
         x = 0;
-/*
-        for (JLabel i: listaJLabel) {
-            i.addMouseListener(this);
-            x+=1;
-            i.setToolTipText("label" + x);
-        }
-*/
         for (int i = 0; i < listaJLabel.length; i++) {
             listaJLabel[i].setName(listaJLabelNome[i].getText());
             listaJLabel[i].addMouseListener(this);
@@ -98,6 +95,10 @@ public class InterfaceGrafica implements MouseListener{
         interfacePrincipal.pack();
         interfacePrincipal.setVisible( true );
     }
+
+	public void prepararNovaCompra() {
+		this.novaVenda = new Venda();
+	}
 
 	private JFrame criarInterfacePrincipal() {
 		//mainFrame
@@ -162,7 +163,7 @@ public class InterfaceGrafica implements MouseListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // abrir janela do carrinho
-				new JanelaDoCarrinho();
+				new JanelaDoCarrinho(novaVenda);
             }
         });
 
@@ -214,7 +215,7 @@ public class InterfaceGrafica implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        ProductWindow productWindow = new ProductWindow(((JLabel)e.getSource()).getName());
+        new ProductWindow(((JLabel)e.getSource()).getName(), this.novaVenda);
     }
 
     @Override

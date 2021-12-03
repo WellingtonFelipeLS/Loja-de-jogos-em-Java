@@ -144,8 +144,7 @@ public class ControleDeEstoque {
 		}
 	}
 
-	public static float buscarPrecoNoEstoque(String nomeDoProduto) throws IOException {
-
+	public static Produto procurarProdutoNoEstoque(String nomeDoProduto) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
 		Object produto;
@@ -154,10 +153,11 @@ public class ControleDeEstoque {
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
 
 				if(((Produto)produto).getNome().equals(nomeDoProduto)) {
-					if(((Produto)produto).getCadastroAtivo()) 
-						return ((Produto)produto).getPreco();
-					else
-						throw new CadastroException("Produto excluído. Recadastre o produto para modificar sua quantidade.");
+					if(((Produto)produto).getCadastroAtivo()){
+						estoque.fecharArquivos();
+						return (Produto)produto;
+					}else
+						throw new CadastroException("Produto excluído.");
 			}
 		}
 			throw new EstoqueException("Produto não encontrado no estoque.");
@@ -169,11 +169,11 @@ public class ControleDeEstoque {
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally {
-			estoque.fecharArquivos();			
+			estoque.fecharArquivos();
 		}
 
-		return -1;
-}
+		return null;
+	}
 
 	public static void setQntNoEstoque(String nomeDoProduto, int qnt) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
@@ -366,20 +366,25 @@ public class ControleDeEstoque {
 
 	public static void main(String[] args) {
 		try{
-			cadastrarProdutoNoEstoque(new Jogo("The Witcher 3", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura")));
-			cadastrarProdutoNoEstoque(new Jogo("Rainbow Six Siege", 60f, 100, "Jogo de Tiro", Set.of("PS5", "XBOX", "PC"), Set.of("FPS", "Tatico")));
-			cadastrarProdutoNoEstoque(new Jogo("The Last Of Us", 45f, 100, "Jogo de Zumbi", Set.of("PS5"), Set.of("Drama", "Apocalipse", "Aventura")));
-			cadastrarProdutoNoEstoque(new Jogo("God Of War", 50f, 100, "Jogo do Kratos", Set.of("PS5"), Set.of("Mitologia", "Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("The Witcher 3", 30f, 100, "Jogo do Geralt", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Fantasia", "Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("Rainbow Six Siege", 60f, 100, "Jogo de Tiro", Set.of("PS4", "XBOX ONE", "PC"), Set.of("FPS", "Tatico")));
+			cadastrarProdutoNoEstoque(new Jogo("The Last Of Us", 45f, 100, "Jogo de Zumbi", Set.of("PS4", "PS5"), Set.of("Drama", "Apocalipse", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("God Of War", 50f, 100, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
 			cadastrarProdutoNoEstoque(new Console("PS5", 4000f, 100, "É um PS5", Set.of("PS5"), "1TB"));
-			cadastrarProdutoNoEstoque(new Console("XBOX Series X", 3500f, 150, "É um XBOX", Set.of("XBOX"), "2TB"));
+			cadastrarProdutoNoEstoque(new Console("XBOX Series X", 3500f, 150, "É um XBOX", Set.of("XBOX Series X"), "2TB"));
 			cadastrarProdutoNoEstoque(new TecladoMecanico("Redragon Kumara", 219.9f, 35, "Teclado mecânico gamer", Set.of("PC"), true, false, "Blue"));
 			cadastrarProdutoNoEstoque(new Mouse("Razer Viper Mini", 400f, 20, "Mouse bonito", Set.of("PC"), true, false, String.valueOf(8500)));
 			cadastrarProdutoNoEstoque(new Fone("Warrior Kaden", 150f, 250, "Fone confortável", Set.of("PC"), true, false, "108DB", true));
+			cadastrarProdutoNoEstoque(new Jogo("Xcom", 45f, 100, "Jogo de estratégia futurista", Set.of("PS3", "XBOX 360", "PC"), Set.of("FPS", "Estratégia")));
+			cadastrarProdutoNoEstoque(new Jogo("Xcom 2", 60f, 100, "Continuação do Xcom", Set.of("PS4", "XBOX ONE", "PC"), Set.of("FPS", "Estratégia")));
+			cadastrarProdutoNoEstoque(new Jogo("Red Dead Redemption", 30f, 100, "Jogo de velho oeste", Set.of("PS3", "XBOX 360", "PC"), Set.of("Velho Oeste", "Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("Civilization 6", 70f, 100, "Jogo de estratégia de tabuleiro online", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Estratégia")));
+			cadastrarProdutoNoEstoque(new Jogo("Red Dead Redemption 2", 80f, 100, "Continuação do Red Dead Redemption", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Velho Oeste", "Acao", "Aventura")));
 
 			System.out.println("======================");
 			listarProdutosDisponiveis();
 			System.out.println("======================");
-			listarProdutosPorCategoria("Fone");
+			listarProdutosPorCategoria("Jogo");
 
 		}catch(IOException e){
 			e.printStackTrace();
