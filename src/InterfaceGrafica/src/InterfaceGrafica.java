@@ -1,5 +1,7 @@
 package InterfaceGrafica.src;
 
+import ExceptionsCustomizadas.EstoqueException;
+import ManipulacaoBancoDeDados.ControleDeEstoque;
 import Produtos.*;
 
 import javax.imageio.ImageIO;
@@ -7,7 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,6 +20,16 @@ import ClassesUtilitarias.Venda;
 
 public class InterfaceGrafica implements MouseListener{
 	private Venda novaVenda;
+    File carrinho = new File("src/BancoDeDados/Carrinho.txt");
+    {
+        try {
+            FileWriter carrinhoWriter = new FileWriter(carrinho);
+            carrinhoWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     InterfaceGrafica() {
 		this.novaVenda = new Venda();
 
@@ -26,19 +41,24 @@ public class InterfaceGrafica implements MouseListener{
 		JButton botaoDoCarrinho = criarBotaoDoCarrinho();
 		JButton botaoDeCompra = criarBotaoDeComprar();
 
+
         interfacePrincipal.add(painelSuperior, BorderLayout.NORTH);
 		interfacePrincipal.add(painelPrincipal, BorderLayout.CENTER);
+
         painelSuperior.add(caixaDeBusca);
 		painelSuperior.add(botaoDeBusca);
-		painelSuperior.add(botaoDoCarrinho);
-		painelSuperior.add(botaoDeCompra);
 
         //totalLabel
-        JLabel totalLabel = new JLabel( "Preço total = " );
+        JLabel totalLabel = new JLabel( );
         totalLabel.setPreferredSize(new Dimension(150, 20));
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setEnabled(false);
         painelSuperior.add(totalLabel);
+
+		painelSuperior.add(botaoDoCarrinho);
+		painelSuperior.add(botaoDeCompra);
+
+
 
 		GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -149,7 +169,8 @@ public class InterfaceGrafica implements MouseListener{
         searchButton.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent e) {
-				new ProductWindow(caixaDeBusca.getText(), novaVenda);
+                new ProductWindow(caixaDeBusca.getText(), novaVenda, carrinho);
+
             }
         });
 
@@ -163,7 +184,7 @@ public class InterfaceGrafica implements MouseListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // abrir janela do carrinho
-				new JanelaDoCarrinho(novaVenda);
+				new JanelaDoCarrinho(novaVenda, carrinho);
             }
         });
 
@@ -176,7 +197,7 @@ public class InterfaceGrafica implements MouseListener{
         comprarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // abrir janela final
+                new JanelaDeCompra();
             }
         });
         comprarButton.setToolTipText("CLique aqui para comprar.");
@@ -195,7 +216,8 @@ public class InterfaceGrafica implements MouseListener{
 
 	private JLabel getImage(String name) throws IOException {
         
-        BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource( "/InterfaceGrafica" + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
+        BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource( "/InterfaceGrafica"
+                + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
         //JLabel subtitleImageLabel = new JLabel(name);
 
         BufferedImage imageResized = new BufferedImage(130, 130, BufferedImage.TYPE_INT_ARGB);
@@ -208,6 +230,7 @@ public class InterfaceGrafica implements MouseListener{
 
     }
 
+
 	@Override
     public void mouseClicked(MouseEvent e) {
 
@@ -215,7 +238,7 @@ public class InterfaceGrafica implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        new ProductWindow(((JLabel)e.getSource()).getName(), this.novaVenda);
+        new ProductWindow(((JLabel)e.getSource()).getName(), this.novaVenda, carrinho);
     }
 
     @Override

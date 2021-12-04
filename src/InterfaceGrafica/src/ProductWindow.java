@@ -9,7 +9,11 @@ import ClassesUtilitarias.Venda;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import ManipulacaoBancoDeDados.ControleDeEstoque;
@@ -17,7 +21,7 @@ import Produtos.Produto;
 
 public class ProductWindow {
 
-    ProductWindow(String name, Venda novaVenda) {
+    ProductWindow(String name, Venda novaVenda, File carrinho) {
         
 		JFrame interfaceDoProduto = criarInterfaceDoProduto(name);
 		JPanel painelPrincipal = criarPainelPrincipal();
@@ -53,11 +57,21 @@ public class ProductWindow {
         	JLabel valorPrecoUnitario = new JLabel(String.valueOf(produto.getPreco()));
         	gbc.anchor = GridBagConstraints.LINE_END;
         	painelPrincipal.add(valorPrecoUnitario, gbc);
+			gbc.gridy += 1;
+
+			//estoqueProduto1 e 2
+			JLabel estoqueLabel1 = new JLabel("Estoque:");
+			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+			painelPrincipal.add(estoqueLabel1, gbc);
+			JLabel estoqueLabel2 = new JLabel(String.valueOf(produto.getQntNoEstoque()));
+			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
+			painelPrincipal.add(estoqueLabel2, gbc);
+
 
 			//quantityLabel
 			JLabel textoQuantidade = new JLabel("Quantidade:");
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-			gbc.gridy = 3;
+			gbc.gridy += 1;
 			painelPrincipal.add(textoQuantidade, gbc);
 
 			//quantityField
@@ -70,19 +84,19 @@ public class ProductWindow {
 			//priceProductLabel1 e 2
 			JLabel textoPrecoTotal = new JLabel("Preço total:");
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-			gbc.gridy = 4;
+			gbc.gridy += 1;
 			painelPrincipal.add(textoPrecoTotal, gbc);
 			JLabel textoCampoDaQuantidade = new JLabel("Digite uma quantidade.");
 			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
-			painelPrincipal.add(textoPrecoTotal, gbc);
+			painelPrincipal.add(textoCampoDaQuantidade, gbc);
 
 			JButton botaoDeCancelar = criarBotaoDeCancelar(interfaceDoProduto);
-			gbc.gridy = 5;
+			gbc.gridy += 1;
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 			painelPrincipal.add(botaoDeCancelar, gbc);
 
-			
-			JButton botaoDeAdiconarAoCarrinho = criarBotaoDeAdicionarAoCarrinho(name, campoDaQuantidade, novaVenda);
+
+			JButton botaoDeAdiconarAoCarrinho = criarBotaoDeAdicionarAoCarrinho(name, campoDaQuantidade, novaVenda, interfaceDoProduto, carrinho, valorPrecoUnitario.getText());
 			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
 			painelPrincipal.add(botaoDeAdiconarAoCarrinho, gbc);
 
@@ -102,9 +116,15 @@ public class ProductWindow {
 					try {
 
 						int numero = Integer.parseInt(campoDaQuantidade.getText());
-						textoCampoDaQuantidade.setText(Float.toString(numero * Float.parseFloat(valorPrecoUnitario.getText())));
-						botaoDeAdiconarAoCarrinho.setEnabled(true);
-
+						if (numero > 0 ) {
+							if (numero <= produto.getQntNoEstoque()) {
+								textoCampoDaQuantidade.setText(Float.toString(numero * Float.parseFloat(valorPrecoUnitario.getText())));
+								botaoDeAdiconarAoCarrinho.setEnabled(true);
+							} else {
+								textoCampoDaQuantidade.setText("Estoque insuficiente!");
+								botaoDeAdiconarAoCarrinho.setEnabled(false);
+							}
+						}
 					} catch (NumberFormatException ex) {
 						textoCampoDaQuantidade.setText("Quantidade inválida!");
 						campoDaQuantidade.setText("");
@@ -118,6 +138,7 @@ public class ProductWindow {
 		}catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
+
 	}
 
 	private JFrame criarInterfaceDoProduto(String name) {
@@ -177,14 +198,24 @@ public class ProductWindow {
 		return cancelButton;
 	}
 
-	private JButton criarBotaoDeAdicionarAoCarrinho(String name, JTextField quantityField, Venda novaVenda) {
+	private JButton criarBotaoDeAdicionarAoCarrinho(String name, JTextField quantityField, Venda novaVenda, JFrame interfaceDoProduto, File carrinho, String price) {
 		//addCarButton
 		JButton addCarButton = new JButton("Adicionar");
 		addCarButton.setEnabled(false);
 		addCarButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// Não se cadastra a venda agora
 				novaVenda.adicionarProdutoAoCarrinho(name, Integer.parseInt(quantityField.getText()));
+				try {
+					FileWriter carrinhoWriter = new FileWriter(carrinho, true);
+					carrinhoWriter.write(name + ", " + quantityField.getText() + ", " + price + "\n");
+					carrinhoWriter.close();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
+
 			}
 		});
 
