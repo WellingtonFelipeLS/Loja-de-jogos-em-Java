@@ -68,7 +68,6 @@ public class Venda implements Serializable{
 			ioe.printStackTrace();
 		}
 		
-
 		return infoCarrinho;
 	}
 
@@ -76,15 +75,20 @@ public class Venda implements Serializable{
 		return carrinho;
 	}
 
-	public final void adicionarProdutoAoCarrinho(String nomeDoProduto, int qnt) {
+	public void adicionarProdutoAoCarrinho(String nomeDoProduto, int qnt) {
 		if(carrinho.keySet().contains(nomeDoProduto))
 			carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) + qnt);
 		else
-			carrinho.put(nomeDoProduto, Integer.valueOf(qnt));
+			carrinho.put(nomeDoProduto, qnt);
 	}
 
-	public final void retirarProdutoDoCarrinho(String nomeDoProduto, int qnt) {
-		carrinho.remove(nomeDoProduto, Integer.valueOf(qnt));
+	public void retirarQntDoProdutoDoCarrinho(String nomeDoProduto, int qnt) {
+		if(carrinho.keySet().contains(nomeDoProduto))
+			carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) - qnt);
+	}
+
+	public void retirarProdutoDoCarrinho(String nomeDoProduto) {
+		carrinho.remove(nomeDoProduto);
 	}
 
 	private void imprimirSeparadorDeNotaFiscal(int n) {
