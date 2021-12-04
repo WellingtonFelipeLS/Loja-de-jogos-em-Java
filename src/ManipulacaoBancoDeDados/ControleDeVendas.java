@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import ClassesUtilitarias.Venda;
 import ClassesUtilitarias.Cliente;
 import ClassesUtilitarias.EOFIndicatorClass;
 import ClassesUtilitarias.IOMaster;
 import ClassesUtilitarias.ObjectIOMaster;
+
 
 public class ControleDeVendas {
 	private static final String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
@@ -32,6 +34,10 @@ public class ControleDeVendas {
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		Object venda;
+		Map<String, Integer> carrinho = novaVenda.getCarrinho();
+
+		for(String nomeDoProduto : carrinho.keySet())
+			ControleDeEstoque.retirarQntDoEstoque(nomeDoProduto, carrinho.get(nomeDoProduto));
 
 		try{
 			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass))

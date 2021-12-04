@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Map;
 
 import ManipulacaoBancoDeDados.ControleDeEstoque;
+import Produtos.Produto;
 
 import java.util.Hashtable;
 
@@ -44,8 +45,42 @@ public class Venda implements Serializable{
 		this.idVenda = IdGenerator.gerarId();
 	}
 
+	public String[][] getInfoParaOCarrinho() {
+		Produto produto;
+		String[] infoProduto;
+		String[][] infoCarrinho = new String[carrinho.size()][];
+		
+		try{
+			int cont = 0;
+			for(String nome : carrinho.keySet()) {
+				produto = ControleDeEstoque.procurarProdutoNoEstoque(nome);
+
+				infoProduto = new String[4];
+				infoProduto[0] = nome;
+				infoProduto[1] = String.valueOf(carrinho.get(nome));
+				infoProduto[2] = String.valueOf(produto.getPreco());
+				infoProduto[3] = String.valueOf(carrinho.get(nome) * produto.getPreco());
+
+				infoCarrinho[cont] = infoProduto;
+				cont++;
+			}
+		}catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+		
+
+		return infoCarrinho;
+	}
+
+	public Map<String, Integer> getCarrinho() {
+		return carrinho;
+	}
+
 	public final void adicionarProdutoAoCarrinho(String nomeDoProduto, int qnt) {
-		carrinho.put(nomeDoProduto, Integer.valueOf(qnt));
+		if(carrinho.keySet().contains(nomeDoProduto))
+			carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) + qnt);
+		else
+			carrinho.put(nomeDoProduto, Integer.valueOf(qnt));
 	}
 
 	public final void retirarProdutoDoCarrinho(String nomeDoProduto, int qnt) {

@@ -1,7 +1,5 @@
 package InterfaceGrafica.src;
 
-import ExceptionsCustomizadas.EstoqueException;
-import ManipulacaoBancoDeDados.ControleDeEstoque;
 import Produtos.*;
 
 import javax.imageio.ImageIO;
@@ -9,10 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Objects;
 import java.util.Set;
 
@@ -20,15 +15,6 @@ import ClassesUtilitarias.Venda;
 
 public class InterfaceGrafica implements MouseListener{
 	private Venda novaVenda;
-    File carrinho = new File("src/BancoDeDados/Carrinho.txt");
-    {
-        try {
-            FileWriter carrinhoWriter = new FileWriter(carrinho);
-            carrinhoWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     InterfaceGrafica() {
 		this.novaVenda = new Venda();
@@ -49,7 +35,7 @@ public class InterfaceGrafica implements MouseListener{
 		painelSuperior.add(botaoDeBusca);
 
         //totalLabel
-        JLabel totalLabel = new JLabel( );
+        JLabel totalLabel = new JLabel();
         totalLabel.setPreferredSize(new Dimension(150, 20));
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setEnabled(false);
@@ -57,8 +43,6 @@ public class InterfaceGrafica implements MouseListener{
 
 		painelSuperior.add(botaoDoCarrinho);
 		painelSuperior.add(botaoDeCompra);
-
-
 
 		GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -116,102 +100,91 @@ public class InterfaceGrafica implements MouseListener{
         interfacePrincipal.setVisible( true );
     }
 
-	public void prepararNovaCompra() {
-		this.novaVenda = new Venda();
-	}
-
 	private JFrame criarInterfacePrincipal() {
-		//mainFrame
-        JFrame mainFrame = new JFrame("Loja WM");
-        mainFrame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        mainFrame.setSize( 800, 400 );
-        mainFrame.setLayout( new BorderLayout() );
+        JFrame interfacePrincipal = new JFrame("Loja WM");
+        interfacePrincipal.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        interfacePrincipal.setSize( 800, 400 );
+        interfacePrincipal.setLayout( new BorderLayout() );
 
-		return mainFrame;
+		return interfacePrincipal;
 	}
 
 	private JPanel criarPainelSuperior() {
 		//Top Panel
-        JPanel topPanel = new JPanel();
+        JPanel painelSuperior = new JPanel();
         //topPanel.setPreferredSize(new Dimension(720, 40));
-        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        topPanel.setBackground(Color.DARK_GRAY);
+        painelSuperior.setLayout(new FlowLayout(FlowLayout.CENTER));
+        painelSuperior.setBackground(Color.DARK_GRAY);
 
-		return topPanel;
+		return painelSuperior;
 	}
 
 	private JTextField criarCaixaDeBusca() {
-		//searchField
-        JTextField searchField = new JTextField( "Digite o nome do produto." );
-        searchField.setColumns(30);
-        searchField.addFocusListener(new FocusListener() {
+        JTextField campoDeBusca = new JTextField( "Digite o nome do produto." );
+        campoDeBusca.setColumns(30);
+        campoDeBusca.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (searchField.getText().equals( "Digite o nome do produto." )) {
-                    searchField.setText( "" );
+                if (campoDeBusca.getText().equals( "Digite o nome do produto." )) {
+                    campoDeBusca.setText( "" );
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (searchField.getText().equals( "" )) {
-                    searchField.setText( "Digite o nome do produto." );
+                if (campoDeBusca.getText().equals( "" )) {
+                    campoDeBusca.setText( "Digite o nome do produto." );
                 }
             }
         });
 
-		return searchField;
+		return campoDeBusca;
 	}
 
 	private JButton criarBotaoDeBusca(JTextField caixaDeBusca) {
-		//searchButton
-        JButton searchButton = new JButton( "pesquisar" );
-        searchButton.addActionListener(new ActionListener() {
+        JButton botaoDeBusca = new JButton( "pesquisar" );
+        botaoDeBusca.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent e) {
-                new ProductWindow(caixaDeBusca.getText(), novaVenda, carrinho);
+                new ProductWindow(caixaDeBusca.getText(), novaVenda);
 
             }
         });
 
-		return searchButton;
+		return botaoDeBusca;
 	}
 
 	private JButton criarBotaoDoCarrinho() {
-		//carButton
-        JButton carButton = new JButton( "Carrinho" );
-        carButton.addActionListener(new ActionListener() {
+        JButton botaoDoCarrinho = new JButton( "Carrinho" );
+        botaoDoCarrinho.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // abrir janela do carrinho
-				new JanelaDoCarrinho(novaVenda, carrinho);
+				new JanelaDoCarrinho(novaVenda);
             }
         });
 
-		return carButton;
+		return botaoDoCarrinho;
 	}
 
 	private JButton criarBotaoDeComprar() {
-		//comprarButton
-        JButton comprarButton = new JButton( "Comprar" );
-        comprarButton.addActionListener(new ActionListener() {
+        JButton botaoDeComprar = new JButton( "Comprar" );
+        botaoDeComprar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new JanelaDeCompra();
+                //new JanelaDeCompra();
             }
         });
-        comprarButton.setToolTipText("CLique aqui para comprar.");
+        botaoDeComprar.setToolTipText("CLique aqui para comprar.");
 
-		return comprarButton;
+		return botaoDeComprar;
 	}
 
 	private JPanel criarPainelPrincipal() {
-		//mainPanel
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setBackground(Color.GRAY);
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new GridBagLayout());
+        painelPrincipal.setBackground(Color.GRAY);
 
-		return mainPanel;
+		return painelPrincipal;
 	}
 
 	private JLabel getImage(String name) throws IOException {
@@ -230,7 +203,6 @@ public class InterfaceGrafica implements MouseListener{
 
     }
 
-
 	@Override
     public void mouseClicked(MouseEvent e) {
 
@@ -238,7 +210,7 @@ public class InterfaceGrafica implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        new ProductWindow(((JLabel)e.getSource()).getName(), this.novaVenda, carrinho);
+        new ProductWindow(((JLabel)e.getSource()).getName(), this.novaVenda);
     }
 
     @Override

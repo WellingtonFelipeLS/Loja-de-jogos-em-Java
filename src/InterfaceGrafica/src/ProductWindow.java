@@ -9,11 +9,7 @@ import ClassesUtilitarias.Venda;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import ManipulacaoBancoDeDados.ControleDeEstoque;
@@ -21,9 +17,9 @@ import Produtos.Produto;
 
 public class ProductWindow {
 
-    ProductWindow(String name, Venda novaVenda, File carrinho) {
+    ProductWindow(String nome, Venda novaVenda) {
         
-		JFrame interfaceDoProduto = criarInterfaceDoProduto(name);
+		JFrame interfaceDoProduto = criarInterfaceDoProduto(nome);
 		JPanel painelPrincipal = criarPainelPrincipal();
 
         
@@ -34,13 +30,13 @@ public class ProductWindow {
 
         //imageLabel
         try {
-            JLabel imageLabel = new JLabel(new ImageIcon(procurarImagemDoProduto(name)));
+            JLabel imageLabel = new JLabel(new ImageIcon(procurarImagemDoProduto(nome)));
 			painelPrincipal.add(imageLabel);
 
 			gbc.gridx = 0;
 			gbc.gridy = 0;
 
-			Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(name);
+			Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(nome);
 
 			JTextArea espacoDaDescricao = criarEspacoParaADescricao(produto.getDescricao()); 
 
@@ -50,7 +46,7 @@ public class ProductWindow {
 
 			gbc.gridy += 1;
 
-			//priceLabel1 e 2
+			/*//priceLabel1 e 2
         	JLabel textoPrecoUnitario = new JLabel("Preço unitário: ");
         	gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         	painelPrincipal.add(textoPrecoUnitario, gbc);
@@ -66,7 +62,6 @@ public class ProductWindow {
 			JLabel estoqueLabel2 = new JLabel(String.valueOf(produto.getQntNoEstoque()));
 			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
 			painelPrincipal.add(estoqueLabel2, gbc);
-
 
 			//quantityLabel
 			JLabel textoQuantidade = new JLabel("Quantidade:");
@@ -88,15 +83,47 @@ public class ProductWindow {
 			painelPrincipal.add(textoPrecoTotal, gbc);
 			JLabel textoCampoDaQuantidade = new JLabel("Digite uma quantidade.");
 			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
+			painelPrincipal.add(textoCampoDaQuantidade, gbc);*/
+
+			JLabel textoPrecoUnitario = criarLegendaGenerica("Preço unitário: ", gbc, GridBagConstraints.FIRST_LINE_START);
+			painelPrincipal.add(textoPrecoUnitario, gbc);
+
+			JLabel valorPrecoUnitario = criarLegendaGenerica(String.valueOf(produto.getPreco()), gbc, GridBagConstraints.LINE_END);
+        	painelPrincipal.add(valorPrecoUnitario, gbc);
+
+			gbc.gridy += 1;
+
+			JLabel estoqueLabel1 = criarLegendaGenerica("Estoque:", gbc, GridBagConstraints.FIRST_LINE_START);
+			painelPrincipal.add(estoqueLabel1, gbc);
+
+			JLabel estoqueLabel2 = criarLegendaGenerica(String.valueOf(produto.getQntNoEstoque()), gbc, GridBagConstraints.FIRST_LINE_END);
+			painelPrincipal.add(estoqueLabel2, gbc);
+
+			gbc.gridy += 1;
+
+			JLabel textoQuantidade = criarLegendaGenerica("Quantidade:", gbc, GridBagConstraints.FIRST_LINE_START);
+			painelPrincipal.add(textoQuantidade, gbc);
+
+			JTextField campoDaQuantidade = new JTextField();
+			campoDaQuantidade.setColumns(5);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			painelPrincipal.add(campoDaQuantidade, gbc);
+
+			gbc.gridy += 1;
+
+			JLabel textoPrecoTotal = criarLegendaGenerica("Preço total:", gbc, GridBagConstraints.FIRST_LINE_START);
+			painelPrincipal.add(textoPrecoTotal, gbc);
+
+			JLabel textoCampoDaQuantidade = criarLegendaGenerica("Digite uma quantidade.", gbc, GridBagConstraints.FIRST_LINE_END);
 			painelPrincipal.add(textoCampoDaQuantidade, gbc);
 
-			JButton botaoDeCancelar = criarBotaoDeCancelar(interfaceDoProduto);
 			gbc.gridy += 1;
+
+			JButton botaoDeCancelar = criarBotaoDeCancelar(interfaceDoProduto);
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 			painelPrincipal.add(botaoDeCancelar, gbc);
 
-
-			JButton botaoDeAdiconarAoCarrinho = criarBotaoDeAdicionarAoCarrinho(name, campoDaQuantidade, novaVenda, interfaceDoProduto, carrinho, valorPrecoUnitario.getText());
+			JButton botaoDeAdiconarAoCarrinho = criarBotaoDeAdicionarAoCarrinho(nome, campoDaQuantidade, novaVenda, interfaceDoProduto, valorPrecoUnitario.getText());
 			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
 			painelPrincipal.add(botaoDeAdiconarAoCarrinho, gbc);
 
@@ -142,35 +169,32 @@ public class ProductWindow {
 	}
 
 	private JFrame criarInterfaceDoProduto(String name) {
-		//productFrame
-		JFrame productFrame = new JFrame(name);
-		productFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE);
-		productFrame.setLocation(740, 0);
-		productFrame.setPreferredSize(new Dimension(240, 480));
+		JFrame interfaceDoProduto = new JFrame(name);
+		interfaceDoProduto.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE);
+		interfaceDoProduto.setLocation(740, 0);
+		interfaceDoProduto.setPreferredSize(new Dimension(240, 480));
 
-		return productFrame;
+		return interfaceDoProduto;
 	}
 
 	private JPanel criarPainelPrincipal() {
-		//mainPanel
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setBackground(Color.GRAY);
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new GridBagLayout());
+        painelPrincipal.setBackground(Color.GRAY);
 
-		return mainPanel;
+		return painelPrincipal;
 	}
 
 	private JTextArea criarEspacoParaADescricao(String descricao) {
-		//DescriptionText
-		JTextArea descriptionLabel = new JTextArea(descricao);
-		descriptionLabel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-		descriptionLabel.setEditable(false);
-		descriptionLabel.setLineWrap(true);
-		descriptionLabel.setWrapStyleWord(true);
-		descriptionLabel.setColumns(20);
-		descriptionLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		JTextArea espacoParaADescricao = new JTextArea(descricao);
+		espacoParaADescricao.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+		espacoParaADescricao.setEditable(false);
+		espacoParaADescricao.setLineWrap(true);
+		espacoParaADescricao.setWrapStyleWord(true);
+		espacoParaADescricao.setColumns(20);
+		espacoParaADescricao.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
-		return descriptionLabel;
+		return espacoParaADescricao;
 	}
 
 	private BufferedImage procurarImagemDoProduto(String name) throws IOException{
@@ -186,39 +210,34 @@ public class ProductWindow {
 	}
 
 	private JButton criarBotaoDeCancelar(JFrame interfaceDoProduto) {
-		//cancelButton
-		JButton cancelButton = new JButton("Cancelar");
-		cancelButton.addActionListener(new ActionListener() {
+		JButton botaoDeCancelar = new JButton("Cancelar");
+		botaoDeCancelar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 
-		return cancelButton;
+		return botaoDeCancelar;
 	}
 
-	private JButton criarBotaoDeAdicionarAoCarrinho(String name, JTextField quantityField, Venda novaVenda, JFrame interfaceDoProduto, File carrinho, String price) {
-		//addCarButton
-		JButton addCarButton = new JButton("Adicionar");
-		addCarButton.setEnabled(false);
-		addCarButton.addActionListener(new ActionListener() {
+	private JButton criarBotaoDeAdicionarAoCarrinho(String name, JTextField quantityField, Venda novaVenda, JFrame interfaceDoProduto, String price) {
+		JButton botaoDeAdicionarAoCarrinho = new JButton("Adicionar");
+		botaoDeAdicionarAoCarrinho.setEnabled(false);
+		botaoDeAdicionarAoCarrinho.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Não se cadastra a venda agora
 				novaVenda.adicionarProdutoAoCarrinho(name, Integer.parseInt(quantityField.getText()));
-				try {
-					FileWriter carrinhoWriter = new FileWriter(carrinho, true);
-					carrinhoWriter.write(name + ", " + quantityField.getText() + ", " + price + "\n");
-					carrinhoWriter.close();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
-
 			}
 		});
 
-		return addCarButton;
+		return botaoDeAdicionarAoCarrinho;
+	}
+
+	private JLabel criarLegendaGenerica(String mensagem, GridBagConstraints gbc, int option) {
+		JLabel legendaGenerica = new JLabel(mensagem);
+        gbc.anchor = option;
+
+		return legendaGenerica;
 	}
 }

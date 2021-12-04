@@ -230,13 +230,15 @@ public class ControleDeEstoque {
 		Object produto;
 
 		try {
-			if(qnt < 0)
-				throw new EstoqueException("A quantidade no estoque não pode ser negativa.");
 
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
 
 				if(((Produto)produto).getNome().equals(nomeDoProduto)) {
 					if(((Produto)produto).getCadastroAtivo()) {
+
+						if(qnt + ((Produto)produto).getQntNoEstoque() < 0) 
+							throw new EstoqueException("A quantidade no estoque não pode ser negativa.");
+
 						((Produto)produto).setQntNoEstoque(qnt + ((Produto)produto).getQntNoEstoque());
 						estoque.escrever(produto);
 					}
@@ -298,12 +300,13 @@ public class ControleDeEstoque {
 				//"((!(Produto)produto).getCadastroAtivo() || ((Produto)produto).getQntNoEstoque() <= 0)"
 
 				// Se val == false, a expressão no if é equivalente à "Integer.valueOf(informacoesCliente[4]) == 1"
-				if((((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) ^ val)
+				if((((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) ^ val) {
 					nomeProdutos.add(((Produto) produto).getNome());
-			}
 
-			for(String s : nomeProdutos)
-				System.out.println(s);
+					System.out.println(((Produto) produto).getNome() + "/" + ((Produto) produto).getQntNoEstoque());
+				}
+					
+			}
 
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
