@@ -112,7 +112,6 @@ public class InterfaceGrafica implements MouseListener{
 	}
 
 	private JPanel criarPainelSuperior() {
-		//Top Panel
         JPanel painelSuperior = new JPanel();
         //topPanel.setPreferredSize(new Dimension(720, 40));
         painelSuperior.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -173,7 +172,7 @@ public class InterfaceGrafica implements MouseListener{
         botaoDeComprar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //new JanelaDeCompra();
+				
             }
         });
         botaoDeComprar.setToolTipText("CLique aqui para comprar.");

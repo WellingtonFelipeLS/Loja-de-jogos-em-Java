@@ -20,7 +20,7 @@ public class ControleDeVendas{
 	private static final String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendas.ser";
 	private static final String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendasTemp.ser";
 	
-	public static void registrarVenda(Venda novaVenda) throws IOException {
+	public static void cadastrarVenda(Venda novaVenda) throws IOException {
 		ObjectIOMaster.verificarArquivo(caminhoBancoDeDados);
 
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
@@ -99,7 +99,7 @@ public class ControleDeVendas{
 		try{
 			Venda venda1 = new Venda();
 			venda1.adicionarProdutoAoCarrinho("XBOX Series X", 10);
-			registrarVenda(venda1);
+			cadastrarVenda(venda1);
 
 			Cliente cliente1 = new Cliente("Wellington Felipe", "424.844.250-74", "49090-073");
 			Venda venda2 = new Venda();
@@ -107,7 +107,7 @@ public class ControleDeVendas{
 			venda2.adicionarProdutoAoCarrinho("Razer Viper Mini", 1);
 			venda2.adicionarProdutoAoCarrinho("Warrior Kaden", 1);
 			venda2.adicionarProdutoAoCarrinho("Rainbow Six Siege", 1);
-			registrarVenda(venda2);
+			cadastrarVenda(venda2);
 
 			Cliente cliente2 = new Cliente("Matheus Miller", "425.332.960-82", "68908-351");
 			Venda venda3 = new Venda();
@@ -115,12 +115,12 @@ public class ControleDeVendas{
 			venda3.adicionarProdutoAoCarrinho("PS5", 1);
 			venda3.adicionarProdutoAoCarrinho("God Of War", 1);
 			venda3.adicionarProdutoAoCarrinho("The Last Of Us", 1);
-			registrarVenda(venda3);
+			cadastrarVenda(venda3);
 
 			Venda venda4 = new Venda();
 			venda4.adicionarProdutoAoCarrinho("The Witcher 3", 20);
 			venda4.adicionarProdutoAoCarrinho("Redragon Kumara", 20);
-			registrarVenda(venda4);
+			cadastrarVenda(venda4);
 
 			listarVendas();
 			System.out.println("**********************************************");

@@ -21,10 +21,10 @@ public class UnitTestVenda {
 	}
 
 	@Test
-	public void testeRetirarQntDoProdutoDoCarrinho() {
+	public void testeModificarQntDoProdutoNoCarrinho() {
 		Venda novaVenda = new Venda();
 		novaVenda.adicionarProdutoAoCarrinho("The Witcher 3", 5);
-		novaVenda.retirarQntDoProdutoDoCarrinho("The Witcher 3", 3);
+		novaVenda.modificarQntDoProdutoNoCarrinho("The Witcher 3", 2);
 
 		Map<String, Integer> resultadoEsperado = new Hashtable<String, Integer>();
 		resultadoEsperado.put("The Witcher 3", 2);

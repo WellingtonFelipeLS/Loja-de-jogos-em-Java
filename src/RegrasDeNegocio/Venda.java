@@ -73,8 +73,26 @@ public class Venda implements Serializable{
 		return infoCarrinho;
 	}
 
+	public String[] getProdutosDoCarrinho() {
+		String[] nomesDosProdutos = new String[carrinho.size()];
+		carrinho.keySet().toArray(nomesDosProdutos);
+		return nomesDosProdutos;
+	}
+
 	public Map<String, Integer> getCarrinho() {
 		return carrinho;
+	}
+
+	public void modificarQntDoProdutoNoCarrinho(String nomeDoProduto, int qnt) {
+		carrinho.replace(nomeDoProduto, qnt);
+	}
+
+	public void adicionarUnidade(String nomeDoProduto) {
+		carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) + 1);
+	}
+
+	public void retirarUnidade(String nomeDoProduto) {
+		carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) - 1);
 	}
 
 	public void adicionarProdutoAoCarrinho(String nomeDoProduto, int qnt) {
@@ -82,11 +100,6 @@ public class Venda implements Serializable{
 			carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) + qnt);
 		else
 			carrinho.put(nomeDoProduto, qnt);
-	}
-
-	public void retirarQntDoProdutoDoCarrinho(String nomeDoProduto, int qnt) {
-		if(carrinho.keySet().contains(nomeDoProduto))
-			carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) - qnt);
 	}
 
 	public void retirarProdutoDoCarrinho(String nomeDoProduto) {

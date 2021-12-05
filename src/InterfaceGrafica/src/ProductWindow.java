@@ -48,45 +48,6 @@ public class ProductWindow {
 
 			gbc.gridy += 1;
 
-			/*//priceLabel1 e 2
-        	JLabel textoPrecoUnitario = new JLabel("Preço unitário: ");
-        	gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        	painelPrincipal.add(textoPrecoUnitario, gbc);
-        	JLabel valorPrecoUnitario = new JLabel(String.valueOf(produto.getPreco()));
-        	gbc.anchor = GridBagConstraints.LINE_END;
-        	painelPrincipal.add(valorPrecoUnitario, gbc);
-			gbc.gridy += 1;
-
-			//estoqueProduto1 e 2
-			JLabel estoqueLabel1 = new JLabel("Estoque:");
-			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-			painelPrincipal.add(estoqueLabel1, gbc);
-			JLabel estoqueLabel2 = new JLabel(String.valueOf(produto.getQntNoEstoque()));
-			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
-			painelPrincipal.add(estoqueLabel2, gbc);
-
-			//quantityLabel
-			JLabel textoQuantidade = new JLabel("Quantidade:");
-			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-			gbc.gridy += 1;
-			painelPrincipal.add(textoQuantidade, gbc);
-
-			//quantityField
-			JTextField campoDaQuantidade = new JTextField();
-			campoDaQuantidade.setColumns(5);
-
-			gbc.anchor = GridBagConstraints.LINE_END;
-			painelPrincipal.add(campoDaQuantidade, gbc);
-
-			//priceProductLabel1 e 2
-			JLabel textoPrecoTotal = new JLabel("Preço total:");
-			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-			gbc.gridy += 1;
-			painelPrincipal.add(textoPrecoTotal, gbc);
-			JLabel textoCampoDaQuantidade = new JLabel("Digite uma quantidade.");
-			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
-			painelPrincipal.add(textoCampoDaQuantidade, gbc);*/
-
 			JLabel textoPrecoUnitario = criarLegendaGenerica("Preço unitário: ", gbc, GridBagConstraints.FIRST_LINE_START);
 			painelPrincipal.add(textoPrecoUnitario, gbc);
 
