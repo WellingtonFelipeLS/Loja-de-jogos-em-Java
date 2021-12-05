@@ -1,4 +1,4 @@
-package Produtos;
+package RegrasDeNegocio.Produtos;
 
 import java.io.Serializable;
 import java.util.Set;

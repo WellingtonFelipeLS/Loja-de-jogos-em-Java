@@ -1,17 +1,19 @@
 package InterfaceGrafica.src;
 
-import Produtos.*;
+import RegrasDeNegocio.Produtos.*;
+import RegrasDeNegocio.Venda;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+
 import java.io.IOException;
+
 import java.util.Objects;
 import java.util.Set;
-
-import ClassesUtilitarias.Venda;
 
 public class InterfaceGrafica implements MouseListener{
 	private Venda novaVenda;

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ClassesUtilitarias.Venda;
+import RegrasDeNegocio.Venda;
 
 public class UnitTestVenda {
 	@Test

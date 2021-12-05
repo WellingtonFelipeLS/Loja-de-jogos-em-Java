@@ -7,12 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+
 import java.io.IOException;
+
 import java.util.Objects;
 
 import ManipulacaoBancoDeDados.ControleDeVendas;
 
-import ClassesUtilitarias.Venda;
+import RegrasDeNegocio.Venda;
 
 public class JanelaDoCarrinho{
 	
@@ -33,7 +35,7 @@ public class JanelaDoCarrinho{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try{
-					ControleDeVendas.cadastrarVenda(novaVenda);
+					ControleDeVendas.registrarVenda(novaVenda);
 					ControleDeVendas.listarVendas();
 					novaVenda.limparDadosDaVenda();
 				}

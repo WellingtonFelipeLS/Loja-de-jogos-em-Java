@@ -4,16 +4,18 @@ package InterfaceGrafica.src;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import ClassesUtilitarias.Venda;
+import RegrasDeNegocio.Venda;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+
 import java.io.IOException;
+
 import java.util.Objects;
 
 import ManipulacaoBancoDeDados.ControleDeEstoque;
-import Produtos.Produto;
+import RegrasDeNegocio.Produtos.Produto;
 
 public class ProductWindow {
 

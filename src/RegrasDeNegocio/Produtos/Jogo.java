@@ -1,4 +1,4 @@
-package Produtos;
+package RegrasDeNegocio.Produtos;
 
 import java.util.Set;
 import java.util.TreeSet;

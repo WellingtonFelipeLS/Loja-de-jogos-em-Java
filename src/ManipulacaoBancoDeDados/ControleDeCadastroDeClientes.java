@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import ClassesUtilitarias.CharIOMaster;
-import ClassesUtilitarias.Cliente;
+import RegrasDeNegocio.Cliente;
 
 public class ControleDeCadastroDeClientes {
 	private static final String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";

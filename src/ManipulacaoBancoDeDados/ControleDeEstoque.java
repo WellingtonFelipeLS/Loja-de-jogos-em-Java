@@ -1,6 +1,6 @@
 package ManipulacaoBancoDeDados;
 
-import Produtos.*;
+import RegrasDeNegocio.Produtos.*;
 import ExceptionsCustomizadas.CadastroException;
 import ExceptionsCustomizadas.EstoqueException;
 
@@ -8,8 +8,8 @@ import ClassesUtilitarias.EOFIndicatorClass;
 import ClassesUtilitarias.IOMaster;
 import ClassesUtilitarias.ObjectIOMaster;
 
-import java.io.File;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -19,17 +19,8 @@ public class ControleDeEstoque {
 	private static final String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "Estoque.ser";
 	private static final String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "EstoqueTemp.ser";
 
-	private static void verificarEstoque(String caminho) throws IOException {
-		File verificarEstoque = new File(caminhoBancoDeDados);
-		if(verificarEstoque.length() == 0) {
-			ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'w');
-			estoque.escrever(new EOFIndicatorClass());
-			estoque.fecharArquivos();
-		}
-	}
-
 	public static void cadastrarProdutoNoEstoque(Produto novoProduto) throws IOException {
-		verificarEstoque(caminhoBancoDeDados);
+		ObjectIOMaster.verificarArquivo(caminhoBancoDeDados);
 
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 

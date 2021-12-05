@@ -1,4 +1,6 @@
-package ClassesUtilitarias;
+package RegrasDeNegocio;
+
+import ClassesUtilitarias.IdGenerator;
 
 import java.io.Serializable;
 // Código para a validação de cpf adquirido em: https://github.com/caelum/caelum-stella/wiki/Downloads-do-caelum-stella
