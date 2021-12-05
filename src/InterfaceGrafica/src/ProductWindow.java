@@ -191,6 +191,7 @@ public class ProductWindow {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				novaVenda.adicionarProdutoAoCarrinho(name, Integer.parseInt(quantityField.getText()));
+				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 

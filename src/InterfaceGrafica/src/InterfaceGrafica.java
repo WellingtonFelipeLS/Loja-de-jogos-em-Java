@@ -27,7 +27,7 @@ public class InterfaceGrafica implements MouseListener{
 		JTextField caixaDeBusca = criarCaixaDeBusca();
 		JButton botaoDeBusca = criarBotaoDeBusca(caixaDeBusca);
 		JButton botaoDoCarrinho = criarBotaoDoCarrinho();
-		JButton botaoDeCompra = criarBotaoDeComprar();
+		JButton botaoDeCompra = criarBotaoDeConta();
 
 
         interfacePrincipal.add(painelSuperior, BorderLayout.NORTH);
@@ -167,18 +167,18 @@ public class InterfaceGrafica implements MouseListener{
 		return botaoDoCarrinho;
 	}
 
-	private JButton criarBotaoDeComprar() {
-        JButton botaoDeComprar = new JButton( "Comprar" );
-        botaoDeComprar.addActionListener(new ActionListener() {
+    private JButton criarBotaoDeConta() {
+        JButton contaButton = new JButton( "Login" );
+        contaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-				
+                new JanelaDaConta(contaButton);
             }
         });
-        botaoDeComprar.setToolTipText("CLique aqui para comprar.");
 
-		return botaoDeComprar;
-	}
+        return contaButton;
+    }
+
 
 	private JPanel criarPainelPrincipal() {
         JPanel painelPrincipal = new JPanel();

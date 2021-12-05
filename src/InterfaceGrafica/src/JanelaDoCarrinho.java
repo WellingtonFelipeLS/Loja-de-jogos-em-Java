@@ -35,7 +35,7 @@ public class JanelaDoCarrinho{
 		painelPrincipal.add(painelSuperior, BorderLayout.NORTH);
 
 		//Label (Painel Superior)
-		JLabel olaUsuario = new JLabel("Olá, Visitante.");
+		JLabel olaUsuario = new JLabel("Logado como Visitante.");
 		olaUsuario.setFont(new Font("Serif", Font.PLAIN, 20));
 		olaUsuario.setForeground(Color.WHITE);
 		painelSuperior.add(olaUsuario);
@@ -97,10 +97,12 @@ public class JanelaDoCarrinho{
 		JComboBox<String> barraDeSelecaoDeProduto = criarBarraDeSelecaoDeProduto(produtoQuantidadeField, legendas);
 		painelSuperiorCentral.add(barraDeSelecaoDeProduto);
 
-		JButton botaoDeAlterarQuantidade = criarBotaoDeAlterarQuantidade(barraDeSelecaoDeProduto, produtoQuantidadeField, tabelaDoCarrinho);
+		JButton botaoDeAlterarQuantidade = criarBotaoDeAlterarQuantidade(barraDeSelecaoDeProduto, produtoQuantidadeField, tabelaDoCarrinho, janelaDoCarrinho);
 		gbc.gridy = 1;
 		gbc.gridx = 2;
 		painelCentralDireito.add(botaoDeAlterarQuantidade, gbc);
+		JButton botaoDeRemover = criarBotaoDeRemover(barraDeSelecaoDeProduto, tabelaDoCarrinho, janelaDoCarrinho);
+		painelSuperiorCentral.add(botaoDeRemover);
 
 		JButton botaoDeCompra = criarBotaoDeCompra();
 
@@ -237,17 +239,34 @@ public class JanelaDoCarrinho{
 		return barraDeSelecaoDeProduto;
 	}
 
-	private JButton criarBotaoDeAlterarQuantidade(JComboBox<String> barraDeSelecaoDeProduto, JTextField produtoQuantidadeField, JTable tabelaDoCarrinho) {
+	private JButton criarBotaoDeAlterarQuantidade(JComboBox<String> barraDeSelecaoDeProduto, JTextField produtoQuantidadeField, JTable tabelaDoCarrinho, JFrame janelaDoCarrinho) {
 		JButton botaoDeAlterarQuantidade = new JButton("Alterar");
 		botaoDeAlterarQuantidade.setPreferredSize(new Dimension(100, 20));
 		botaoDeAlterarQuantidade.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
+				janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
+				new JanelaDoCarrinho(novaVenda);
 			}
 		});
 
 		return botaoDeAlterarQuantidade;
+	}
+	private JButton criarBotaoDeRemover(JComboBox<String> barraDeSelecaoDeProduto, JTable tabelaDoCarrinho, JFrame janelaDoCarrinho) {
+		JButton botaoDeRemover = new JButton("Remover Produto");
+		botaoDeRemover.setPreferredSize(new Dimension(150, 25));
+		botaoDeRemover.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// remover produto do carrinho
+				//novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
+				janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
+				new JanelaDoCarrinho(novaVenda);
+			}
+		});
+
+		return botaoDeRemover;
 	}
 
 	private JButton criarBotaoDeCompra() {
