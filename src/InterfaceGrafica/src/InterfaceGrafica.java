@@ -26,6 +26,7 @@ public class InterfaceGrafica implements MouseListener{
 		JPanel painelPrincipal = criarPainelPrincipal();
 		JTextField caixaDeBusca = criarCaixaDeBusca();
 		JButton botaoDeBusca = criarBotaoDeBusca(caixaDeBusca);
+        JButton botaoDeOpcao = criarBotaoDeOpcao();
 		JButton botaoDoCarrinho = criarBotaoDoCarrinho();
 		JButton botaoDeCompra = criarBotaoDeConta();
 
@@ -38,11 +39,12 @@ public class InterfaceGrafica implements MouseListener{
 
         //totalLabel
         JLabel totalLabel = new JLabel();
-        totalLabel.setPreferredSize(new Dimension(150, 20));
+        totalLabel.setPreferredSize(new Dimension(85, 20));
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setEnabled(false);
         painelSuperior.add(totalLabel);
 
+        painelSuperior.add(botaoDeOpcao);
 		painelSuperior.add(botaoDoCarrinho);
 		painelSuperior.add(botaoDeCompra);
 
@@ -153,6 +155,19 @@ public class InterfaceGrafica implements MouseListener{
 
 		return botaoDeBusca;
 	}
+
+    private JButton criarBotaoDeOpcao() {
+        JButton botaoDeOpcao = new JButton( "Opções" );
+        botaoDeOpcao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new JanelaDeOpcao();
+
+            }
+        });
+
+        return botaoDeOpcao;
+    }
 
 	private JButton criarBotaoDoCarrinho() {
         JButton botaoDoCarrinho = new JButton( "Carrinho" );

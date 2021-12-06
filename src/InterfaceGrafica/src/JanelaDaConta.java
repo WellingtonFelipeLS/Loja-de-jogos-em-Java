@@ -208,14 +208,14 @@ public class JanelaDaConta {
             public void actionPerformed(ActionEvent e) {
                 // cadastrar
 				try{
-					if(ValidacaoDeParametros.valida(cpfField.getText()) && userNameTextField2.getText().equals("")){
+					//if(ValidacaoDeParametros.valida(cpfField.getText()) && userNameTextField2.getText().equals("")){
 						ControleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
 						janelaDaConta.remove(cadastroPanel);
 						janelaDaConta.add(loginPanel, BorderLayout.CENTER);
 						janelaDaConta.repaint();
 						janelaDaConta.revalidate();
 						cadastroButton.setText("Clique aqui para cadastrar-se");
-					}
+					//}
 					//Abrir janela de mensagem
 						
 				}catch(IOException ioe) {
@@ -225,6 +225,7 @@ public class JanelaDaConta {
 
             }
         });
+
         cadastroGBC.gridx = 0;
         cadastroGBC.gridwidth = 2;
         cadastroGBC.anchor = GridBagConstraints.CENTER;
