@@ -81,7 +81,7 @@ public class ControleDeCadastroDeClientes {
 		}
 	}
 
-	public static boolean procurarCliente(String CPF) throws IOException{
+	public static Cliente procurarCliente(String CPF) throws IOException, CadastroException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
 		
 		String cliente;
@@ -90,13 +90,16 @@ public class ControleDeCadastroDeClientes {
 		while((cliente = (String)ciomaster.ler()) != null){
 			informacoesCliente = cliente.split(separadorDeinformacoes);
 
-			if(CPF.equals(informacoesCliente[1]))
-				return Integer.valueOf(informacoesCliente[4]) == 1;
+			if(CPF.equals(informacoesCliente[1])) {
+				if(Integer.valueOf(informacoesCliente[4]) == 1)
+					return new Cliente(informacoesCliente[0], informacoesCliente[1], informacoesCliente[2]);
+				else
+					throw new CadastroException("Cliente excluido");
+			}
+				
 		}
-
 		ciomaster.fecharArquivos();
-
-		return false;
+		return null;
 	}
 
 	public static void excluirCliente(String CPF) throws IOException{

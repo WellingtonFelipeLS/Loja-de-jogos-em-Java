@@ -50,14 +50,10 @@ public final class Cliente implements Serializable{
 		return this.CPF.equals(cliente.getCPF());
 	}
 
-	public void imprimirInformacoes() {
+	public String imprimirInformacoes() {
 		if(eAnonimo)
-			System.out.println("Nome: " + nome);
-		else{
-			System.out.println("Nome: " +  nome);
-			System.out.println("CPF: " +  CPF);
-			System.out.println("CEP: " +  CEP);
-		}
-			//System.out.printf("Nome: %s - CPF: %s - CEP: %s\n", nome, CPF, CEP);
+			return "Nome: " + nome + '\n';
+		else
+			return "Nome: " +  nome + '\n' + "CPF: " +  CPF + '\n' + "CEP: " +  CEP + '\n';
 	}
 }

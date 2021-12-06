@@ -113,7 +113,6 @@ public class InterfaceGrafica implements MouseListener{
 
 	private JPanel criarPainelSuperior() {
         JPanel painelSuperior = new JPanel();
-        //topPanel.setPreferredSize(new Dimension(720, 40));
         painelSuperior.setLayout(new FlowLayout(FlowLayout.CENTER));
         painelSuperior.setBackground(Color.DARK_GRAY);
 
@@ -172,7 +171,7 @@ public class InterfaceGrafica implements MouseListener{
         contaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new JanelaDaConta(contaButton);
+                new JanelaDaConta(contaButton, novaVenda);
             }
         });
 
@@ -192,7 +191,6 @@ public class InterfaceGrafica implements MouseListener{
         
         BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource( "/InterfaceGrafica"
                 + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
-        //JLabel subtitleImageLabel = new JLabel(name);
 
         BufferedImage imageResized = new BufferedImage(130, 130, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = imageResized.createGraphics();

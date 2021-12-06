@@ -72,7 +72,7 @@ public class ControleDeVendas{
 		}
 	}
 
-	public static void listarVendasPorCliente(String CPF) throws IOException{
+	public static String listarVendasPorCliente(String CPF) throws IOException{
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
 		Collection<Venda> vendas = new ArrayList<Venda>();
@@ -80,19 +80,25 @@ public class ControleDeVendas{
 		Object venda;
 
 		try{
+
 			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass)) {
 				if(((Venda)venda).getCliente().getCPF().equals(CPF))
 					vendas.add((Venda)venda);
 			}
 
+			StringBuilder notasFiscais = new StringBuilder();
+
 			for(Venda v : vendas)
-				v.imprimirNotaFiscal();
-				
+				notasFiscais.append(v.imprimirNotaFiscal());
+			
+			return notasFiscais.toString();
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally{
 			registroDeVendas.fecharArquivos();
 		}
+
+		return null;
 	}
 
 	public static void main(String[] args) {

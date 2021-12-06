@@ -1,21 +1,30 @@
 package InterfaceGrafica.src;
 
 import javax.swing.*;
+
+import ExceptionsCustomizadas.CadastroException;
+import ManipulacaoBancoDeDados.ControleDeCadastroDeClientes;
+import ManipulacaoBancoDeDados.ControleDeVendas;
+import RegrasDeNegocio.Cliente;
+import RegrasDeNegocio.Venda;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.Objects;
 
 public class JanelaDaConta {
+	private Venda novaVenda;
 
-    JanelaDaConta(JButton botao) {
+    JanelaDaConta(JButton botao, Venda novaVenda) {
+		this.novaVenda = novaVenda;
+
         JFrame janelaDaConta = new JFrame("Conta");
         janelaDaConta.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         janelaDaConta.setBackground(Color.GRAY);
         janelaDaConta.setLayout(new BorderLayout());
         janelaDaConta.setSize( 600, 600 );
         janelaDaConta.setLocation(740,0);
-
-
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -62,42 +71,51 @@ public class JanelaDaConta {
         });
         topPanel.add(cadastroButton);
 
-        JLabel userNameLabel = new JLabel("Usuário:");
-        JTextField userNameTextField = new JTextField("Digite o nome do usuário");
-        userNameTextField.setColumns(15);
-        userNameTextField.addFocusListener(new FocusListener() {
+        JLabel userCPFLabel = new JLabel("CPF do usuário:");
+        JTextField userCPFTextField = new JTextField("Digite o CPF do usuário");
+        userCPFTextField.setColumns(15);
+        userCPFTextField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (Objects.equals(userNameTextField.getText(), "Digite o nome do usuário"))
-                    userNameTextField.setText("");
+                if (Objects.equals(userCPFTextField.getText(), "Digite o CPF do usuário"))
+				userCPFTextField.setText("");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (Objects.equals(userNameTextField.getText(), "")) {
-                    userNameTextField.setText("Digite o nome do usuário");
+                if (Objects.equals(userCPFTextField.getText(), "")) {
+                    userCPFTextField.setText("Digite o CPF do usuário");
                 }
             }
         });
 
-        loginPanel.add(userNameLabel, loginGBC);
+        loginPanel.add(userCPFLabel, loginGBC);
         loginGBC.gridx = 1;
-        loginPanel.add(userNameTextField, loginGBC);
+        loginPanel.add(userCPFTextField, loginGBC);
 
         JButton loginButton = new JButton("Login");
         loginGBC.gridwidth = 2;
         loginGBC.gridx = 1;
         loginGBC.gridy = 1;
         loginGBC.anchor = GridBagConstraints.LINE_END;
-        loginPanel.add(loginButton, loginGBC);
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Fazer login
-                botao.setText("Conta");
-                janelaDaConta.dispatchEvent(new WindowEvent(janelaDaConta, WindowEvent.WINDOW_CLOSING));
+				try{
+					novaVenda.setCliente(ControleDeCadastroDeClientes.procurarCliente(userCPFTextField.getText()));
+                	botao.setText("Conta");
+                	janelaDaConta.dispatchEvent(new WindowEvent(janelaDaConta, WindowEvent.WINDOW_CLOSING));
+				}catch(IOException ioe) {
+					ioe.printStackTrace();
+				}catch(CadastroException ce) {
+					System.out.println("Cliente excluido");
+				}
+				
             }
         });
+
+		loginPanel.add(loginButton, loginGBC);
 
         JButton visitanteButton = new JButton("Login de Visitante");
         loginGBC.gridx = 0;
@@ -106,6 +124,7 @@ public class JanelaDaConta {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+				novaVenda.setCliente(new Cliente());
                 janelaDaConta.dispatchEvent(new WindowEvent(janelaDaConta, WindowEvent.WINDOW_CLOSING));
             }
         });
@@ -132,16 +151,16 @@ public class JanelaDaConta {
         cadastroGBC.gridx = 1;
         cadastroPanel.add(userNameTextField2, cadastroGBC);
 
-        JLabel cpfLabel = new JLabel("Cpf:");
+        JLabel cpfLabel = new JLabel("CPF:");
         cadastroGBC.gridx = 0;
         cadastroGBC.gridy = 1;
         cadastroPanel.add(cpfLabel, cadastroGBC);
 
-        JTextField cpfField = new JTextField("Digite seu cpf", 15);
+        JTextField cpfField = new JTextField("Digite seu CPF", 15);
         cpfField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (Objects.equals(cpfField.getText(), "Digite seu cpf")) {
+                if (Objects.equals(cpfField.getText(), "Digite seu CPF")) {
                     cpfField.setText("");
                 }
             }
@@ -149,23 +168,25 @@ public class JanelaDaConta {
             @Override
             public void focusLost(FocusEvent e) {
                 if (Objects.equals(cpfField.getText(), "")) {
-                    cpfField.setText("Digite seu cpf");
+                    cpfField.setText("Digite seu CPF");
                 }
+
+				//Validar CPF aqui
             }
         });
         cadastroGBC.gridx = 1;
         cadastroPanel.add(cpfField, cadastroGBC);
 
-        JLabel cepLabel = new JLabel("Cep:");
+        JLabel cepLabel = new JLabel("CEP:");
         cadastroGBC.gridx = 0;
         cadastroGBC.gridy = 2;
         cadastroPanel.add(cepLabel, cadastroGBC);
 
-        JTextField cepField = new JTextField("Digite seu cep", 15);
+        JTextField cepField = new JTextField("Digite seu CEP", 15);
         cepField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (Objects.equals(cepField.getText(), "Digite seu cep")) {
+                if (Objects.equals(cepField.getText(), "Digite seu CEP")) {
                     cepField.setText("");
                 }
             }
@@ -173,8 +194,10 @@ public class JanelaDaConta {
             @Override
             public void focusLost(FocusEvent e) {
                 if (Objects.equals(cepField.getText(), "")) {
-                    cepField.setText("Digite seu cep");
+                    cepField.setText("Digite seu CEP");
                 }
+
+				//Validar CEP aqui
             }
         });
         cadastroGBC.gridx = 1;
@@ -185,11 +208,17 @@ public class JanelaDaConta {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // cadastrar
-                janelaDaConta.remove(cadastroPanel);
-                janelaDaConta.add(loginPanel, BorderLayout.CENTER);
-                janelaDaConta.repaint();
-                janelaDaConta.revalidate();
-                cadastroButton.setText("Clique aqui para cadastrar-se");
+				try{
+					ControleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
+                	janelaDaConta.remove(cadastroPanel);
+                	janelaDaConta.add(loginPanel, BorderLayout.CENTER);
+                	janelaDaConta.repaint();
+                	janelaDaConta.revalidate();
+                	cadastroButton.setText("Clique aqui para cadastrar-se");
+				}catch(IOException ioe) {
+					ioe.printStackTrace();
+				}
+				
 
             }
         });
@@ -223,8 +252,8 @@ public class JanelaDaConta {
             superiorContaPanel.setBackground(Color.DARK_GRAY);
             janelaDaConta2.add(superiorContaPanel, BorderLayout.NORTH);
 
-            JTextPane historicoPane = new JTextPane();
-            JScrollPane scrollPane = new JScrollPane(historicoPane);
+            JTextArea historicoTextArea = new JTextArea();
+            JScrollPane scrollPane = new JScrollPane(historicoTextArea);
             scrollPane.setPreferredSize(new Dimension(600, 200));
             scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -235,6 +264,12 @@ public class JanelaDaConta {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     //exibir histórico de compra
+					try{
+						historicoTextArea.setText(ControleDeVendas.listarVendasPorCliente(novaVenda.getCliente().getCPF()));
+					}catch(IOException ioe) {
+						ioe.printStackTrace();
+					}
+					
                 }
             });
             superiorContaPanel.add(historicoCompraButton);
@@ -244,6 +279,7 @@ public class JanelaDaConta {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // logout na conta
+					novaVenda.setCliente(new Cliente());
                     botao.setText("Login");
                     janelaDaConta2.dispatchEvent(new WindowEvent(janelaDaConta, WindowEvent.WINDOW_CLOSING));
                 }
@@ -253,10 +289,6 @@ public class JanelaDaConta {
 
             janelaDaConta2.setVisible(true);
         }
-
-
-
-
 
 
     }

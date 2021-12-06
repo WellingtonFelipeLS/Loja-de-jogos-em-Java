@@ -42,7 +42,6 @@ public class Venda implements Serializable{
 	}
 
 	public void limparDadosDaVenda() {
-		this.cliente = new Cliente();
 		limparCarrinho();
 		this.idVenda = IdGenerator.gerarId();
 	}
@@ -106,47 +105,56 @@ public class Venda implements Serializable{
 		carrinho.remove(nomeDoProduto);
 	}
 
-	private void imprimirSeparadorDeNotaFiscal(int n) {
+	private String imprimirSeparadorDeNotaFiscal(int n) {
+		StringBuilder separador = new StringBuilder(n);
 		for(int i = 0; i < n; i++)
-			System.out.print("=");
-		System.out.println();
+			separador.append('=');
+		separador.append('\n');
+
+		return separador.toString();
 	}
 
-	private void imprimirSeparadorDeSecao(int n) {
+	private String imprimirSeparadorDeSecao(int n) {
+		StringBuilder separador = new StringBuilder(n);
 		for(int i = 0; i < n; i++)
-			System.out.print("-");
-		System.out.println();
+			separador.append('-');
+		separador.append('\n');
+
+		return separador.toString();
 	}
 
-	public void imprimirNotaFiscal() throws IOException{
+	public String imprimirNotaFiscal() throws IOException{
 		int n = 60;
-		imprimirSeparadorDeNotaFiscal(n);
+		StringBuilder notaFiscal = new StringBuilder();
+		notaFiscal.append(imprimirSeparadorDeNotaFiscal(n));
 
-		cliente.imprimirInformacoes();
+		notaFiscal.append(cliente.imprimirInformacoes());
 
-		System.out.println("Data: " + dataDaCompra);
+		notaFiscal.append("Data: " + dataDaCompra + '\n');
 
-		System.out.println("ID: " + idVenda);
+		notaFiscal.append("ID: " + idVenda + '\n');
 
-		imprimirSeparadorDeSecao(n);
+		notaFiscal.append(imprimirSeparadorDeSecao(n));
 
-		System.out.printf("%-20s %5s %10s %10s\n", "Nome", "Qnt.", "Preco Unit.", "Preco Tot.");
+		notaFiscal.append(String.format("%-20s %5s %10s %10s\n", "Nome", "Qnt.", "Preco Unit.", "Preco Tot."));
 
 		int qntTotal = 0;
 		float precoTotal = 0f;
 		for(String nomeDoProduto : carrinho.keySet()) {
 			int qntVendidaDoProduto = carrinho.get(nomeDoProduto).intValue();
 			float precoUnitario = ControleDeEstoque.procurarProdutoNoEstoque(nomeDoProduto).getPreco();
-			System.out.printf("%-20s %5d %10.2f %10.2f\n", nomeDoProduto, qntVendidaDoProduto, precoUnitario, precoUnitario * qntVendidaDoProduto);
+			notaFiscal.append(String.format("%-20s %5d %10.2f %10.2f\n", nomeDoProduto, qntVendidaDoProduto, precoUnitario, precoUnitario * qntVendidaDoProduto));
 
 			qntTotal += qntVendidaDoProduto;
 			precoTotal += precoUnitario * qntVendidaDoProduto;
 		}
 
-		imprimirSeparadorDeSecao(n);
+		notaFiscal.append(imprimirSeparadorDeSecao(n));
 
-		System.out.printf("%-20s %5d %10s %10.2f\n", "Total:", qntTotal, " ", precoTotal);
+		notaFiscal.append(String.format("%-20s %5d %10s %10.2f\n", "Total:", qntTotal, " ", precoTotal));
 
-		imprimirSeparadorDeNotaFiscal(n);
+		notaFiscal.append(imprimirSeparadorDeNotaFiscal(n));
+
+		return notaFiscal.toString();
 	}
 }
