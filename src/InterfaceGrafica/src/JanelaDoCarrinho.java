@@ -17,7 +17,7 @@ import RegrasDeNegocio.Produtos.Produto;
 
 public class JanelaDoCarrinho{
 
-	private Venda novaVenda;   
+	private Venda novaVenda;
 
 	public JanelaDoCarrinho(Venda novaVenda) {
 		this.novaVenda = novaVenda;
@@ -97,20 +97,30 @@ public class JanelaDoCarrinho{
 		JComboBox<String> barraDeSelecaoDeProduto = criarBarraDeSelecaoDeProduto(produtoQuantidadeField, legendas);
 		painelSuperiorCentral.add(barraDeSelecaoDeProduto);
 
-		JButton botaoDeAlterarQuantidade = criarBotaoDeAlterarQuantidade(barraDeSelecaoDeProduto, produtoQuantidadeField, tabelaDoCarrinho, janelaDoCarrinho);
+		gbc.gridy = 3;
+		gbc.gridx = 0;
+		gbc.gridwidth = 2;
+		gbc.anchor = GridBagConstraints.CENTER;
+		JLabel mensagemLabel = new JLabel();
+		mensagemLabel.setForeground(Color.RED);
+		painelCentralDireito.add(mensagemLabel, gbc);
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		JButton botaoDeAlterarQuantidade = criarBotaoDeAlterarQuantidade(barraDeSelecaoDeProduto, produtoQuantidadeField, tabelaDoCarrinho, janelaDoCarrinho, mensagemLabel);
 		gbc.gridy = 1;
 		gbc.gridx = 2;
 		painelCentralDireito.add(botaoDeAlterarQuantidade, gbc);
 		JButton botaoDeRemover = criarBotaoDeRemover(barraDeSelecaoDeProduto, tabelaDoCarrinho, janelaDoCarrinho);
 		painelSuperiorCentral.add(botaoDeRemover);
 
-		JButton botaoDeCompra = criarBotaoDeCompra();
+		JButton botaoDeCompra = criarBotaoDeCompra(mensagemLabel, janelaDoCarrinho);
 
 		JLabel space1 = new JLabel(" ");
 		gbc.ipady = 80;
 		gbc.gridy = 2;
 		painelCentralDireito.add(space1, gbc);
 
+
+		gbc.gridwidth = 1;
 		gbc.ipady = 0;
 		gbc.gridx = 2;
 		gbc.gridy = 3;
@@ -239,7 +249,7 @@ public class JanelaDoCarrinho{
 		return barraDeSelecaoDeProduto;
 	}
 
-	private JButton criarBotaoDeAlterarQuantidade(JComboBox<String> barraDeSelecaoDeProduto, JTextField produtoQuantidadeField, JTable tabelaDoCarrinho, JFrame janelaDoCarrinho) {
+	private JButton criarBotaoDeAlterarQuantidade(JComboBox<String> barraDeSelecaoDeProduto, JTextField produtoQuantidadeField, JTable tabelaDoCarrinho, JFrame janelaDoCarrinho, JLabel mensagemLabel) {
 		JButton botaoDeAlterarQuantidade = new JButton("Alterar");
 		botaoDeAlterarQuantidade.setPreferredSize(new Dimension(100, 20));
 		botaoDeAlterarQuantidade.addActionListener(new ActionListener() {
@@ -248,18 +258,23 @@ public class JanelaDoCarrinho{
 				try{
 					Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(barraDeSelecaoDeProduto.getSelectedItem().toString());
 					int qntASerComprada = Integer.valueOf(produtoQuantidadeField.getText());
-					if(produto.getQntNoEstoque() >= qntASerComprada){
-						novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
-						janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
-						new JanelaDoCarrinho(novaVenda);
+					if (qntASerComprada > 0) {
+						if(produto.getQntNoEstoque() >= qntASerComprada){
+							novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
+							janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
+							new JanelaDoCarrinho(novaVenda);
+						}
+						else {
+							mensagemLabel.setText("Quantidade Inválida");
+						}
+					} else {
+						mensagemLabel.setText("Quantidade Inválida");
 					}
-				else {
-					System.out.println("Quantidade Inválida");
-				}
+
 				}catch(IOException ioe) {
 					System.out.println("FALHA NA COMUNICAÇÃO COM O BANCO DE DADOS");
 				}
-				
+
 			}
 		});
 
@@ -281,7 +296,7 @@ public class JanelaDoCarrinho{
 		return botaoDeRemover;
 	}
 
-	private JButton criarBotaoDeCompra() {
+	private JButton criarBotaoDeCompra(JLabel menssagemLabel, JFrame janelaDoCarrinho) {
 		JButton botaoDeCompra = new JButton("Comprar");
 		botaoDeCompra.setPreferredSize(new Dimension(100, 20));
 		botaoDeCompra.addActionListener(new ActionListener(){
@@ -289,12 +304,22 @@ public class JanelaDoCarrinho{
 			public void actionPerformed(ActionEvent e) {
 				try{
 					if(novaVenda.getCarrinho().isEmpty()) {
-						System.out.println("Carrinho vazio");
+						menssagemLabel.setText("Carrinho vazio");
 					}else {
 						ControleDeVendas.cadastrarVenda(novaVenda);
 						ControleDeVendas.listarVendas();
 						novaVenda.limparDadosDaVenda();
 						System.out.println("Compra realizada");
+						JFrame compraRealizadaFrame = new JFrame("Menssagem");
+						compraRealizadaFrame.setBackground(Color.LIGHT_GRAY);
+						compraRealizadaFrame.setBounds(700, 200, 320, 100);
+						JLabel compraRealizadaLabel = new JLabel("Compra realizada com sucesso");
+						compraRealizadaLabel.setForeground(Color.GREEN);
+						compraRealizadaLabel.setFont(new Font("SansSerif", Font.PLAIN, 20));
+						compraRealizadaFrame.add(compraRealizadaLabel);
+						compraRealizadaFrame.setVisible(true);
+						janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
+
 					}
 				}
 				catch(IOException ioe) {

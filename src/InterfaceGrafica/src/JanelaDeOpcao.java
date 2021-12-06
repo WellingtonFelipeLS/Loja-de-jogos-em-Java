@@ -745,6 +745,131 @@ public class JanelaDeOpcao {
         painelCadastro.setLayout(new FlowLayout(FlowLayout.CENTER));
         janelaDeOpcao.add(painelCadastro, BorderLayout.CENTER);
 
+        JButton removerProdutoButton = new JButton("Descadastrar produto");
+        painelCadastro.add(removerProdutoButton);
+        removerProdutoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                painelDeVisualizacao.removeAll();
+                painelDeVisualizacao.repaint();
+                painelDeVisualizacao.revalidate();
+
+                JPanel painelRemoverProduto = new JPanel();
+                painelRemoverProduto.setLayout(new GridBagLayout());
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                gbc.anchor = GridBagConstraints.LINE_START;
+                gbc.insets = new Insets(5,5,5,5);
+                painelDeVisualizacao.add(painelRemoverProduto, BorderLayout.CENTER);
+
+                JLabel nomeProdutoLabel = new JLabel("Nome:");
+                painelRemoverProduto.add(nomeProdutoLabel, gbc);
+
+                gbc.anchor = GridBagConstraints.CENTER;
+                gbc.gridy = 1;
+                gbc.gridwidth = 3;
+                JLabel mensagemLabel = new JLabel();
+                painelRemoverProduto.add(mensagemLabel, gbc);
+
+                gbc.gridy = 0;
+                gbc.gridwidth = 1;
+                gbc.anchor = GridBagConstraints.LINE_START;
+                gbc.gridx = 1;
+                JTextField nomeProdutoField = new JTextField("Digite o nome do produto", 20);
+                painelRemoverProduto.add(nomeProdutoField, gbc);
+                nomeProdutoField.addFocusListener(new FocusListener() {
+                    @Override
+                    public void focusGained(FocusEvent e) {
+                        if (Objects.equals(nomeProdutoField.getText(), "Digite o nome do produto")) {
+                            nomeProdutoField.setText("");
+                        }
+                    }
+
+                    @Override
+                    public void focusLost(FocusEvent e) {
+                        if (Objects.equals(nomeProdutoField.getText(), "")) {
+                            nomeProdutoField.setText("Digite o nome do produto");
+                        }
+                    }
+                });
+
+                gbc.gridx = 2;
+                JButton descadastrarButton = new JButton("Descadastrar");
+                painelRemoverProduto.add(descadastrarButton, gbc);
+                descadastrarButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        //verifica se nomeProdutoField.getText() está cadastrado e descadastra
+                        //if não cadastrado -> mensagemLabel.setText("produto não cadastrado")
+                        //if descadastrar - > mensagemLabel.setText("produto descadastrado") e nomeProdutoField.setText("")
+                    }
+                });
+            }
+        });
+        JButton removerClienteButton = new JButton("Descadastrar cliente");
+        painelCadastro.add(removerClienteButton);
+        removerClienteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                painelDeVisualizacao.removeAll();
+                painelDeVisualizacao.repaint();
+                painelDeVisualizacao.revalidate();
+
+                JPanel painelRemoverCliente = new JPanel();
+                painelRemoverCliente.setLayout(new GridBagLayout());
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                gbc.anchor = GridBagConstraints.LINE_START;
+                gbc.insets = new Insets(5,5,5,5);
+                painelDeVisualizacao.add(painelRemoverCliente, BorderLayout.CENTER);
+
+                JLabel nomeProdutoLabel = new JLabel("Cpf:");
+                painelRemoverCliente.add(nomeProdutoLabel, gbc);
+
+                gbc.anchor = GridBagConstraints.CENTER;
+                gbc.gridy = 1;
+                gbc.gridwidth = 3;
+                JLabel mensagemLabel = new JLabel("");
+                painelRemoverCliente.add(mensagemLabel, gbc);
+
+                gbc.gridy = 0;
+                gbc.gridwidth = 1;
+                gbc.anchor = GridBagConstraints.LINE_START;
+                gbc.gridx = 1;
+                JTextField nomeProdutoField = new JTextField("Digite o cpf do cliente", 20);
+                painelRemoverCliente.add(nomeProdutoField, gbc);
+                nomeProdutoField.addFocusListener(new FocusListener() {
+                    @Override
+                    public void focusGained(FocusEvent e) {
+                        if (Objects.equals(nomeProdutoField.getText(), "Digite o cpf do cliente")) {
+                            nomeProdutoField.setText("");
+                        }
+                    }
+
+                    @Override
+                    public void focusLost(FocusEvent e) {
+                        if (Objects.equals(nomeProdutoField.getText(), "")) {
+                            nomeProdutoField.setText("Digite o cpf do cliente");
+                        }
+                    }
+                });
+
+                gbc.gridx = 2;
+                JButton descadastrarButton = new JButton("Descadastrar");
+                painelRemoverCliente.add(descadastrarButton, gbc);
+                descadastrarButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        //verifica se nomeProdutoField.getText() está cadastrado e descadastra
+                        //if não cadastrado -> mensagemLabel.setText("produto não cadastrado")
+                        //if descadastrar - > mensagemLabel.setText("produto descadastrado") e nomeProdutoField.setText("")
+                    }
+                });
+            }
+        });
+
         JButton botaoDeListarClientes = new JButton("Listar clientes cadastrados");
         painelCadastro.add(botaoDeListarClientes);
         botaoDeListarClientes.addActionListener(new ActionListener() {
