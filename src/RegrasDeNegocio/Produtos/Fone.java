@@ -6,9 +6,12 @@ public class Fone extends Periferico {
 	private String sensibilidade;
 	private boolean temMicrofone;
 
-	public Fone(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma, boolean temRGB, boolean temBluetooth,
+
+	public Fone() {}
+	
+	public Fone(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma, boolean temBluetooth,
 	 String sensibilidade, boolean temMicrofone) {
-		super(nome, preco, qntNoEstoque, descricao, plataforma, temRGB, temBluetooth);
+		super(nome, preco, qntNoEstoque, descricao, plataforma, temBluetooth);
 		this.sensibilidade = sensibilidade;
 		this.temMicrofone = temMicrofone;
 	}
@@ -21,6 +24,14 @@ public class Fone extends Periferico {
 			return true;
 		
 		return false;
+	}
+
+	public void setSensibilidade(String sensibilidade) {
+		this.sensibilidade = sensibilidade;
+	}
+
+	public void setTemMicrofone(boolean temMicrofone) {
+		this.temMicrofone = temMicrofone;
 	}
 
 	public String getSensibilidade() {

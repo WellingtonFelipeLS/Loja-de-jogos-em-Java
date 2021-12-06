@@ -51,11 +51,11 @@ public class JanelaDaConta {
         cadastroGBC.anchor = GridBagConstraints.FIRST_LINE_START;
         cadastroPanel.setBackground(Color.GRAY);
 
-        JButton cadastroButton = new JButton("Clique aqui para cadastrar-se");
+        JButton cadastroButton = new JButton("Clique aqui para efetuar o cadastro");
         cadastroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (cadastroButton.getText() == "Clique aqui para cadastrar-se") {
+                if (cadastroButton.getText() == "Clique aqui para efetuar o cadastro") {
                     janelaDaConta.remove(loginPanel);
                     janelaDaConta.add(cadastroPanel, BorderLayout.CENTER);
                     janelaDaConta.repaint();
@@ -66,7 +66,7 @@ public class JanelaDaConta {
                     janelaDaConta.add(loginPanel, BorderLayout.CENTER);
                     janelaDaConta.repaint();
                     janelaDaConta.revalidate();
-                    cadastroButton.setText("Clique aqui para cadastrar-se");
+                    cadastroButton.setText("Clique aqui para efetuar o cadastro");
                 }
             }
         });
@@ -104,9 +104,16 @@ public class JanelaDaConta {
             public void actionPerformed(ActionEvent e) {
                 //Fazer login
 				try{
-					novaVenda.setCliente(ControleDeCadastroDeClientes.procurarCliente(userCPFTextField.getText()));
-                	botao.setText("Conta");
-                	janelaDaConta.dispatchEvent(new WindowEvent(janelaDaConta, WindowEvent.WINDOW_CLOSING));
+					if(ValidacaoDeParametros.valida(userCPFTextField.getText())) {
+						Cliente cliente = ControleDeCadastroDeClientes.procurarCliente(userCPFTextField.getText());
+						if(cliente != null) {
+							novaVenda.setCliente(cliente);
+							botao.setText("Conta");
+							janelaDaConta.dispatchEvent(new WindowEvent(janelaDaConta, WindowEvent.WINDOW_CLOSING));
+						}else
+							System.out.println("Cliente não cadastrado");
+					}else
+						System.out.println("CPF inválido");
 				}catch(IOException ioe) {
 					ioe.printStackTrace();
 				}catch(CadastroException ce) {
@@ -122,7 +129,7 @@ public class JanelaDaConta {
         loginGBC.gridx = 0;
         loginGBC.anchor = GridBagConstraints.LINE_START;
         loginPanel.add(visitanteButton, loginGBC);
-        loginButton.addActionListener(new ActionListener() {
+        visitanteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 				novaVenda.setCliente(new Cliente());
@@ -208,14 +215,14 @@ public class JanelaDaConta {
             public void actionPerformed(ActionEvent e) {
                 // cadastrar
 				try{
-					//if(ValidacaoDeParametros.valida(cpfField.getText()) && userNameTextField2.getText().equals("")){
+					if(ValidacaoDeParametros.valida(cpfField.getText()) && userNameTextField2.getText().equals("")){
 						ControleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
 						janelaDaConta.remove(cadastroPanel);
 						janelaDaConta.add(loginPanel, BorderLayout.CENTER);
 						janelaDaConta.repaint();
 						janelaDaConta.revalidate();
 						cadastroButton.setText("Clique aqui para cadastrar-se");
-					//}
+					}
 					//Abrir janela de mensagem
 						
 				}catch(IOException ioe) {
@@ -293,8 +300,6 @@ public class JanelaDaConta {
 
             janelaDaConta2.setVisible(true);
         }
-
-
     }
 
     public static void main(String[] args) {

@@ -5,8 +5,10 @@ import java.util.Set;
 public class TecladoMecanico extends Periferico{
 	private String tipoDeSwitch;
 
-	public TecladoMecanico(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma, boolean temRGB, boolean temBluetooth, String tipoDeSwitch) {
-		super(nome, preco, qntNoEstoque, descricao, plataforma, temRGB, temBluetooth);
+	public TecladoMecanico() {}
+	
+	public TecladoMecanico(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma, boolean temBluetooth, String tipoDeSwitch) {
+		super(nome, preco, qntNoEstoque, descricao, plataforma, temBluetooth);
 		this.tipoDeSwitch = tipoDeSwitch;
 	}
 
@@ -18,6 +20,10 @@ public class TecladoMecanico extends Periferico{
 			return true;
 		
 		return false;
+	}
+
+	public void setTipoDeSwitch(String tipoDeSwitch) {
+		this.tipoDeSwitch = tipoDeSwitch;
 	}
 
 	public String getTipoDeSwitch() {

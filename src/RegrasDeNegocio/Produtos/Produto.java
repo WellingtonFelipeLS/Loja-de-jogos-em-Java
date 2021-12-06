@@ -15,6 +15,8 @@ public abstract class Produto implements Serializable{
 	private boolean cadastroAtivo;
 	private int qntNoEstoque;
 
+	public Produto(){}
+
 	public Produto(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma) {
 		this.nome = nome;
 		setPreco(preco);
@@ -32,9 +34,20 @@ public abstract class Produto implements Serializable{
         return false;
     }
 
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	public void setPreco(float preco) {
-		//Exception para valor negativo
 		this.preco = preco;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public void setPlataforma(Set<String> plataforma) {
+		this.plataforma = plataforma;
 	}
 
 	public void setCadastroAtivo(boolean cadastroAtivo) {
@@ -42,7 +55,6 @@ public abstract class Produto implements Serializable{
 	}
 
 	public void setQntNoEstoque(int qntNoEstoque) {
-		//Exception para valor negativo
 		this.qntNoEstoque = qntNoEstoque;
 	}
 

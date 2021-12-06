@@ -314,24 +314,30 @@ public class ControleDeEstoque {
 		prototipoListarProdutos(true);
 	}
 
-	public static void listarProdutosCadastrados() throws IOException {
+	public static String listarProdutosCadastrados() throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
-
-		Collection<String> nomeProdutos = new ArrayList<String>();
 		
 		Object produto;
+		StringBuilder produtosCadastrados = new StringBuilder();
+
 		try{
-			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass))
-				nomeProdutos.add(((Produto) produto).getNome());
-		
-			for(String s : nomeProdutos)
-				System.out.println(s);
+			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
+				produtosCadastrados.append(String.format("Nome: %s/ Quantidade No Estoque: %d/ Preço: %.2f\n",
+															((Produto) produto).getNome(),
+															((Produto) produto).getQntNoEstoque(),
+															((Produto) produto).getPreco()));
+			}
+
+			return produtosCadastrados.toString();
+				
 
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally {
 			estoque.fecharArquivos();
 		}
+
+		return null;
 	}
 
 	public static void listarProdutosPorCategoria(String categoria) throws IOException {
@@ -366,9 +372,9 @@ public class ControleDeEstoque {
 			cadastrarProdutoNoEstoque(new Jogo("God Of War", 50f, 100, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
 			cadastrarProdutoNoEstoque(new Console("PS5", 4000f, 100, "É um PS5", Set.of("PS5"), "1TB"));
 			cadastrarProdutoNoEstoque(new Console("XBOX Series X", 3500f, 150, "É um XBOX", Set.of("XBOX Series X"), "2TB"));
-			cadastrarProdutoNoEstoque(new TecladoMecanico("Redragon Kumara", 219.9f, 35, "Teclado mecânico gamer", Set.of("PC"), true, false, "Blue"));
-			cadastrarProdutoNoEstoque(new Mouse("Razer Viper Mini", 400f, 20, "Mouse bonito", Set.of("PC"), true, false, String.valueOf(8500)));
-			cadastrarProdutoNoEstoque(new Fone("Warrior Kaden", 150f, 250, "Fone confortável", Set.of("PC"), true, false, "108DB", true));
+			cadastrarProdutoNoEstoque(new TecladoMecanico("Redragon Kumara", 219.9f, 35, "Teclado mecânico gamer", Set.of("PC"), false, "Blue"));
+			cadastrarProdutoNoEstoque(new Mouse("Razer Viper Mini", 400f, 20, "Mouse bonito", Set.of("PC"), false, String.valueOf(8500)));
+			cadastrarProdutoNoEstoque(new Fone("Warrior Kaden", 150f, 250, "Fone confortável", Set.of("PC"), false, "108DB", true));
 			cadastrarProdutoNoEstoque(new Jogo("Xcom", 45f, 100, "Jogo de estratégia futurista", Set.of("PS3", "XBOX 360", "PC"), Set.of("FPS", "Estratégia")));
 			cadastrarProdutoNoEstoque(new Jogo("Xcom 2", 60f, 100, "Continuação do Xcom", Set.of("PS4", "XBOX ONE", "PC"), Set.of("FPS", "Estratégia")));
 			cadastrarProdutoNoEstoque(new Jogo("Red Dead Redemption", 30f, 100, "Jogo de velho oeste", Set.of("PS3", "XBOX 360", "PC"), Set.of("Velho Oeste", "Acao", "Aventura")));

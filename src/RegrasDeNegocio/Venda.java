@@ -86,14 +86,6 @@ public class Venda implements Serializable{
 		carrinho.replace(nomeDoProduto, qnt);
 	}
 
-	public void adicionarUnidade(String nomeDoProduto) {
-		carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) + 1);
-	}
-
-	public void retirarUnidade(String nomeDoProduto) {
-		carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) - 1);
-	}
-
 	public void adicionarProdutoAoCarrinho(String nomeDoProduto, int qnt) {
 		if(carrinho.keySet().contains(nomeDoProduto))
 			carrinho.replace(nomeDoProduto, carrinho.get(nomeDoProduto) + qnt);

@@ -245,22 +245,34 @@ public class JanelaDoCarrinho{
 		botaoDeAlterarQuantidade.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
-				janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
-				new JanelaDoCarrinho(novaVenda);
+				try{
+					Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(barraDeSelecaoDeProduto.getSelectedItem().toString());
+					int qntASerComprada = Integer.valueOf(produtoQuantidadeField.getText());
+					if(produto.getQntNoEstoque() >= qntASerComprada){
+						novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
+						janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
+						new JanelaDoCarrinho(novaVenda);
+					}
+				else {
+					System.out.println("Quantidade Inválida");
+				}
+				}catch(IOException ioe) {
+					System.out.println("FALHA NA COMUNICAÇÃO COM O BANCO DE DADOS");
+				}
+				
 			}
 		});
 
 		return botaoDeAlterarQuantidade;
 	}
+
 	private JButton criarBotaoDeRemover(JComboBox<String> barraDeSelecaoDeProduto, JTable tabelaDoCarrinho, JFrame janelaDoCarrinho) {
 		JButton botaoDeRemover = new JButton("Remover Produto");
 		botaoDeRemover.setPreferredSize(new Dimension(150, 25));
 		botaoDeRemover.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// remover produto do carrinho
-				//novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
+				novaVenda.retirarProdutoDoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString());
 				janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
 				new JanelaDoCarrinho(novaVenda);
 			}
@@ -276,9 +288,14 @@ public class JanelaDoCarrinho{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try{
-					ControleDeVendas.cadastrarVenda(novaVenda);
-					ControleDeVendas.listarVendas();
-					novaVenda.limparDadosDaVenda();
+					if(novaVenda.getCarrinho().isEmpty()) {
+						System.out.println("Carrinho vazio");
+					}else {
+						ControleDeVendas.cadastrarVenda(novaVenda);
+						ControleDeVendas.listarVendas();
+						novaVenda.limparDadosDaVenda();
+						System.out.println("Compra realizada");
+					}
 				}
 				catch(IOException ioe) {
 					ioe.printStackTrace();

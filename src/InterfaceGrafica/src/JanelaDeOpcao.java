@@ -1,9 +1,16 @@
 package InterfaceGrafica.src;
 
 import javax.swing.*;
+
+import ManipulacaoBancoDeDados.ControleDeEstoque;
+import RegrasDeNegocio.Produtos.EnumCategoriaDeProdutos;
+import RegrasDeNegocio.Produtos.*;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.Set;
 
 public class JanelaDeOpcao {
 
@@ -40,7 +47,7 @@ public class JanelaDeOpcao {
                 painelDeVisualizacao.add(painelSuperiorCadastrarProduto, BorderLayout.NORTH);
 
 
-                String[] listaTipoProduto = {"Jogo", "Console", "Fone", "Mouse", "Teclado Mecânico"};
+                String[] listaTipoProduto = EnumCategoriaDeProdutos.getCategoriasDeProduto();
                 JComboBox cadastrarProdutoBox = new JComboBox(listaTipoProduto);
                 painelSuperiorCadastrarProduto.add(cadastrarProdutoBox);
                 cadastrarProdutoBox.addActionListener(new ActionListener() {
@@ -149,45 +156,7 @@ public class JanelaDeOpcao {
                         });
                         centralCadastrarProdutoGBC.gridx += 1;
                         painelCentralCadastrarProduto.add(estoqueProdutoField, centralCadastrarProdutoGBC);
-/*
-                        JLabel idLabel = new JLabel("ID:");
-                        centralCadastrarProdutoGBC.gridx = 0;
-                        centralCadastrarProdutoGBC.gridy += 1;
-                        painelCentralCadastrarProduto.add(idLabel, centralCadastrarProdutoGBC);
 
-                        JTextField idField = new JTextField("Clique no botão ao lado para gerar ID", 27);
-                        idField.addFocusListener(new FocusListener() {
-                            @Override
-                            public void focusGained(FocusEvent e) {
-                                if (Objects.equals(idField.getText(), "Clique no botão ao lado para gerar ID")) {
-                                    idField.setText("");
-                                }
-                            }
-
-                            @Override
-                            public void focusLost(FocusEvent e) {
-                                if (Objects.equals(idField.getText(), "")) {
-                                    idField.setText("Clique no botão ao lado para gerar ID");
-                                }
-                            }
-                        });
-                        centralCadastrarProdutoGBC.gridx = 1;
-
-                        centralCadastrarProdutoGBC.gridwidth = 2;
-                        painelCentralCadastrarProduto.add(idField, centralCadastrarProdutoGBC);
-
-                        JButton botaoGerarID = new JButton("Gerar ID");
-                        botaoGerarID.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                // Código de gerar ID dentro do settext
-                                //idField.setText();
-                            }
-                        });
-                        centralCadastrarProdutoGBC.gridx += 2;
-                        centralCadastrarProdutoGBC.gridwidth = 1;
-                        painelCentralCadastrarProduto.add(botaoGerarID, centralCadastrarProdutoGBC);
-*/
                         JLabel descricaoLabel = new JLabel("Descrição:");
                         centralCadastrarProdutoGBC.gridx = 0;
                         centralCadastrarProdutoGBC.gridy += 1;
@@ -301,9 +270,22 @@ public class JanelaDeOpcao {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     //Cadastrar
-                                    painelDeVisualizacao.removeAll();
-                                    painelDeVisualizacao.repaint();
-                                    painelDeVisualizacao.revalidate();
+									try{
+										String nome = nomeProdutoField.getText();
+										float preco = Float.parseFloat(precoField.getText());
+										int qntNoEstoque = Integer.parseInt(estoqueProdutoField.getText());
+										String descricao = descricaoField.getText();
+										Set<String> plataformas = Set.of(plataformaField.getText().split(","));
+										Set<String> generos = Set.of(generosJogoField.getText().split(","));
+
+										ControleDeEstoque.cadastrarProdutoNoEstoque(new Jogo(nome, preco, qntNoEstoque, descricao, plataformas, generos));
+										painelDeVisualizacao.removeAll();
+										painelDeVisualizacao.repaint();
+										painelDeVisualizacao.revalidate();
+									}catch(IOException ioe) {
+										System.out.println("Falha na cominucação com o banco de dados");
+									}
+									
                                 }
                             });
                             InferiorCadastrarJogoGBC.gridy += 1;
@@ -348,9 +330,21 @@ public class JanelaDeOpcao {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     // cadastrar
-                                    painelDeVisualizacao.removeAll();
-                                    painelDeVisualizacao.repaint();
-                                    painelDeVisualizacao.revalidate();
+									try{
+										String nome = nomeProdutoField.getText();
+										float preco = Float.parseFloat(precoField.getText());
+										int qntNoEstoque = Integer.parseInt(estoqueProdutoField.getText());
+										String descricao = descricaoField.getText();
+										Set<String> plataformas = Set.of(plataformaField.getText().split(","));
+										String memoria = memoriaField.getText();
+
+										ControleDeEstoque.cadastrarProdutoNoEstoque(new Console(nome, preco, qntNoEstoque, descricao, plataformas, memoria));
+                                    	painelDeVisualizacao.removeAll();
+                                 		painelDeVisualizacao.repaint();
+                                    	painelDeVisualizacao.revalidate();
+									}catch(IOException ioe) {
+										System.out.println("FALHA");
+									}
                                 }
                             });
 
@@ -399,12 +393,20 @@ public class JanelaDeOpcao {
                             cadastrarFoneButton.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    //cadastrar fone
+									String nome = nomeProdutoField.getText();
+									float preco = Float.parseFloat(precoField.getText());
+									int qntNoEstoque = Integer.parseInt(estoqueProdutoField.getText());
+									String descricao = descricaoField.getText();
+									Set<String> plataformas = Set.of(plataformaField.getText().split(","));
+									Boolean temMicrofone = (temMicrofoneBox.getSelectedItem() == "Sim") ? true : false;
+									
+									//ControleDeEstoque.cadastrarProdutoNoEstoque(new Fone(nome, preco, qntNoEstoque, descricao, plataformas, ));
                                     painelDeVisualizacao.removeAll();
                                     painelDeVisualizacao.repaint();
                                     painelDeVisualizacao.revalidate();
                                 }
                             });
+
                             InferiorCadastrarFoneGBC.gridx = 0;
                             InferiorCadastrarFoneGBC.gridy += 1;
                             InferiorCadastrarFoneGBC.gridwidth = 2;
@@ -454,7 +456,7 @@ public class JanelaDeOpcao {
                             InferiorCadastrarMouseGBC.anchor = GridBagConstraints.CENTER;
                             InferiorCadastrarMouseGBC.gridwidth = 2;
                             painelInferiorCadastrarMouse.add(cadastrarMouseButton, InferiorCadastrarMouseGBC);
-                        } else if (Objects.equals(Objects.requireNonNull(cadastrarProdutoBox.getSelectedItem()).toString(), "Teclado Mecânico")) {
+                        } else if (Objects.equals(Objects.requireNonNull(cadastrarProdutoBox.getSelectedItem()).toString(), "Teclado Mecanico")) {
                             painelDeVisualizacao.add(painelSuperiorCadastrarProduto, BorderLayout.NORTH);
                             painelDeVisualizacao.add(painelCentralCadastrarProduto, BorderLayout.CENTER);
                             painelDeVisualizacao.add(painelInferiorCadastrarTeclado, BorderLayout.SOUTH);
@@ -504,7 +506,6 @@ public class JanelaDeOpcao {
                 });
                 painelDeVisualizacao.repaint();
                 painelDeVisualizacao.revalidate();
-
 
             }
         });
@@ -606,8 +607,12 @@ public class JanelaDeOpcao {
                 scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
-
-                // imprimir produtos cadastrados
+				try{
+					produtosCadastradosTextArea.setText(ControleDeEstoque.listarProdutosCadastrados());
+				}catch(IOException ioe) {
+					System.out.println("Falha");
+				}
+               
 
             }
         });
@@ -715,8 +720,6 @@ public class JanelaDeOpcao {
                 // imprimir todas as vendas
             }
         });
-
-
 
         janelaDeOpcao.setVisible(true);
     }

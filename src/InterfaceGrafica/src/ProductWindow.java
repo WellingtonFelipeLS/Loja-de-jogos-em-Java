@@ -190,8 +190,19 @@ public class ProductWindow {
 		botaoDeAdicionarAoCarrinho.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				novaVenda.adicionarProdutoAoCarrinho(name, Integer.parseInt(quantityField.getText()));
-				interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
+				int qntASerAdicionadaAoCarrinho = Integer.parseInt(quantityField.getText());
+				int qntNoCarrinho = (novaVenda.getCarrinho().get(name) == null) ? 0 : novaVenda.getCarrinho().get(name);
+
+				try{
+					if(qntASerAdicionadaAoCarrinho + qntNoCarrinho <= ControleDeEstoque.procurarProdutoNoEstoque(name).getQntNoEstoque()){
+					novaVenda.adicionarProdutoAoCarrinho(name, qntASerAdicionadaAoCarrinho);
+					interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
+				}else
+					System.out.println("Quantidade inválida");
+				}catch(IOException ioe) {
+					System.out.println("FALHA NA COMUNICAÇÃO COM O BANCO DE DADOS");
+				}
+				
 			}
 		});
 

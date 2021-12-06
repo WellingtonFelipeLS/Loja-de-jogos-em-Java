@@ -3,12 +3,12 @@ package RegrasDeNegocio.Produtos;
 import java.util.Set;
 
 public class Periferico extends Produto{
-	private boolean temRGB;
 	private boolean temBluetooth;
 
-    public Periferico(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma, boolean temRGB, boolean temBluetooth) {
+	public Periferico() {}
+	
+    public Periferico(String nome, float preco, int qntNoEstoque, String descricao, Set<String> plataforma, boolean temBluetooth) {
         super(nome, preco, qntNoEstoque,  descricao, plataforma);
-		this.temRGB = temRGB;
 		this.temBluetooth = temBluetooth;
     }
 
@@ -16,15 +16,14 @@ public class Periferico extends Produto{
 		if(!(outro instanceof Periferico))
 			return false;
 		
-		if(super.equals(outro) && (this.getTemRGB() && ((Periferico)outro).getTemRGB()) && (this.getTemRGB() && ((Periferico)outro).getTemRGB()))
+		if(super.equals(outro) && (this.temBluetooth && ((Periferico)outro).getTemBluetooth()))
 			return true;
 		
 		return false;
 	}
 
-
-	public boolean getTemRGB() {
-		return temRGB;
+	public void setTemBluetooth(boolean temBluetooth) {
+		this.temBluetooth = temBluetooth;
 	}
 
 	public boolean getTemBluetooth() {
