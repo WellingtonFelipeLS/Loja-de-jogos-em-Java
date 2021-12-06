@@ -2,6 +2,7 @@ package InterfaceGrafica.src;
 
 import javax.swing.*;
 
+import ClassesUtilitarias.ValidacaoDeParametros;
 import ExceptionsCustomizadas.CadastroException;
 import ManipulacaoBancoDeDados.ControleDeCadastroDeClientes;
 import ManipulacaoBancoDeDados.ControleDeVendas;
@@ -170,8 +171,6 @@ public class JanelaDaConta {
                 if (Objects.equals(cpfField.getText(), "")) {
                     cpfField.setText("Digite seu CPF");
                 }
-
-				//Validar CPF aqui
             }
         });
         cadastroGBC.gridx = 1;
@@ -209,12 +208,16 @@ public class JanelaDaConta {
             public void actionPerformed(ActionEvent e) {
                 // cadastrar
 				try{
-					ControleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
-                	janelaDaConta.remove(cadastroPanel);
-                	janelaDaConta.add(loginPanel, BorderLayout.CENTER);
-                	janelaDaConta.repaint();
-                	janelaDaConta.revalidate();
-                	cadastroButton.setText("Clique aqui para cadastrar-se");
+					if(ValidacaoDeParametros.valida(cpfField.getText()) && userNameTextField2.getText().equals("")){
+						ControleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
+						janelaDaConta.remove(cadastroPanel);
+						janelaDaConta.add(loginPanel, BorderLayout.CENTER);
+						janelaDaConta.repaint();
+						janelaDaConta.revalidate();
+						cadastroButton.setText("Clique aqui para cadastrar-se");
+					}
+					//Abrir janela de mensagem
+						
 				}catch(IOException ioe) {
 					ioe.printStackTrace();
 				}
