@@ -2,7 +2,9 @@ package InterfaceGrafica.src;
 
 import javax.swing.*;
 
+import ManipulacaoBancoDeDados.ControleDeCadastroDeClientes;
 import ManipulacaoBancoDeDados.ControleDeEstoque;
+import ManipulacaoBancoDeDados.ControleDeVendas;
 import RegrasDeNegocio.Produtos.EnumCategoriaDeProdutos;
 import RegrasDeNegocio.Produtos.*;
 
@@ -407,12 +409,19 @@ public class JanelaDeOpcao {
 									int qntNoEstoque = Integer.parseInt(estoqueProdutoField.getText());
 									String descricao = descricaoField.getText();
 									Set<String> plataformas = Set.of(plataformaField.getText().split(","));
-									Boolean temMicrofone = (temMicrofoneBox.getSelectedItem() == "Sim") ? true : false;
+									boolean temBluetooth = (temBluetoothBox.getSelectedItem() == "Sim") ? true : false;
+									String sensibilidade = sensibilidadeField.getText();
+									boolean temMicrofone = (temMicrofoneBox.getSelectedItem() == "Sim") ? true : false;
+
+									try{
+										ControleDeEstoque.cadastrarProdutoNoEstoque(new Fone(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, sensibilidade, temMicrofone));
+										painelDeVisualizacao.removeAll();
+										painelDeVisualizacao.repaint();
+										painelDeVisualizacao.revalidate();
+									}catch(IOException ioe) {
+										System.out.println("Falha");
+									}
 									
-									//ControleDeEstoque.cadastrarProdutoNoEstoque(new Fone(nome, preco, qntNoEstoque, descricao, plataformas, ));
-                                    painelDeVisualizacao.removeAll();
-                                    painelDeVisualizacao.repaint();
-                                    painelDeVisualizacao.revalidate();
                                 }
                             });
 
@@ -467,11 +476,25 @@ public class JanelaDeOpcao {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     // cadastrar mouse
-                                    painelDeVisualizacao.removeAll();
-                                    painelDeVisualizacao.repaint();
-                                    painelDeVisualizacao.revalidate();
+									String nome = nomeProdutoField.getText();
+									float preco = Float.parseFloat(precoField.getText());
+									int qntNoEstoque = Integer.parseInt(estoqueProdutoField.getText());
+									String descricao = descricaoField.getText();
+									Set<String> plataformas = Set.of(plataformaField.getText().split(","));
+									boolean temBluetooth = (temBluetoothBox.getSelectedItem() == "Sim") ? true : false;
+									String dpi = dpiField.getText();
+									try{
+										ControleDeEstoque.cadastrarProdutoNoEstoque(new Mouse(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, dpi));
+										painelDeVisualizacao.removeAll();
+										painelDeVisualizacao.repaint();
+										painelDeVisualizacao.revalidate();
+									}catch(IOException ioe) {
+										System.out.println("Falha");
+									}
+									
                                 }
                             });
+
                             InferiorCadastrarMouseGBC.gridy += 1;
                             InferiorCadastrarMouseGBC.gridx = 0;
                             InferiorCadastrarMouseGBC.anchor = GridBagConstraints.CENTER;
@@ -527,9 +550,22 @@ public class JanelaDeOpcao {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     // cadastrar teclado
-                                    painelDeVisualizacao.removeAll();
-                                    painelDeVisualizacao.repaint();
-                                    painelDeVisualizacao.revalidate();
+                                    String nome = nomeProdutoField.getText();
+									float preco = Float.parseFloat(precoField.getText());
+									int qntNoEstoque = Integer.parseInt(estoqueProdutoField.getText());
+									String descricao = descricaoField.getText();
+									Set<String> plataformas = Set.of(plataformaField.getText().split(","));
+									boolean temBluetooth = (temBluetoothBox.getSelectedItem() == "Sim") ? true : false;
+									String tipoDeSwitch = switchTecladoField.getText();
+
+									try{
+										ControleDeEstoque.cadastrarProdutoNoEstoque(new TecladoMecanico(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, tipoDeSwitch));
+										painelDeVisualizacao.removeAll();
+										painelDeVisualizacao.repaint();
+										painelDeVisualizacao.revalidate();
+									}catch(IOException ioe) {
+										System.out.println("Falha");
+									}
                                 }
                             });
                             painelInferiorCadastrarTeclado.add(cadastrarTecladoButton, InferiorCadastrarTecladoGBC);
@@ -596,13 +632,16 @@ public class JanelaDeOpcao {
                 selecionarProduto.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String nome = nomeProdutoField.getText();
-                        //chamar o produto nome
                         estoqueField.setEditable(true);
-                        //estoqueField.setText(produto.getEstoque());
-
+                        try{
+							Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(nomeProdutoField.getText());
+							produto.getQntNoEstoque();
+						}catch(IOException ioe) {
+							System.out.println("Falha");
+						}
                     }
                 });
+
                 painelAlterarEstoque.add(selecionarProduto, gbc);
 
                 gbc.gridy = 1;
@@ -615,14 +654,15 @@ public class JanelaDeOpcao {
                 alterarEstoqueButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        int estoque = Integer.parseInt(estoqueField.getText());
-                        //produto.setEstoque(estoque);
-                        //alterar estoque
+                        try{
+							ControleDeEstoque.setQntNoEstoque(nomeProdutoField.getText(), Integer.parseInt(estoqueField.getText()));
+						}catch(IOException ioe) {
+							System.out.println("Falha");
+						}
+						
                     }
                 });
                 painelAlterarEstoque.add(alterarEstoqueButton, gbc);
-
-
             }
         });
 
@@ -665,7 +705,11 @@ public class JanelaDeOpcao {
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
-                // imprimir produtos Disponíveis
+				try{
+					produtosDisponiveisTextArea.setText(ControleDeEstoque.listarProdutosDisponiveis());
+				}catch(IOException ioe) {
+					System.out.println("FALHA");
+				}
 
             }
         });
@@ -685,7 +729,11 @@ public class JanelaDeOpcao {
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
-                // imprimir produtos indisponiveis
+                try{
+					produtosIndisponiveisTextArea.setText(ControleDeEstoque.listarProdutosExcluidosOuForaDoEstoque());
+				}catch(IOException ioe) {
+					System.out.println("FALHA");
+				}
 
             }
         });
@@ -712,7 +760,11 @@ public class JanelaDeOpcao {
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
-                // imprimir todos os clientes cadastrados
+                try{
+					listarClientesTextArea.setText(ControleDeCadastroDeClientes.listarClientesCadastrados());
+				}catch(IOException ioe) {
+					System.out.println("FALHA");
+				}
             }
         });
 
@@ -731,7 +783,11 @@ public class JanelaDeOpcao {
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
-                // imprimir todos os clientes excluídos
+                try{
+					listarClientesExcluidosTextArea.setText(ControleDeCadastroDeClientes.listarClientesExcluidos());
+				}catch(IOException ioe) {
+					System.out.println("FALHA");
+				}
             }
         });
 
@@ -750,7 +806,11 @@ public class JanelaDeOpcao {
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
-                // imprimir todas as vendas
+                try{
+					listarTodasVendasTextArea.setText(ControleDeVendas.listarVendas());
+				}catch(IOException ioe) {
+					System.out.println("FALHA");
+				}
             }
         });
 

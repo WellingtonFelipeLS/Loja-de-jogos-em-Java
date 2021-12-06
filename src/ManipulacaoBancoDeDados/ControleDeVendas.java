@@ -51,54 +51,44 @@ public class ControleDeVendas{
 		}
 	}
 
-	public static void listarVendas() throws IOException {
+	public static String listarVendas() throws IOException {
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
-		Collection<Venda> vendas = new ArrayList<Venda>();
-
 		Object venda;
+		StringBuilder notasFiscais = new StringBuilder();
 
 		try{
 			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass))
-				vendas.add((Venda) venda);
-
-			for(Venda v : vendas)
-				v.imprimirNotaFiscal();
+				notasFiscais.append(((Venda) venda).imprimirNotaFiscal());
 				
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally{
 			registroDeVendas.fecharArquivos();
 		}
+
+		return notasFiscais.toString();
 	}
 
 	public static String listarVendasPorCliente(String CPF) throws IOException{
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
-		Collection<Venda> vendas = new ArrayList<Venda>();
-
 		Object venda;
+		StringBuilder notasFiscais = new StringBuilder();
 
 		try{
 
-			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass)) {
+			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass)) 
 				if(((Venda)venda).getCliente().getCPF().equals(CPF))
-					vendas.add((Venda)venda);
-			}
-
-			StringBuilder notasFiscais = new StringBuilder();
-
-			for(Venda v : vendas)
-				notasFiscais.append(v.imprimirNotaFiscal());
+					notasFiscais.append(((Venda) venda).imprimirNotaFiscal());
 			
-			return notasFiscais.toString();
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally{
 			registroDeVendas.fecharArquivos();
 		}
 
-		return null;
+		return notasFiscais.toString();
 	}
 
 	public static void main(String[] args) {

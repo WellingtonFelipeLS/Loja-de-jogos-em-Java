@@ -135,12 +135,13 @@ public class ControleDeCadastroDeClientes {
 		}
 	}
 
-	private static void prototipoListarClientes(boolean val) throws IOException{
+	private static String prototipoListarClientes(boolean val) throws IOException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
 
-		Set<String> nomeClientes = new TreeSet<String>();
 		String cliente;
 		String[] informacoesCliente;
+
+		StringBuilder listaClientes = new StringBuilder();
 
 		while((cliente = (String)ciomaster.ler()) != null){
 			informacoesCliente = cliente.split(separadorDeinformacoes);
@@ -149,21 +150,24 @@ public class ControleDeCadastroDeClientes {
 			// Se val == true, a expressão no if é equivalente à "!(Integer.valueOf(informacoesCliente[4]) == 1)"
 			// Se val == false, a expressão no if é equivalente à "Integer.valueOf(informacoesCliente[4]) == 1"
 			if((Integer.valueOf(informacoesCliente[4]) == 1) ^ val)
-				nomeClientes.add(informacoesCliente[0]);
+				listaClientes.append(String.format("Nome: %-20s		CPF: %-10s 		CEP:%-10s \n", 
+													informacoesCliente[0], 
+													informacoesCliente[1], 
+													informacoesCliente[2]));
 		}
-		
-		for(String s : nomeClientes)
-			System.out.println(s);
+
 
 		ciomaster.fecharArquivos();
+
+		return listaClientes.toString();
 	}
 
-	public static void listarClientesCadastrados() throws IOException{
-		prototipoListarClientes(false);
+	public static String listarClientesCadastrados() throws IOException{
+		return prototipoListarClientes(false);
 	}
 
-	public static void listarClientesExcluidos() throws IOException{
-		prototipoListarClientes(true);
+	public static String listarClientesExcluidos() throws IOException{
+		return prototipoListarClientes(true);
 	}
 
 	public static void main(String[] args) {

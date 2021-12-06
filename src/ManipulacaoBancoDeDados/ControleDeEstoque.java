@@ -274,12 +274,11 @@ public class ControleDeEstoque {
 		modificarQntNoEstoque(nomeDoProduto, -qnt);
 	}
 
-	private static void prototipoListarProdutos(boolean val) throws IOException {
+	private static String prototipoListarProdutos(boolean val) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
-
-		Collection<String> nomeProdutos = new ArrayList<String>();
 		
 		Object produto;
+		StringBuilder listaDosProdutos = new StringBuilder();
 
 		try{
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
@@ -291,27 +290,31 @@ public class ControleDeEstoque {
 				//"((!(Produto)produto).getCadastroAtivo() || ((Produto)produto).getQntNoEstoque() <= 0)"
 
 				// Se val == false, a expressão no if é equivalente à "Integer.valueOf(informacoesCliente[4]) == 1"
-				if((((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) ^ val) {
-					nomeProdutos.add(((Produto) produto).getNome());
-
-					System.out.println(((Produto) produto).getNome() + "/" + ((Produto) produto).getQntNoEstoque());
-				}
+				if((((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) ^ val) 
+					listaDosProdutos.append(String.format("Nome: %-20s		Quantidade No Estoque: %-10d		Preço: %-10.2f\n",
+																((Produto) produto).getNome(),
+																((Produto) produto).getQntNoEstoque(),
+																((Produto) produto).getPreco()));
 					
 			}
+
+			return listaDosProdutos.toString();
 
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally {
 			estoque.fecharArquivos();
-		}	
+		}
+
+		return null;
 	}
 
-	public static void listarProdutosDisponiveis() throws IOException {
-		prototipoListarProdutos(false);
+	public static String listarProdutosDisponiveis() throws IOException {
+		return prototipoListarProdutos(false);
 	}
 
-	public static void listarProdutosExcluidosOuForaDoEstoque() throws IOException {
-		prototipoListarProdutos(true);
+	public static String listarProdutosExcluidosOuForaDoEstoque() throws IOException {
+		return prototipoListarProdutos(true);
 	}
 
 	public static String listarProdutosCadastrados() throws IOException {
@@ -321,12 +324,11 @@ public class ControleDeEstoque {
 		StringBuilder produtosCadastrados = new StringBuilder();
 
 		try{
-			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
-				produtosCadastrados.append(String.format("Nome: %s/ Quantidade No Estoque: %d/ Preço: %.2f\n",
-															((Produto) produto).getNome(),
-															((Produto) produto).getQntNoEstoque(),
-															((Produto) produto).getPreco()));
-			}
+			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) 
+				produtosCadastrados.append(String.format("Nome: %-20s		Quantidade No Estoque: %-10d		Preço: %-10.2f\n",
+														((Produto) produto).getNome(),
+														((Produto) produto).getQntNoEstoque(),
+														((Produto) produto).getPreco()));
 
 			return produtosCadastrados.toString();
 				

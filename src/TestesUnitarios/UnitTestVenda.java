@@ -1,5 +1,7 @@
 package TestesUnitarios;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -41,5 +43,29 @@ public class UnitTestVenda {
 		Map<String, Integer> resultadoEsperado = new Hashtable<String, Integer>();
 
 		Assert.assertEquals(resultadoEsperado, novaVenda.getCarrinho());
+	}
+
+	@Test
+	public void testeGetProdutosDoCarrinho() {
+		Venda novaVenda = new Venda();
+		novaVenda.adicionarProdutoAoCarrinho("The Witcher 3", 5);
+		novaVenda.adicionarProdutoAoCarrinho("The Last Of Us", 2);
+
+		String[] produtosDoCarrinho = novaVenda.getProdutosDoCarrinho();
+
+		String[] resultadoEsperado = {"The Witcher 3", "The Last Of Us"};
+
+		assertArrayEquals(resultadoEsperado, produtosDoCarrinho);
+	}
+
+	@Test
+	public void testeGetInfoParaOCarrinho() {
+		Venda novaVenda = new Venda();
+		novaVenda.adicionarProdutoAoCarrinho("The Witcher 3", 5);
+		novaVenda.adicionarProdutoAoCarrinho("The Last Of Us", 2);
+
+		String[][] infoParaOCarrinho = novaVenda.getInfoParaOCarrinho();
+
+		String[][] resultadoEsperado = {{}};
 	}
 }
