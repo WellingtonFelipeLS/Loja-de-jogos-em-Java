@@ -389,6 +389,15 @@ public class JanelaDeOpcao {
                             InferiorCadastrarFoneGBC.gridx = 1;
                             painelInferiorCadastrarFone.add(temMicrofoneBox, InferiorCadastrarFoneGBC);
 
+                            InferiorCadastrarFoneGBC.gridx = 0;
+                            InferiorCadastrarFoneGBC.gridy += 1;
+                            JLabel temBluetoothLabel = new JLabel("Tem Bluetooth?");
+                            painelInferiorCadastrarFone.add(temBluetoothLabel, InferiorCadastrarFoneGBC);
+
+                            JComboBox temBluetoothBox = new JComboBox(simNao);
+                            InferiorCadastrarFoneGBC.gridx += 1;
+                            painelInferiorCadastrarFone.add(temBluetoothBox, InferiorCadastrarFoneGBC);
+
                             JButton cadastrarFoneButton = new JButton("Cadastrar fone");
                             cadastrarFoneButton.addActionListener(new ActionListener() {
                                 @Override
@@ -440,6 +449,18 @@ public class JanelaDeOpcao {
                             });
                             InferiorCadastrarMouseGBC.gridx = 1;
                             painelInferiorCadastrarMouse.add(dpiField, InferiorCadastrarMouseGBC);
+                            InferiorCadastrarMouseGBC.gridx = 0;
+                            InferiorCadastrarMouseGBC.gridy += 1;
+
+                            JLabel temBluetoothLabel = new JLabel("Tem Bluetooth?");
+                            painelInferiorCadastrarMouse.add(temBluetoothLabel, InferiorCadastrarMouseGBC);
+
+                            InferiorCadastrarMouseGBC.gridx = 1;
+                            String[] simNao = {"Sim", "Não"};
+                            JComboBox temBluetoothBox = new JComboBox(simNao);
+                            painelInferiorCadastrarMouse.add(temBluetoothBox, InferiorCadastrarMouseGBC);
+
+
 
                             JButton cadastrarMouseButton = new JButton("Cadastrar Mouse");
                             cadastrarMouseButton.addActionListener(new ActionListener() {
@@ -484,6 +505,18 @@ public class JanelaDeOpcao {
                             });
                             InferiorCadastrarTecladoGBC.gridx = 1;
                             painelInferiorCadastrarTeclado.add(switchTecladoField, InferiorCadastrarTecladoGBC);
+
+                            InferiorCadastrarTecladoGBC.gridy += 1;
+                            InferiorCadastrarTecladoGBC.gridx = 0;
+                            JLabel temBluetoothLabel = new JLabel("Tem Bluetooth?");
+                            painelInferiorCadastrarTeclado.add(temBluetoothLabel, InferiorCadastrarTecladoGBC);
+
+                            InferiorCadastrarTecladoGBC.gridx = 1;
+                            String[] simNao = {"Sim", "Não"};
+                            JComboBox temBluetoothBox = new JComboBox(simNao);
+                            painelInferiorCadastrarTeclado.add(temBluetoothBox, InferiorCadastrarTecladoGBC);
+
+
                             InferiorCadastrarTecladoGBC.gridx = 0;
                             InferiorCadastrarTecladoGBC.gridy += 1;
                             InferiorCadastrarTecladoGBC.gridwidth = 2;

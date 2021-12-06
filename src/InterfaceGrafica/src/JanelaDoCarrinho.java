@@ -35,7 +35,7 @@ public class JanelaDoCarrinho{
 		painelPrincipal.add(painelSuperior, BorderLayout.NORTH);
 
 		//Label (Painel Superior)
-		JLabel olaUsuario = new JLabel("Logado como Visitante.");
+		JLabel olaUsuario = new JLabel("Logado como " + novaVenda.getCliente().getNome());
 		olaUsuario.setFont(new Font("Serif", Font.PLAIN, 20));
 		olaUsuario.setForeground(Color.WHITE);
 		painelSuperior.add(olaUsuario);
