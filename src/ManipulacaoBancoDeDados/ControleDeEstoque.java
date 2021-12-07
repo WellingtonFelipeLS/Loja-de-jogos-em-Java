@@ -11,8 +11,6 @@ import ClassesUtilitarias.ObjectIOMaster;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 public class ControleDeEstoque {
@@ -416,11 +414,31 @@ public class ControleDeEstoque {
 			cadastrarProdutoNoEstoque(new Jogo("Red Dead Redemption", 30f, 100, "Jogo de velho oeste", Set.of("PS3", "XBOX 360", "PC"), Set.of("Velho Oeste", "Acao", "Aventura")));
 			cadastrarProdutoNoEstoque(new Jogo("Civilization 6", 70f, 100, "Jogo de estratégia de tabuleiro online", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Estratégia")));
 			cadastrarProdutoNoEstoque(new Jogo("Red Dead Redemption 2", 80f, 100, "Continuação do Red Dead Redemption", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Velho Oeste", "Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("Dying Light", 145f, 1010, "Jogo de sobrevivência zumbi", Set.of("PS3", "XBOX 360", "PC"), Set.of("Sobrevivência", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("Dying Light 2", 260f, 1100, "Continuação do Dying Light", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Sobrevivência", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("GTA 5", 130f, 1090, "Jogo de mundo aberto", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("GTA 6", 700f, 1, "Jogo mais aguardado da década", Set.of("PS5", "XBOX Series X", "PC"), Set.of("Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("While True Learn()", 80f, 100, "Jogo de desafios lógicos", Set.of("PC"), Set.of("Puzzle")));
+			cadastrarProdutoNoEstoque(new Fone("KZ ZSN", 200f, 2400, "Fone Musical", Set.of("PC"), false, "104Db", false));
+			cadastrarProdutoNoEstoque(new Jogo("Frostpunk", 130f, 1200, "Jogo de gestão aopcalíptica", Set.of("PC"), Set.of("Estrategia", "Gestao", "Apocalipse")));
+			cadastrarProdutoNoEstoque(new Jogo("Frostpunk 2", 180f, 1200, "Jogo de gestão aopcalíptica", Set.of("PC"), Set.of("Estrategia", "Gestao", "Apocalipse")));
+			cadastrarProdutoNoEstoque(new Jogo("The Last Of Us 2", 145f, 10110, "Jogo de Zumbi", Set.of("PS4", "PS5"), Set.of("Drama", "Apocalipse", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("Marvel Midnight Sons", 350f, 10, "Jogo do MCU de rpg tático", Set.of("PC"), Set.of("Estratégia", "Acao", "rpg")));
+			cadastrarProdutoNoEstoque(new Console("Steam Deck", 4000f, 100, "É um Steam Deck", Set.of("PC"), "1TB"));
+			cadastrarProdutoNoEstoque(new Console("Nintendo Switch", 3500f, 150, "É um Nintendo Switch", Set.of("Nintendo Switch"), "128GB"));
+			cadastrarProdutoNoEstoque(new TecladoMecanico("Spk 8404", 500f, 35, "Teclado mecânico gamer", Set.of("PC"), false, "Blue"));
+			cadastrarProdutoNoEstoque(new Mouse("Warrior MO262", 40f, 20, "Mouse bonito", Set.of("PC"), false, String.valueOf(3200)));
+			cadastrarProdutoNoEstoque(new Jogo("Diablo 3", 80f, 1200, "Jogo de rpg da Blizzard", Set.of("PC"), Set.of("Estrategia", "rpg", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("Diablo 4", 280f, 1200, "Jogo de rpg da Blizzard", Set.of("PC"), Set.of("Estrategia", "rpg", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("God Of War 2", 50f, 2100, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("God Of War 3", 50f, 1200, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
+			cadastrarProdutoNoEstoque(new Jogo("God Of War Ragnarok", 50f, 1020, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
 
 			System.out.println("======================");
 			listarProdutosDisponiveis();
 			System.out.println("======================");
 			listarProdutosPorCategoria("Jogo");
+			
 
 		}catch(IOException e){
 			e.printStackTrace();
