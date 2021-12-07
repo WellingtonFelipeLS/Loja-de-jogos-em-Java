@@ -25,6 +25,9 @@ public class InterfaceGrafica implements MouseListener{
 		JPanel painelSuperior = criarPainelSuperior();
 		JPanel painelPrincipal = criarPainelPrincipal();
 
+		JScrollPane scrollPane = new JScrollPane(painelPrincipal);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
 		GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
@@ -36,7 +39,7 @@ public class InterfaceGrafica implements MouseListener{
 
 
         interfacePrincipal.add(painelSuperior, BorderLayout.NORTH);
-		interfacePrincipal.add(painelPrincipal, BorderLayout.CENTER);
+		interfacePrincipal.add(scrollPane, BorderLayout.CENTER);
 
         painelSuperior.add(marcadoresNomes);
 		painelSuperior.add(botaoDeBusca);
@@ -52,7 +55,6 @@ public class InterfaceGrafica implements MouseListener{
 		painelSuperior.add(botaoDoCarrinho);
 		painelSuperior.add(botaoDeCompra);
 
-        //String[] lista = {"Xcom", "Xcom 2", "Red Dead Redemption", "Red Dead Redemption 2", "Civilization 6", "Diablo 3"};
         try{
 			exporProdutos(ControleDeEstoque.listarNomeDosProdutosDisponiveis(), painelPrincipal, gbc);
 		}catch(IOException ioe) {

@@ -79,13 +79,13 @@ public class JanelaDaConta {
         userCPFTextField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (Objects.equals(userCPFTextField.getText(), "Digite o CPF do usuário"))
-				userCPFTextField.setText("");
+                if(Objects.equals(userCPFTextField.getText(), "Digite o CPF do usuário") || Objects.equals(userCPFTextField.getText(), "CPF inválido"))
+					userCPFTextField.setText("");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (Objects.equals(userCPFTextField.getText(), "")) {
+                if (Objects.equals(userCPFTextField.getText(), "") || Objects.equals(userCPFTextField.getText(), "CPF inválido")) {
                     userCPFTextField.setText("Digite o CPF do usuário");
                 }
             }
@@ -119,6 +119,8 @@ public class JanelaDaConta {
 					ioe.printStackTrace();
 				}catch(CadastroException ce) {
 					System.out.println("Cliente excluido");
+				}catch(InvalidStateException iee) {
+					userCPFTextField.setText("CPF inválido");
 				}
 				
             }
