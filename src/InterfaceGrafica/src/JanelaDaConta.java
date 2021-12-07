@@ -8,6 +8,7 @@ import ManipulacaoBancoDeDados.ControleDeCadastroDeClientes;
 import ManipulacaoBancoDeDados.ControleDeVendas;
 import RegrasDeNegocio.Cliente;
 import RegrasDeNegocio.Venda;
+import br.com.caelum.stella.validation.InvalidStateException;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -168,7 +169,7 @@ public class JanelaDaConta {
         cpfField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (Objects.equals(cpfField.getText(), "Digite seu CPF")) {
+                if (Objects.equals(cpfField.getText(), "Digite seu CPF") || Objects.equals(cpfField.getText(), "CPF inválido")) {
                     cpfField.setText("");
                 }
             }
@@ -223,10 +224,11 @@ public class JanelaDaConta {
 						janelaDaConta.revalidate();
 						cadastroButton.setText("Clique aqui para cadastrar-se");
 					}
-					//Abrir janela de mensagem
 						
 				}catch(IOException ioe) {
 					ioe.printStackTrace();
+				}catch(InvalidStateException iee) {
+					cpfField.setText("CPF inválido");
 				}
 				
 

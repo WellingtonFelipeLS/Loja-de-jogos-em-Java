@@ -12,16 +12,6 @@ public class Periferico extends Produto{
 		this.temBluetooth = temBluetooth;
     }
 
-	public boolean equals(Produto outro) {
-		if(!(outro instanceof Periferico))
-			return false;
-		
-		if(super.equals(outro) && (this.temBluetooth && ((Periferico)outro).getTemBluetooth()))
-			return true;
-		
-		return false;
-	}
-
 	public void setTemBluetooth(boolean temBluetooth) {
 		this.temBluetooth = temBluetooth;
 	}

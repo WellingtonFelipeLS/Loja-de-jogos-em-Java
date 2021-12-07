@@ -2,10 +2,12 @@ package InterfaceGrafica.src;
 
 import javax.swing.*;
 
+import ClassesUtilitarias.ValidacaoDeParametros;
 import ManipulacaoBancoDeDados.ControleDeCadastroDeClientes;
 import ManipulacaoBancoDeDados.ControleDeEstoque;
 import ManipulacaoBancoDeDados.ControleDeVendas;
 import RegrasDeNegocio.Produtos.EnumCategoriaDeProdutos;
+import br.com.caelum.stella.validation.InvalidStateException;
 import RegrasDeNegocio.Produtos.*;
 
 import java.awt.*;
@@ -800,13 +802,19 @@ public class JanelaDeOpcao {
                 descadastrarButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        //verifica se nomeProdutoField.getText() está cadastrado e descadastra
-                        //if não cadastrado -> mensagemLabel.setText("produto não cadastrado")
-                        //if descadastrar - > mensagemLabel.setText("produto descadastrado") e nomeProdutoField.setText("")
+						try{
+							ControleDeEstoque.excluirProduto(nomeProdutoField.getText().toString());
+							mensagemLabel.setText("Produto descadastrado");
+							nomeProdutoField.setText("");
+						}catch(IOException ioe){
+							System.out.println("FALHA");
+						}
+						
                     }
                 });
             }
         });
+
         JButton removerClienteButton = new JButton("Descadastrar cliente");
         painelCadastro.add(removerClienteButton);
         removerClienteButton.addActionListener(new ActionListener() {
@@ -825,7 +833,7 @@ public class JanelaDeOpcao {
                 gbc.insets = new Insets(5,5,5,5);
                 painelDeVisualizacao.add(painelRemoverCliente, BorderLayout.CENTER);
 
-                JLabel nomeProdutoLabel = new JLabel("Cpf:");
+                JLabel nomeProdutoLabel = new JLabel("CPF:");
                 painelRemoverCliente.add(nomeProdutoLabel, gbc);
 
                 gbc.anchor = GridBagConstraints.CENTER;
@@ -838,20 +846,20 @@ public class JanelaDeOpcao {
                 gbc.gridwidth = 1;
                 gbc.anchor = GridBagConstraints.LINE_START;
                 gbc.gridx = 1;
-                JTextField nomeProdutoField = new JTextField("Digite o cpf do cliente", 20);
-                painelRemoverCliente.add(nomeProdutoField, gbc);
-                nomeProdutoField.addFocusListener(new FocusListener() {
+                JTextField CPFField = new JTextField("Digite o CPF do cliente", 20);
+                painelRemoverCliente.add(CPFField, gbc);
+                CPFField.addFocusListener(new FocusListener() {
                     @Override
                     public void focusGained(FocusEvent e) {
-                        if (Objects.equals(nomeProdutoField.getText(), "Digite o cpf do cliente")) {
-                            nomeProdutoField.setText("");
+                        if (Objects.equals(CPFField.getText(), "Digite o CPF do cliente") || Objects.equals(CPFField.getText(), "CPF inválido")) {
+                            CPFField.setText("");
                         }
                     }
 
                     @Override
                     public void focusLost(FocusEvent e) {
-                        if (Objects.equals(nomeProdutoField.getText(), "")) {
-                            nomeProdutoField.setText("Digite o cpf do cliente");
+                        if (Objects.equals(CPFField.getText(), "")) {
+                            CPFField.setText("Digite o CPF do cliente");
                         }
                     }
                 });
@@ -865,6 +873,15 @@ public class JanelaDeOpcao {
                         //verifica se nomeProdutoField.getText() está cadastrado e descadastra
                         //if não cadastrado -> mensagemLabel.setText("produto não cadastrado")
                         //if descadastrar - > mensagemLabel.setText("produto descadastrado") e nomeProdutoField.setText("")
+						try{
+							ValidacaoDeParametros.valida(CPFField.getText().toString());
+							ControleDeCadastroDeClientes.excluirCliente(CPFField.getText().toString());
+						}catch(IOException ioe) {
+							System.out.println("FALHA");
+						}catch(InvalidStateException iee) {
+							CPFField.setText("CPF inválido");
+						}
+						
                     }
                 });
             }

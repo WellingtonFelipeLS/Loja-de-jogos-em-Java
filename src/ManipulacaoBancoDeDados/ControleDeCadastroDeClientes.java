@@ -4,9 +4,6 @@ import ExceptionsCustomizadas.CadastroException;
 
 import java.io.IOException;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 import ClassesUtilitarias.CharIOMaster;
 import RegrasDeNegocio.Cliente;
 

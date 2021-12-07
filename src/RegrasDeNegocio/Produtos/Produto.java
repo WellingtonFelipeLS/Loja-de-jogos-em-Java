@@ -28,7 +28,7 @@ public abstract class Produto implements Serializable{
 	}
 
     public boolean equals(Produto outro) {
-        if (nome.equals(outro.getNome()) && plataforma.equals(outro.getPlataforma()))
+        if (this.nome.equals(outro.getNome()))
 			return true;
 
         return false;

@@ -1,19 +1,19 @@
 package InterfaceGrafica.src;
 
-import RegrasDeNegocio.Produtos.*;
 import RegrasDeNegocio.Venda;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import ManipulacaoBancoDeDados.ControleDeEstoque;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Set;
 
 public class InterfaceGrafica implements MouseListener{
 	private Venda novaVenda;
@@ -24,19 +24,21 @@ public class InterfaceGrafica implements MouseListener{
 		JFrame interfacePrincipal = criarInterfacePrincipal();
 		JPanel painelSuperior = criarPainelSuperior();
 		JPanel painelPrincipal = criarPainelPrincipal();
-		JTextField caixaDeBusca = criarCaixaDeBusca();
-		JButton botaoDeBusca = criarBotaoDeBusca(caixaDeBusca);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+		JComboBox marcadoresNomes = criarComboBox(painelPrincipal, gbc);
+		JButton botaoDeBusca = criarBotaoDeBusca(marcadoresNomes);
         JButton botaoDeOpcao = criarBotaoDeOpcao();
 		JButton botaoDoCarrinho = criarBotaoDoCarrinho();
 		JButton botaoDeCompra = criarBotaoDeConta();
-        JComboBox marcadoresNomes = criarComboBox();
 
 
         interfacePrincipal.add(painelSuperior, BorderLayout.NORTH);
 		interfacePrincipal.add(painelPrincipal, BorderLayout.CENTER);
 
         painelSuperior.add(marcadoresNomes);
-        //painelSuperior.add(caixaDeBusca);
 		painelSuperior.add(botaoDeBusca);
 
         //totalLabel
@@ -50,60 +52,13 @@ public class InterfaceGrafica implements MouseListener{
 		painelSuperior.add(botaoDoCarrinho);
 		painelSuperior.add(botaoDeCompra);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        /*
-        Produto[] listaJogos = new Jogo[5];
-        listaJogos[0] = new Jogo("Xcom", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[1] = new Jogo("Xcom 2", 60f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[2] = new Jogo("Red Dead Redemption", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[3] = new Jogo("Red Dead Redemption 2", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[4] = new Jogo("Civilization 6", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-
-        int x = 0, y = 0, ultimo = 0;
-        JLabel[] listaJLabel = new JLabel[0];
-        JLabel[] listaJLabelNome = new JLabel[0];
-        for (Produto i: listaJogos) {
-            gbc.gridx = x;
-            gbc.gridy = y;
-            try {
-                if (listaJLabel.length == ultimo) {
-
-                    JLabel[] listaAux = new JLabel[ultimo + 1];
-                    System.arraycopy(listaJLabel, 0, listaAux, 0, listaJLabel.length);
-                    listaJLabel = listaAux;
-
-                    listaAux = new JLabel[ultimo + 1];
-                    System.arraycopy(listaJLabelNome, 0, listaAux, 0, listaJLabelNome.length);
-                    listaJLabelNome = listaAux;
-                }
-                listaJLabel[ultimo] = getImage(i.getNome());
-                painelPrincipal.add(listaJLabel[ultimo], gbc);
-
-                gbc.gridy = y + 1;
-                listaJLabelNome[ultimo] = new JLabel(i.getNome());
-                painelPrincipal.add(listaJLabelNome[ultimo], gbc);
-                if (x % 4 == 0 && x != 0) {
-                    x = 0;
-                    y += 2;
-                } else {
-                    x += 1;
-                }
-            } catch (IOException ex) {
-                System.out.println("Error " + i.getNome());
-            }
-            ultimo += 1;
-        }
-
-        x = 0;
-        for (int i = 0; i < listaJLabel.length; i++) {
-            listaJLabel[i].setName(listaJLabelNome[i].getText());
-            listaJLabel[i].addMouseListener(this);
-            listaJLabel[i].setToolTipText(listaJLabel[i].getName());
-        }
-        */
-        String[] lista = {"Xcom", "Xcom 2", "Red Dead Redemption", "Red Dead Redemption 2", "Civilization 6", "Diablo 3"};
-        exporProdutos(lista, painelPrincipal, gbc);
+        //String[] lista = {"Xcom", "Xcom 2", "Red Dead Redemption", "Red Dead Redemption 2", "Civilization 6", "Diablo 3"};
+        try{
+			exporProdutos(ControleDeEstoque.listarNomeDosProdutosDisponiveis(), painelPrincipal, gbc);
+		}catch(IOException ioe) {
+			System.out.println("FALHA");
+		}
+		
         interfacePrincipal.pack();
         interfacePrincipal.setVisible( true );
     }
@@ -147,13 +102,12 @@ public class InterfaceGrafica implements MouseListener{
 		return campoDeBusca;
 	}
 
-	private JButton criarBotaoDeBusca(JTextField caixaDeBusca) {
+	private JButton criarBotaoDeBusca(JComboBox caixaDeBusca) {
         JButton botaoDeBusca = new JButton( "pesquisar" );
         botaoDeBusca.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent e) {
-                new ProductWindow(caixaDeBusca.getText(), novaVenda);
-
+                new ProductWindow(caixaDeBusca.getSelectedItem().toString(), novaVenda);
             }
         });
 
@@ -206,29 +160,35 @@ public class InterfaceGrafica implements MouseListener{
 		return painelPrincipal;
 	}
 
-    private JComboBox criarComboBox() {
+    private JComboBox criarComboBox(JPanel painelPrincipal, GridBagConstraints gbc) {
         String[] marcadores = {"", "Jogo", "Console", "Fone", "Mouse", "Teclado"};
         JComboBox comboBox = new JComboBox(marcadores);
         comboBox.setPreferredSize(new Dimension(300, 25));
+		comboBox.setEditable(true);
         comboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+				try{
+				ArrayList<String> lista = (comboBox.getSelectedItem().toString().equals("")) ?
+								ControleDeEstoque.listarNomeDosProdutosDisponiveis() :
+								ControleDeEstoque.listarProdutosPorCategoria(comboBox.getSelectedItem().toString());
 
+				exporProdutos(lista,painelPrincipal, gbc);
+				}catch(IOException ioe) {
+					System.out.println("FALHA");
+				}
+				
             }
         });
         return comboBox;
     }
 
-    private void exporProdutos(String[] lista, JPanel painelPrincipal, GridBagConstraints gbc) {
-        /*
-        Produto[] listaJogos = new Jogo[5];
-        listaJogos[0] = new Jogo("Xcom", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[1] = new Jogo("Xcom 2", 60f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[2] = new Jogo("Red Dead Redemption", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[3] = new Jogo("Red Dead Redemption 2", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        listaJogos[4] = new Jogo("Civilization 6", 30f, 100, "Jogo do Geralt", Set.of("PS5", "XBOX", "PC"), Set.of("Fantasia", "Acao", "Aventura"));
-        */
-        int x = 0, y = 0, ultimo = 0;
+    private void exporProdutos(ArrayList<String> lista, JPanel painelPrincipal, GridBagConstraints gbc) {
+        painelPrincipal.removeAll();
+		painelPrincipal.repaint();
+		painelPrincipal.revalidate();
+
+		int x = 0, y = 0, ultimo = 0;
         JLabel[] listaJLabel = new JLabel[0];
         JLabel[] listaJLabelNome = new JLabel[0];
         for (String i: lista) {

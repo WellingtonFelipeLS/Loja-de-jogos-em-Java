@@ -57,15 +57,4 @@ public class UnitTestVenda {
 
 		assertArrayEquals(resultadoEsperado, produtosDoCarrinho);
 	}
-
-	@Test
-	public void testeGetInfoParaOCarrinho() {
-		Venda novaVenda = new Venda();
-		novaVenda.adicionarProdutoAoCarrinho("The Witcher 3", 5);
-		novaVenda.adicionarProdutoAoCarrinho("The Last Of Us", 2);
-
-		String[][] infoParaOCarrinho = novaVenda.getInfoParaOCarrinho();
-
-		String[][] resultadoEsperado = {{}};
-	}
 }

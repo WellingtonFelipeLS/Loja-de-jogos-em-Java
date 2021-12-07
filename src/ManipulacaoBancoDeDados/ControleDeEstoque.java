@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public class ControleDeEstoque {
@@ -104,7 +105,7 @@ public class ControleDeEstoque {
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
 
 				if(((Produto)produto).getNome().equals(nomeDoProduto)) {
-					if(((Produto)produto).getCadastroAtivo())
+					if(!((Produto)produto).getCadastroAtivo())
 						throw new CadastroException("Produto já excluído.");
 					else{
 						((Produto)produto).setCadastroAtivo(false);
@@ -274,6 +275,38 @@ public class ControleDeEstoque {
 		modificarQntNoEstoque(nomeDoProduto, -qnt);
 	}
 
+	public static ArrayList<String> listarNomeDosProdutosDisponiveis() throws IOException{
+		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
+		
+		Object produto;
+		ArrayList<String> nomesDosProdutos = new ArrayList<String>();
+
+		try{
+			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
+				// Operador XOR agindo como negação.
+
+				// Se val == true, a expressão no if é equivalente à 
+				// "!(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0)"
+				// Que, utilizando simplificações lógicas, é equivalente à
+				//"((!(Produto)produto).getCadastroAtivo() || ((Produto)produto).getQntNoEstoque() <= 0)"
+
+				// Se val == false, a expressão no if é equivalente à "Integer.valueOf(informacoesCliente[4]) == 1"
+				if(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) 
+					nomesDosProdutos.add(((Produto) produto).getNome());
+					
+			}
+
+			return nomesDosProdutos;
+
+		}catch(ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
+		}finally {
+			estoque.fecharArquivos();
+		}
+
+		return null;
+	}
+
 	private static String prototipoListarProdutos(boolean val) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 		
@@ -342,10 +375,10 @@ public class ControleDeEstoque {
 		return null;
 	}
 
-	public static void listarProdutosPorCategoria(String categoria) throws IOException {
+	public static ArrayList<String> listarProdutosPorCategoria(String categoria) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
-		Collection<String> nomeProdutos = new ArrayList<String>();
+		ArrayList<String> nomeProdutos = new ArrayList<String>();
 		
 		Object produto;
 		String categoriaDoProduto;
@@ -356,14 +389,15 @@ public class ControleDeEstoque {
 					nomeProdutos.add(((Produto) produto).getNome());
 			}
 				
-			for(String s : nomeProdutos)
-				System.out.println(s);
+			return nomeProdutos;
 
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally {
 			estoque.fecharArquivos();
 		}
+
+		return null;
 	}
 
 	public static void main(String[] args) {
