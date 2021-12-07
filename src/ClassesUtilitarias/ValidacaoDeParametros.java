@@ -9,4 +9,9 @@ public class ValidacaoDeParametros {
 		cpfValidator.assertValid(cpf); 
 		return true;
 	}
+
+	public static boolean validaCEP(String cep) {
+		return cep.matches("\\d{5}-\\d{3}");
+	}
+
 }

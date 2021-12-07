@@ -8,74 +8,39 @@ import ClassesUtilitarias.CharIOMaster;
 import RegrasDeNegocio.Cliente;
 
 public class ControleDeCadastroDeClientes {
-	private String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
-	private String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientes.txt";
-	private String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientesTemp.txt";
+	private String caminhoBancoDeDados;
+	private String caminhoBancoDeDadosTemp;
 	private String separadorDeinformacoes = "/";
 
-	public void cadastrarCliente(Cliente novoCliente) throws IOException{
-		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
-
-		String cliente;
-		String[] informacoesClienteCliente;
-
-		try {
-			while((cliente = (String)ciomaster.ler()) != null){
-				informacoesClienteCliente = cliente.split(separadorDeinformacoes);
-	
-				if(informacoesClienteCliente[1].equals(novoCliente.getCPF())) {
-					throw new CadastroException();
-				}
-			}
-
-			ciomaster.fecharArquivos();
-
-			ciomaster = new CharIOMaster(caminhoBancoDeDados, 'a', separadorDeinformacoes);
-
-			String[] infoNovoCliente = {novoCliente.getNome(), novoCliente.getCPF(), novoCliente.getCEP(), novoCliente.getId(), String.valueOf(1)};
-			ciomaster.escrever(infoNovoCliente);
-
-		}catch(CadastroException ce){
-			System.err.println("Cliente com CPF " + novoCliente.getCPF() + " já está cadastrado.");
-		}finally{
-			ciomaster.fecharArquivos();
-		}
+	public ControleDeCadastroDeClientes(String caminhoPastaBancoDeDados) {
+		this.caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientes.txt";
+		this.caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientesTemp.txt";
 	}
 
-	public void reCadastrarCliente(Cliente novoCliente) throws IOException{
+	public void cadastrarCliente(Cliente novoCliente) throws IOException, CadastroException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp, separadorDeinformacoes);
 
 		String cliente;
 		String[] informacoesCliente;
 
-		try {
-			while((cliente = (String)ciomaster.ler()) != null){
-				informacoesCliente = cliente.split(separadorDeinformacoes);
+		while((cliente = (String)ciomaster.ler()) != null){
+			informacoesCliente = cliente.split(separadorDeinformacoes);
 	
-				if(informacoesCliente[1].equals(novoCliente.getCPF())) {
-					if(Integer.valueOf(informacoesCliente[3]).equals(0)){
-						informacoesCliente[0] = novoCliente.getNome();
-						informacoesCliente[2] = novoCliente.getCEP();
-						informacoesCliente[3] = novoCliente.getId();
-						informacoesCliente[4] = String.valueOf(1);
-					}else
-						throw new CadastroException("Cliente já cadastrado.");
+			if(informacoesCliente[1].equals(novoCliente.getCPF())) {
+				if(Integer.valueOf(informacoesCliente[4]) == 1)
+					throw new CadastroException();
+				else{
+					informacoesCliente[0] = novoCliente.getNome();
+					informacoesCliente[2] = novoCliente.getCEP();
+					informacoesCliente[3] = novoCliente.getId();
+					informacoesCliente[4] = String.valueOf(1);
 				}
-				
-				ciomaster.escrever(informacoesCliente);
 			}
-
-			ciomaster.fecharArquivos();
-
-			CharIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
-
-		}catch(CadastroException ce){
-			ce.printStackTrace();
-			
-			ciomaster.fecharArquivos();
-
-			CharIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
+			ciomaster.escrever(informacoesCliente);
 		}
+
+		ciomaster.fecharArquivos();
+		CharIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 	}
 
 	public Cliente procurarCliente(String CPF) throws IOException, CadastroException{
@@ -169,7 +134,7 @@ public class ControleDeCadastroDeClientes {
 
 	public static void main(String[] args) {
 		try{
-			ControleDeCadastroDeClientes controleDeCadastroDeClientes = new ControleDeCadastroDeClientes();
+			ControleDeCadastroDeClientes controleDeCadastroDeClientes = new ControleDeCadastroDeClientes("src" + System.getProperty("file.separator") + "BancoDeDados");
 			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Jonas", "289.875.960-01", "69027-410"));
 			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Maria", "606.981.120-83", "74990-725"));
 			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Kalil", "087.532.840-70", "78085-778"));
@@ -180,6 +145,8 @@ public class ControleDeCadastroDeClientes {
 			controleDeCadastroDeClientes.listarClientesExcluidos();
 		}catch(IOException e){
 			System.out.println("Falha na comunicação com o banco de dados.");
+		}catch(CadastroException ce) {
+			ce.printStackTrace();
 		}
 	}
 }

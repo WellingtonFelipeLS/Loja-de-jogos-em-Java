@@ -21,11 +21,11 @@ public class InterfaceGrafica implements MouseListener{
 	private ControleDeVendas controleDeVendas;
 	private ControleDeCadastroDeClientes controleDeCadastroDeClientes;
 
-    InterfaceGrafica() {
+    public InterfaceGrafica() {
 		this.novaVenda = new Venda();
-		this.controleDeEstoque = new ControleDeEstoque();
-		this.controleDeVendas = new ControleDeVendas(controleDeEstoque);
-		this.controleDeCadastroDeClientes = new ControleDeCadastroDeClientes();
+		this.controleDeEstoque = new ControleDeEstoque("src" + System.getProperty("file.separator") + "BancoDeDados");
+		this.controleDeVendas = new ControleDeVendas(controleDeEstoque, "src" + System.getProperty("file.separator") + "BancoDeDados");
+		this.controleDeCadastroDeClientes = new ControleDeCadastroDeClientes("src" + System.getProperty("file.separator") + "BancoDeDados");
 
 		JFrame interfacePrincipal = criarInterfacePrincipal();
 		JPanel painelSuperior = criarPainelSuperior();
@@ -148,7 +148,7 @@ public class InterfaceGrafica implements MouseListener{
 	}
 
     private JComboBox criarComboBox(JPanel painelPrincipal, GridBagConstraints gbc) {
-        String[] marcadores = {"", "Jogo", "Console", "Fone", "Mouse", "Teclado"};
+        String[] marcadores = {"", "Jogo", "Console", "Fone", "Mouse", "TecladoMecanico"};
         JComboBox comboBox = new JComboBox(marcadores);
         comboBox.setPreferredSize(new Dimension(300, 25));
 		comboBox.setEditable(true);
@@ -257,8 +257,4 @@ public class InterfaceGrafica implements MouseListener{
     public void mouseExited(MouseEvent e) {
 
     }
-
-	public static void main(String[] args) {
-		new InterfaceGrafica();
-	}
 }

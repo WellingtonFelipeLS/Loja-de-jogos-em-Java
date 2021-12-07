@@ -200,7 +200,7 @@ public class JanelaDaConta {
         cepField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (Objects.equals(cepField.getText(), "Digite seu CEP")) {
+                if (Objects.equals(cepField.getText(), "Digite seu CEP") || Objects.equals(cpfField.getText(), "CPF inválido")) {
                     cepField.setText("");
                 }
             }
@@ -223,19 +223,25 @@ public class JanelaDaConta {
             public void actionPerformed(ActionEvent e) {
                 // cadastrar
 				try{
-					if(ValidacaoDeParametros.valida(cpfField.getText()) && userNameTextField2.getText().equals("")){
-						controleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
-						janelaDaConta.remove(cadastroPanel);
-						janelaDaConta.add(loginPanel, BorderLayout.CENTER);
-						janelaDaConta.repaint();
-						janelaDaConta.revalidate();
-						cadastroButton.setText("Clique aqui para cadastrar-se");
+					if(ValidacaoDeParametros.valida(cpfField.getText()) && !userNameTextField2.getText().equals("")){
+                        if (ValidacaoDeParametros.validaCEP(cepField.getText())) {
+                            controleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
+                            janelaDaConta.remove(cadastroPanel);
+                            janelaDaConta.add(loginPanel, BorderLayout.CENTER);
+                            janelaDaConta.repaint();
+                            janelaDaConta.revalidate();
+                            cadastroButton.setText("Clique aqui para cadastrar-se");
+                        } else {
+                            cepField.setText("Cep inválido");
+                        }
+
 					}
-						
 				}catch(IOException ioe) {
 					ioe.printStackTrace();
 				}catch(InvalidStateException iee) {
 					cpfField.setText("CPF inválido");
+				}catch(CadastroException ce) {
+					cpfField.setText("CPF com cadastro ativo");
 				}
 				
 

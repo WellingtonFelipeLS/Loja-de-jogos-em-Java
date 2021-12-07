@@ -14,14 +14,16 @@ import ClassesUtilitarias.ObjectIOMaster;
 
 
 public class ControleDeVendas{
-	private String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
-	private String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendas.ser";
-	private String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendasTemp.ser";
+	private String caminhoBancoDeDados;
+	private String caminhoBancoDeDadosTemp;
 	private ControleDeEstoque controleDeEstoque;
 	
-	public ControleDeVendas(ControleDeEstoque controleDeEstoque) {
+	public ControleDeVendas(ControleDeEstoque controleDeEstoque, String caminhoPastaBancoDeDados) {
 		this.controleDeEstoque = controleDeEstoque;
+		this.caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendas.ser";
+		this.caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendasTemp.ser";
 	}
+
 	public void cadastrarVenda(Venda novaVenda) throws IOException {
 		ObjectIOMaster.verificarArquivo(caminhoBancoDeDados);
 
@@ -95,7 +97,7 @@ public class ControleDeVendas{
 
 	public static void main(String[] args) {
 		try{
-			ControleDeVendas controleDeVendas = new ControleDeVendas(new ControleDeEstoque());
+			ControleDeVendas controleDeVendas = new ControleDeVendas(new ControleDeEstoque("src" + System.getProperty("file.separator") + "BancoDeDados"), "src" + System.getProperty("file.separator") + "BancoDeDados");
 
 			Venda venda1 = new Venda();
 			venda1.adicionarProdutoAoCarrinho("XBOX Series X", 10);

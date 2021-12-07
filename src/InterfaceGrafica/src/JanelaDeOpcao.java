@@ -644,7 +644,7 @@ public class JanelaDeOpcao {
                         estoqueField.setEditable(true);
                         try{
 							Produto produto = controleDeEstoque.procurarProdutoNoEstoque(nomeProdutoField.getText());
-							produto.getQntNoEstoque();
+							estoqueField.setText(String.valueOf(produto.getQntNoEstoque()));
 						}catch(IOException ioe) {
 							System.out.println("Falha");
 						}

@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class ControleDeEstoque {
-	private String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
-	private String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "Estoque.ser";
-	private String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "EstoqueTemp.ser";
-	private ArrayList<Produto> bufferDoEstoque;
+	private String caminhoBancoDeDados;
+	private String caminhoBancoDeDadosTemp;
 
+	public ControleDeEstoque(String caminhoPastaBancoDeDados) {
+		this.caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "Estoque.ser";
+		this.caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "EstoqueTemp.ser";
+	}
 	public void cadastrarProdutoNoEstoque(Produto novoProduto) throws IOException {
 		ObjectIOMaster.verificarArquivo(caminhoBancoDeDados);
 
@@ -402,7 +404,7 @@ public class ControleDeEstoque {
 	public static void main(String[] args) {
 		try{
 
-			ControleDeEstoque controleDeEstoque = new ControleDeEstoque();
+			ControleDeEstoque controleDeEstoque = new ControleDeEstoque("src" + System.getProperty("file.separator") + "BancoDeDados");
 
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("The Witcher 3", 30f, 100, "Jogo do Geralt", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Fantasia", "Acao", "Aventura")));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("Rainbow Six Siege", 60f, 100, "Jogo de Tiro", Set.of("PS4", "XBOX ONE", "PC"), Set.of("FPS", "Tatico")));
@@ -437,11 +439,6 @@ public class ControleDeEstoque {
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("God Of War 2", 50f, 2100, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("God Of War 3", 50f, 1200, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("God Of War Ragnarok", 50f, 1020, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
-
-			System.out.println("======================");
-			controleDeEstoque.listarProdutosDisponiveis();
-			System.out.println("======================");
-			controleDeEstoque.listarProdutosPorCategoria("Jogo");
 
 		}catch(IOException e){
 			e.printStackTrace();
