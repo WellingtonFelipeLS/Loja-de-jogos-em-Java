@@ -18,9 +18,13 @@ import ManipulacaoBancoDeDados.ControleDeEstoque;
 import RegrasDeNegocio.Produtos.Produto;
 
 public class ProductWindow {
+	Venda novaVenda;
+	private ControleDeEstoque controleDeEstoque;
 
-    ProductWindow(String nome, Venda novaVenda) {
-        
+    ProductWindow(String nome, Venda novaVenda, ControleDeEstoque controleDeEstoque) {
+		this.novaVenda = novaVenda;
+		this.controleDeEstoque = controleDeEstoque;
+
 		JFrame interfaceDoProduto = criarInterfaceDoProduto(nome);
 		JPanel painelPrincipal = criarPainelPrincipal();
 
@@ -38,7 +42,7 @@ public class ProductWindow {
 			gbc.gridx = 0;
 			gbc.gridy = 0;
 
-			Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(nome);
+			Produto produto = controleDeEstoque.procurarProdutoNoEstoque(nome);
 
 			JTextArea espacoDaDescricao = criarEspacoParaADescricao(produto.getDescricao()); 
 
@@ -194,8 +198,9 @@ public class ProductWindow {
 				int qntNoCarrinho = (novaVenda.getCarrinho().get(name) == null) ? 0 : novaVenda.getCarrinho().get(name);
 
 				try{
-					if(qntASerAdicionadaAoCarrinho + qntNoCarrinho <= ControleDeEstoque.procurarProdutoNoEstoque(name).getQntNoEstoque()){
-					novaVenda.adicionarProdutoAoCarrinho(name, qntASerAdicionadaAoCarrinho);
+					if(qntASerAdicionadaAoCarrinho + qntNoCarrinho <= controleDeEstoque.procurarProdutoNoEstoque(name).getQntNoEstoque()){
+						novaVenda.adicionarProdutoAoCarrinho(name, qntASerAdicionadaAoCarrinho);
+
 					interfaceDoProduto.dispatchEvent(new WindowEvent(interfaceDoProduto, WindowEvent.WINDOW_CLOSING));
 				}else
 					System.out.println("Quantidade inválida");

@@ -46,7 +46,7 @@ public class Venda implements Serializable{
 		this.idVenda = IdGenerator.gerarId();
 	}
 
-	public String[][] getInfoParaOCarrinho() {
+	public String[][] getInfoParaOCarrinho(ControleDeEstoque controleDeEstoque) {
 		Produto produto;
 		String[] infoProduto;
 		String[][] infoCarrinho = new String[carrinho.size()][];
@@ -54,7 +54,7 @@ public class Venda implements Serializable{
 		try{
 			int cont = 0;
 			for(String nome : carrinho.keySet()) {
-				produto = ControleDeEstoque.procurarProdutoNoEstoque(nome);
+				produto = controleDeEstoque.procurarProdutoNoEstoque(nome);
 
 				infoProduto = new String[4];
 				infoProduto[0] = nome;
@@ -115,7 +115,7 @@ public class Venda implements Serializable{
 		return separador.toString();
 	}
 
-	public String imprimirNotaFiscal() throws IOException{
+	public String imprimirNotaFiscal(ControleDeEstoque controleDeEstoque) throws IOException{
 		int n = 60;
 		StringBuilder notaFiscal = new StringBuilder();
 		notaFiscal.append(imprimirSeparadorDeNotaFiscal(n));
@@ -134,7 +134,7 @@ public class Venda implements Serializable{
 		float precoTotal = 0f;
 		for(String nomeDoProduto : carrinho.keySet()) {
 			int qntVendidaDoProduto = carrinho.get(nomeDoProduto).intValue();
-			float precoUnitario = ControleDeEstoque.procurarProdutoNoEstoque(nomeDoProduto).getPreco();
+			float precoUnitario = controleDeEstoque.procurarProdutoNoEstoque(nomeDoProduto).getPreco();
 			notaFiscal.append(String.format("%-20s %5d %10.2f %10.2f\n", nomeDoProduto, qntVendidaDoProduto, precoUnitario, precoUnitario * qntVendidaDoProduto));
 
 			qntTotal += qntVendidaDoProduto;

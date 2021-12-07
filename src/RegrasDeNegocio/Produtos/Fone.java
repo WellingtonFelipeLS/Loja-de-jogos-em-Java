@@ -16,6 +16,16 @@ public class Fone extends Periferico {
 		this.temMicrofone = temMicrofone;
 	}
 
+	public boolean equals(Produto outro) {
+		if(!(outro instanceof Fone))
+			return false;
+		
+		if(super.equals(outro) && this.getSensibilidade().equals(((Fone)outro).getSensibilidade()) && (this.getTemMicrofone()&&((Fone)outro).getTemMicrofone()))
+			return true;
+		
+		return false;
+	}
+
 	public void setSensibilidade(String sensibilidade) {
 		this.sensibilidade = sensibilidade;
 	}

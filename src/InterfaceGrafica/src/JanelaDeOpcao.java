@@ -17,8 +17,15 @@ import java.util.Objects;
 import java.util.Set;
 
 public class JanelaDeOpcao {
+	private ControleDeEstoque controleDeEstoque;
+	private ControleDeCadastroDeClientes controleDeCadastroDeClientes;
+	private ControleDeVendas controleDeVendas;
 
-    public JanelaDeOpcao() {
+    public JanelaDeOpcao(ControleDeEstoque controleDeEstoque, ControleDeCadastroDeClientes controleDeCadastroDeClientes, ControleDeVendas controleDeVendas) {
+		this.controleDeEstoque = controleDeEstoque;
+		this.controleDeCadastroDeClientes = controleDeCadastroDeClientes;
+		this.controleDeVendas = controleDeVendas;
+
 
         JFrame janelaDeOpcao = new JFrame("Opção");
         janelaDeOpcao.setBounds(0, 100, 900, 600);
@@ -282,7 +289,7 @@ public class JanelaDeOpcao {
 										Set<String> plataformas = Set.of(plataformaField.getText().split(","));
 										Set<String> generos = Set.of(generosJogoField.getText().split(","));
 
-										ControleDeEstoque.cadastrarProdutoNoEstoque(new Jogo(nome, preco, qntNoEstoque, descricao, plataformas, generos));
+										controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo(nome, preco, qntNoEstoque, descricao, plataformas, generos));
 										painelDeVisualizacao.removeAll();
 										painelDeVisualizacao.repaint();
 										painelDeVisualizacao.revalidate();
@@ -342,7 +349,7 @@ public class JanelaDeOpcao {
 										Set<String> plataformas = Set.of(plataformaField.getText().split(","));
 										String memoria = memoriaField.getText();
 
-										ControleDeEstoque.cadastrarProdutoNoEstoque(new Console(nome, preco, qntNoEstoque, descricao, plataformas, memoria));
+										controleDeEstoque.cadastrarProdutoNoEstoque(new Console(nome, preco, qntNoEstoque, descricao, plataformas, memoria));
                                     	painelDeVisualizacao.removeAll();
                                  		painelDeVisualizacao.repaint();
                                     	painelDeVisualizacao.revalidate();
@@ -416,7 +423,7 @@ public class JanelaDeOpcao {
 									boolean temMicrofone = (temMicrofoneBox.getSelectedItem() == "Sim") ? true : false;
 
 									try{
-										ControleDeEstoque.cadastrarProdutoNoEstoque(new Fone(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, sensibilidade, temMicrofone));
+										controleDeEstoque.cadastrarProdutoNoEstoque(new Fone(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, sensibilidade, temMicrofone));
 										painelDeVisualizacao.removeAll();
 										painelDeVisualizacao.repaint();
 										painelDeVisualizacao.revalidate();
@@ -486,7 +493,7 @@ public class JanelaDeOpcao {
 									boolean temBluetooth = (temBluetoothBox.getSelectedItem() == "Sim") ? true : false;
 									String dpi = dpiField.getText();
 									try{
-										ControleDeEstoque.cadastrarProdutoNoEstoque(new Mouse(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, dpi));
+										controleDeEstoque.cadastrarProdutoNoEstoque(new Mouse(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, dpi));
 										painelDeVisualizacao.removeAll();
 										painelDeVisualizacao.repaint();
 										painelDeVisualizacao.revalidate();
@@ -561,7 +568,7 @@ public class JanelaDeOpcao {
 									String tipoDeSwitch = switchTecladoField.getText();
 
 									try{
-										ControleDeEstoque.cadastrarProdutoNoEstoque(new TecladoMecanico(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, tipoDeSwitch));
+										controleDeEstoque.cadastrarProdutoNoEstoque(new TecladoMecanico(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, tipoDeSwitch));
 										painelDeVisualizacao.removeAll();
 										painelDeVisualizacao.repaint();
 										painelDeVisualizacao.revalidate();
@@ -636,7 +643,7 @@ public class JanelaDeOpcao {
                     public void actionPerformed(ActionEvent e) {
                         estoqueField.setEditable(true);
                         try{
-							Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(nomeProdutoField.getText());
+							Produto produto = controleDeEstoque.procurarProdutoNoEstoque(nomeProdutoField.getText());
 							produto.getQntNoEstoque();
 						}catch(IOException ioe) {
 							System.out.println("Falha");
@@ -657,7 +664,7 @@ public class JanelaDeOpcao {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try{
-							ControleDeEstoque.setQntNoEstoque(nomeProdutoField.getText(), Integer.parseInt(estoqueField.getText()));
+							controleDeEstoque.setQntNoEstoque(nomeProdutoField.getText(), Integer.parseInt(estoqueField.getText()));
 						}catch(IOException ioe) {
 							System.out.println("Falha");
 						}
@@ -683,7 +690,7 @@ public class JanelaDeOpcao {
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 				try{
-					produtosCadastradosTextArea.setText(ControleDeEstoque.listarProdutosCadastrados());
+					produtosCadastradosTextArea.setText(controleDeEstoque.listarProdutosCadastrados());
 				}catch(IOException ioe) {
 					System.out.println("Falha");
 				}
@@ -708,7 +715,7 @@ public class JanelaDeOpcao {
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
 				try{
-					produtosDisponiveisTextArea.setText(ControleDeEstoque.listarProdutosDisponiveis());
+					produtosDisponiveisTextArea.setText(controleDeEstoque.listarProdutosDisponiveis());
 				}catch(IOException ioe) {
 					System.out.println("FALHA");
 				}
@@ -732,7 +739,7 @@ public class JanelaDeOpcao {
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
                 try{
-					produtosIndisponiveisTextArea.setText(ControleDeEstoque.listarProdutosExcluidosOuForaDoEstoque());
+					produtosIndisponiveisTextArea.setText(controleDeEstoque.listarProdutosExcluidosOuForaDoEstoque());
 				}catch(IOException ioe) {
 					System.out.println("FALHA");
 				}
@@ -803,7 +810,7 @@ public class JanelaDeOpcao {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 						try{
-							ControleDeEstoque.excluirProduto(nomeProdutoField.getText().toString());
+							controleDeEstoque.excluirProduto(nomeProdutoField.getText().toString());
 							mensagemLabel.setText("Produto descadastrado");
 							nomeProdutoField.setText("");
 						}catch(IOException ioe){
@@ -875,7 +882,7 @@ public class JanelaDeOpcao {
                         //if descadastrar - > mensagemLabel.setText("produto descadastrado") e nomeProdutoField.setText("")
 						try{
 							ValidacaoDeParametros.valida(CPFField.getText().toString());
-							ControleDeCadastroDeClientes.excluirCliente(CPFField.getText().toString());
+							controleDeCadastroDeClientes.excluirCliente(CPFField.getText().toString());
 						}catch(IOException ioe) {
 							System.out.println("FALHA");
 						}catch(InvalidStateException iee) {
@@ -903,7 +910,7 @@ public class JanelaDeOpcao {
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
                 try{
-					listarClientesTextArea.setText(ControleDeCadastroDeClientes.listarClientesCadastrados());
+					listarClientesTextArea.setText(controleDeCadastroDeClientes.listarClientesCadastrados());
 				}catch(IOException ioe) {
 					System.out.println("FALHA");
 				}
@@ -926,7 +933,7 @@ public class JanelaDeOpcao {
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
                 try{
-					listarClientesExcluidosTextArea.setText(ControleDeCadastroDeClientes.listarClientesExcluidos());
+					listarClientesExcluidosTextArea.setText(controleDeCadastroDeClientes.listarClientesExcluidos());
 				}catch(IOException ioe) {
 					System.out.println("FALHA");
 				}
@@ -949,7 +956,7 @@ public class JanelaDeOpcao {
                 painelDeVisualizacao.add(scrollPane, BorderLayout.CENTER);
 
                 try{
-					listarTodasVendasTextArea.setText(ControleDeVendas.listarVendas());
+					listarTodasVendasTextArea.setText(controleDeVendas.listarVendas());
 				}catch(IOException ioe) {
 					System.out.println("FALHA");
 				}

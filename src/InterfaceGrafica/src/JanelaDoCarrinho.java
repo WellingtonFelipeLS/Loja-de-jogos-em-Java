@@ -18,9 +18,13 @@ import RegrasDeNegocio.Produtos.Produto;
 public class JanelaDoCarrinho{
 
 	private Venda novaVenda;
+	private ControleDeEstoque controleDeEstoque;
+	private ControleDeVendas controleDeVendas;
 
-	public JanelaDoCarrinho(Venda novaVenda) {
+	public JanelaDoCarrinho(Venda novaVenda, ControleDeEstoque controleDeEstoque, ControleDeVendas controleDeVendas) {
 		this.novaVenda = novaVenda;
+		this.controleDeEstoque = controleDeEstoque;
+		this.controleDeVendas = controleDeVendas;
 
 		JFrame janelaDoCarrinho = criarJanelaDoCarrinho("Carrinho");
 
@@ -204,7 +208,7 @@ public class JanelaDoCarrinho{
 
 	private JTable criarTabelaDeItens() {
 		String[] informacoes = {"Produto", "Quantidade", "Preço unitário", "Preço total"};
-		JTable tabelaDoCarrinho = new JTable(novaVenda.getInfoParaOCarrinho(), informacoes);
+		JTable tabelaDoCarrinho = new JTable(novaVenda.getInfoParaOCarrinho(controleDeEstoque), informacoes);
 		tabelaDoCarrinho.setFillsViewportHeight(true);
 		tabelaDoCarrinho.setEnabled(false);
 		tabelaDoCarrinho.setShowGrid(false);
@@ -225,7 +229,7 @@ public class JanelaDoCarrinho{
 
 	private JComboBox<String> criarBarraDeSelecaoDeProduto(JTextField produtoQuantidadeField, JLabel[] legendas){
 		JComboBox<String> barraDeSelecaoDeProduto = new JComboBox<String>(novaVenda.getProdutosDoCarrinho());
-		String[][] finalDataCarrinhoFinal = novaVenda.getInfoParaOCarrinho();
+		String[][] finalDataCarrinhoFinal = novaVenda.getInfoParaOCarrinho(controleDeEstoque);
 		barraDeSelecaoDeProduto.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -236,7 +240,7 @@ public class JanelaDoCarrinho{
 
 				try {
 					legendas[2].setIcon(new ImageIcon(procurarImagemDoProduto(produtoNome)));
-					Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(produtoNome);
+					Produto produto = controleDeEstoque.procurarProdutoNoEstoque(produtoNome);
 					assert produto != null;
 					legendas[3].setText("Estoque: " + produto.getQntNoEstoque());
 				} catch (IOException ex) {
@@ -256,13 +260,13 @@ public class JanelaDoCarrinho{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try{
-					Produto produto = ControleDeEstoque.procurarProdutoNoEstoque(barraDeSelecaoDeProduto.getSelectedItem().toString());
+					Produto produto = controleDeEstoque.procurarProdutoNoEstoque(barraDeSelecaoDeProduto.getSelectedItem().toString());
 					int qntASerComprada = Integer.valueOf(produtoQuantidadeField.getText());
 					if (qntASerComprada > 0) {
 						if(produto.getQntNoEstoque() >= qntASerComprada){
 							novaVenda.modificarQntDoProdutoNoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString(), Integer.valueOf(produtoQuantidadeField.getText()));
 							janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
-							new JanelaDoCarrinho(novaVenda);
+							new JanelaDoCarrinho(novaVenda, controleDeEstoque, controleDeVendas);
 						}
 						else {
 							mensagemLabel.setText("Quantidade Inválida");
@@ -289,7 +293,7 @@ public class JanelaDoCarrinho{
 			public void actionPerformed(ActionEvent e) {
 				novaVenda.retirarProdutoDoCarrinho(barraDeSelecaoDeProduto.getSelectedItem().toString());
 				janelaDoCarrinho.dispatchEvent(new WindowEvent(janelaDoCarrinho, WindowEvent.WINDOW_CLOSING));
-				new JanelaDoCarrinho(novaVenda);
+				new JanelaDoCarrinho(novaVenda, controleDeEstoque, controleDeVendas);
 			}
 		});
 
@@ -306,8 +310,8 @@ public class JanelaDoCarrinho{
 					if(novaVenda.getCarrinho().isEmpty()) {
 						menssagemLabel.setText("Carrinho vazio");
 					}else {
-						ControleDeVendas.cadastrarVenda(novaVenda);
-						ControleDeVendas.listarVendas();
+						controleDeVendas.cadastrarVenda(novaVenda);
+						controleDeVendas.listarVendas();
 						novaVenda.limparDadosDaVenda();
 						System.out.println("Compra realizada");
 						JFrame compraRealizadaFrame = new JFrame("Menssagem");

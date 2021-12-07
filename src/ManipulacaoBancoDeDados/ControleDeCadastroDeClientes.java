@@ -8,12 +8,12 @@ import ClassesUtilitarias.CharIOMaster;
 import RegrasDeNegocio.Cliente;
 
 public class ControleDeCadastroDeClientes {
-	private static final String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
-	private static final String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientes.txt";
-	private static final String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientesTemp.txt";
-	private static final String separadorDeinformacoes = "/";
+	private String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
+	private String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientes.txt";
+	private String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientesTemp.txt";
+	private String separadorDeinformacoes = "/";
 
-	public static void cadastrarCliente(Cliente novoCliente) throws IOException{
+	public void cadastrarCliente(Cliente novoCliente) throws IOException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
 
 		String cliente;
@@ -42,7 +42,7 @@ public class ControleDeCadastroDeClientes {
 		}
 	}
 
-	public static void reCadastrarCliente(Cliente novoCliente) throws IOException{
+	public void reCadastrarCliente(Cliente novoCliente) throws IOException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp, separadorDeinformacoes);
 
 		String cliente;
@@ -78,7 +78,7 @@ public class ControleDeCadastroDeClientes {
 		}
 	}
 
-	public static Cliente procurarCliente(String CPF) throws IOException, CadastroException{
+	public Cliente procurarCliente(String CPF) throws IOException, CadastroException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
 		
 		String cliente;
@@ -99,7 +99,7 @@ public class ControleDeCadastroDeClientes {
 		return null;
 	}
 
-	public static void excluirCliente(String CPF) throws IOException{
+	public void excluirCliente(String CPF) throws IOException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp, separadorDeinformacoes);
 
 		String cliente;
@@ -132,7 +132,7 @@ public class ControleDeCadastroDeClientes {
 		}
 	}
 
-	private static String prototipoListarClientes(boolean val) throws IOException{
+	private String prototipoListarClientes(boolean val) throws IOException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
 
 		String cliente;
@@ -159,24 +159,25 @@ public class ControleDeCadastroDeClientes {
 		return listaClientes.toString();
 	}
 
-	public static String listarClientesCadastrados() throws IOException{
+	public String listarClientesCadastrados() throws IOException{
 		return prototipoListarClientes(false);
 	}
 
-	public static String listarClientesExcluidos() throws IOException{
+	public String listarClientesExcluidos() throws IOException{
 		return prototipoListarClientes(true);
 	}
 
 	public static void main(String[] args) {
 		try{
-			cadastrarCliente(new Cliente("Jonas", "289.875.960-01", "69027-410"));
-			cadastrarCliente(new Cliente("Maria", "606.981.120-83", "74990-725"));
-			cadastrarCliente(new Cliente("Kalil", "087.532.840-70", "78085-778"));
-			cadastrarCliente(new Cliente("Wellington Felipe", "424.844.250-74", "49090-073"));
-			cadastrarCliente(new Cliente("Matheus Miller", "425.332.960-82", "68908-351"));
-			listarClientesCadastrados();
+			ControleDeCadastroDeClientes controleDeCadastroDeClientes = new ControleDeCadastroDeClientes();
+			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Jonas", "289.875.960-01", "69027-410"));
+			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Maria", "606.981.120-83", "74990-725"));
+			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Kalil", "087.532.840-70", "78085-778"));
+			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Wellington Felipe", "424.844.250-74", "49090-073"));
+			controleDeCadastroDeClientes.cadastrarCliente(new Cliente("Matheus Miller", "425.332.960-82", "68908-351"));
+			controleDeCadastroDeClientes.listarClientesCadastrados();
 			System.out.println("-------------------------");
-			listarClientesExcluidos();
+			controleDeCadastroDeClientes.listarClientesExcluidos();
 		}catch(IOException e){
 			System.out.println("Falha na comunicação com o banco de dados.");
 		}

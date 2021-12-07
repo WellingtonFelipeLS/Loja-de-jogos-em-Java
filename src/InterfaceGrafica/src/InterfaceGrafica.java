@@ -5,7 +5,7 @@ import RegrasDeNegocio.Venda;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import ManipulacaoBancoDeDados.ControleDeEstoque;
+import ManipulacaoBancoDeDados.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,9 +17,15 @@ import java.util.Objects;
 
 public class InterfaceGrafica implements MouseListener{
 	private Venda novaVenda;
+	private ControleDeEstoque controleDeEstoque;
+	private ControleDeVendas controleDeVendas;
+	private ControleDeCadastroDeClientes controleDeCadastroDeClientes;
 
     InterfaceGrafica() {
 		this.novaVenda = new Venda();
+		this.controleDeEstoque = new ControleDeEstoque();
+		this.controleDeVendas = new ControleDeVendas(controleDeEstoque);
+		this.controleDeCadastroDeClientes = new ControleDeCadastroDeClientes();
 
 		JFrame interfacePrincipal = criarInterfacePrincipal();
 		JPanel painelSuperior = criarPainelSuperior();
@@ -55,8 +61,9 @@ public class InterfaceGrafica implements MouseListener{
 		painelSuperior.add(botaoDoCarrinho);
 		painelSuperior.add(botaoDeCompra);
 
+        //String[] lista = {"Xcom", "Xcom 2", "Red Dead Redemption", "Red Dead Redemption 2", "Civilization 6", "Diablo 3"};
         try{
-			exporProdutos(ControleDeEstoque.listarNomeDosProdutosDisponiveis(), painelPrincipal, gbc);
+			exporProdutos(controleDeEstoque.listarNomeDosProdutosDisponiveis(), painelPrincipal, gbc);
 		}catch(IOException ioe) {
 			System.out.println("FALHA");
 		}
@@ -82,34 +89,12 @@ public class InterfaceGrafica implements MouseListener{
 		return painelSuperior;
 	}
 
-	private JTextField criarCaixaDeBusca() {
-        JTextField campoDeBusca = new JTextField( "Digite o nome do produto." );
-        campoDeBusca.setColumns(30);
-        campoDeBusca.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (campoDeBusca.getText().equals( "Digite o nome do produto." )) {
-                    campoDeBusca.setText( "" );
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (campoDeBusca.getText().equals( "" )) {
-                    campoDeBusca.setText( "Digite o nome do produto." );
-                }
-            }
-        });
-
-		return campoDeBusca;
-	}
-
 	private JButton criarBotaoDeBusca(JComboBox caixaDeBusca) {
         JButton botaoDeBusca = new JButton( "pesquisar" );
         botaoDeBusca.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent e) {
-                new ProductWindow(caixaDeBusca.getSelectedItem().toString(), novaVenda);
+                new ProductWindow(caixaDeBusca.getSelectedItem().toString(), novaVenda, controleDeEstoque);
             }
         });
 
@@ -121,7 +106,7 @@ public class InterfaceGrafica implements MouseListener{
         botaoDeOpcao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new JanelaDeOpcao();
+                new JanelaDeOpcao(controleDeEstoque, controleDeCadastroDeClientes, controleDeVendas);
 
             }
         });
@@ -134,7 +119,7 @@ public class InterfaceGrafica implements MouseListener{
         botaoDoCarrinho.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-				new JanelaDoCarrinho(novaVenda);
+				new JanelaDoCarrinho(novaVenda, controleDeEstoque, controleDeVendas);
             }
         });
 
@@ -146,7 +131,7 @@ public class InterfaceGrafica implements MouseListener{
         contaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new JanelaDaConta(contaButton, novaVenda);
+                new JanelaDaConta(contaButton, novaVenda, controleDeVendas, controleDeCadastroDeClientes);
             }
         });
 
@@ -172,8 +157,8 @@ public class InterfaceGrafica implements MouseListener{
             public void actionPerformed(ActionEvent e) {
 				try{
 				ArrayList<String> lista = (comboBox.getSelectedItem().toString().equals("")) ?
-								ControleDeEstoque.listarNomeDosProdutosDisponiveis() :
-								ControleDeEstoque.listarProdutosPorCategoria(comboBox.getSelectedItem().toString());
+								controleDeEstoque.listarNomeDosProdutosDisponiveis() :
+								controleDeEstoque.listarProdutosPorCategoria(comboBox.getSelectedItem().toString());
 
 				exporProdutos(lista,painelPrincipal, gbc);
 				}catch(IOException ioe) {
@@ -255,7 +240,7 @@ public class InterfaceGrafica implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        new ProductWindow(((JLabel)e.getSource()).getName(), this.novaVenda);
+        new ProductWindow(((JLabel)e.getSource()).getName(), this.novaVenda, controleDeEstoque);
     }
 
     @Override

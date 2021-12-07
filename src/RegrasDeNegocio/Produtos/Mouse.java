@@ -12,6 +12,16 @@ public class Mouse extends Periferico{
 		this.dpi = dpi;
 	}
 
+	public boolean equals(Produto outro) {
+		if(!(outro instanceof Mouse))
+			return false;
+		
+		if(super.equals(outro) && this.getDpi().equals(((Mouse)outro).getDpi()))
+			return true;
+		
+		return false;
+	}
+
 	public void setDpi(String dpi) {
 		this.dpi = dpi;
 	}

@@ -14,11 +14,15 @@ import ClassesUtilitarias.ObjectIOMaster;
 
 
 public class ControleDeVendas{
-	private static final String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
-	private static final String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendas.ser";
-	private static final String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendasTemp.ser";
+	private String caminhoPastaBancoDeDados = "src" + System.getProperty("file.separator") + "BancoDeDados";
+	private String caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendas.ser";
+	private String caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDasVendasTemp.ser";
+	private ControleDeEstoque controleDeEstoque;
 	
-	public static void cadastrarVenda(Venda novaVenda) throws IOException {
+	public ControleDeVendas(ControleDeEstoque controleDeEstoque) {
+		this.controleDeEstoque = controleDeEstoque;
+	}
+	public void cadastrarVenda(Venda novaVenda) throws IOException {
 		ObjectIOMaster.verificarArquivo(caminhoBancoDeDados);
 
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
@@ -27,7 +31,7 @@ public class ControleDeVendas{
 		Map<String, Integer> carrinho = novaVenda.getCarrinho();
 
 		for(String nomeDoProduto : carrinho.keySet())
-			ControleDeEstoque.retirarQntDoEstoque(nomeDoProduto, carrinho.get(nomeDoProduto));
+			controleDeEstoque.retirarQntDoEstoque(nomeDoProduto, carrinho.get(nomeDoProduto));
 
 		try{
 			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass))
@@ -49,7 +53,7 @@ public class ControleDeVendas{
 		}
 	}
 
-	public static String listarVendas() throws IOException {
+	public String listarVendas() throws IOException {
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
 		Object venda;
@@ -57,7 +61,7 @@ public class ControleDeVendas{
 
 		try{
 			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass))
-				notasFiscais.append(((Venda) venda).imprimirNotaFiscal());
+				notasFiscais.append(((Venda) venda).imprimirNotaFiscal(controleDeEstoque));
 				
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
@@ -68,7 +72,7 @@ public class ControleDeVendas{
 		return notasFiscais.toString();
 	}
 
-	public static String listarVendasPorCliente(String CPF) throws IOException{
+	public String listarVendasPorCliente(String CPF) throws IOException{
 		ObjectIOMaster registroDeVendas = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
 		Object venda;
@@ -78,7 +82,7 @@ public class ControleDeVendas{
 
 			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass)) 
 				if(((Venda)venda).getCliente().getCPF().equals(CPF))
-					notasFiscais.append(((Venda) venda).imprimirNotaFiscal());
+					notasFiscais.append(((Venda) venda).imprimirNotaFiscal(controleDeEstoque));
 			
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
@@ -91,9 +95,11 @@ public class ControleDeVendas{
 
 	public static void main(String[] args) {
 		try{
+			ControleDeVendas controleDeVendas = new ControleDeVendas(new ControleDeEstoque());
+
 			Venda venda1 = new Venda();
 			venda1.adicionarProdutoAoCarrinho("XBOX Series X", 10);
-			cadastrarVenda(venda1);
+			controleDeVendas.cadastrarVenda(venda1);
 
 			Cliente cliente1 = new Cliente("Wellington Felipe", "424.844.250-74", "49090-073");
 			Venda venda2 = new Venda();
@@ -101,7 +107,7 @@ public class ControleDeVendas{
 			venda2.adicionarProdutoAoCarrinho("Razer Viper Mini", 1);
 			venda2.adicionarProdutoAoCarrinho("Warrior Kaden", 1);
 			venda2.adicionarProdutoAoCarrinho("Rainbow Six Siege", 1);
-			cadastrarVenda(venda2);
+			controleDeVendas.cadastrarVenda(venda2);
 
 			Cliente cliente2 = new Cliente("Matheus Miller", "425.332.960-82", "68908-351");
 			Venda venda3 = new Venda();
@@ -109,16 +115,16 @@ public class ControleDeVendas{
 			venda3.adicionarProdutoAoCarrinho("PS5", 1);
 			venda3.adicionarProdutoAoCarrinho("God Of War", 1);
 			venda3.adicionarProdutoAoCarrinho("The Last Of Us", 1);
-			cadastrarVenda(venda3);
+			controleDeVendas.cadastrarVenda(venda3);
 
 			Venda venda4 = new Venda();
 			venda4.adicionarProdutoAoCarrinho("The Witcher 3", 20);
 			venda4.adicionarProdutoAoCarrinho("Redragon Kumara", 20);
-			cadastrarVenda(venda4);
+			controleDeVendas.cadastrarVenda(venda4);
 
-			listarVendas();
+			controleDeVendas.listarVendas();
 			System.out.println("**********************************************");
-			listarVendasPorCliente("42484425074");
+			controleDeVendas.listarVendasPorCliente("42484425074");
 		}catch(IOException ioe) {
 			ioe.printStackTrace();
 		}

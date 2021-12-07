@@ -17,9 +17,14 @@ import java.util.Objects;
 
 public class JanelaDaConta {
 	private Venda novaVenda;
+	ControleDeCadastroDeClientes controleDeCadastroDeClientes;
+	ControleDeVendas controleDeVendas;
 
-    JanelaDaConta(JButton botao, Venda novaVenda) {
+
+    JanelaDaConta(JButton botao, Venda novaVenda, ControleDeVendas controleDeVendas, ControleDeCadastroDeClientes controleDeCadastroDeClientes) {
 		this.novaVenda = novaVenda;
+		this.controleDeCadastroDeClientes = controleDeCadastroDeClientes;
+		this.controleDeVendas = controleDeVendas;
 
         JFrame janelaDaConta = new JFrame("Conta");
         janelaDaConta.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -106,7 +111,7 @@ public class JanelaDaConta {
                 //Fazer login
 				try{
 					if(ValidacaoDeParametros.valida(userCPFTextField.getText())) {
-						Cliente cliente = ControleDeCadastroDeClientes.procurarCliente(userCPFTextField.getText());
+						Cliente cliente = controleDeCadastroDeClientes.procurarCliente(userCPFTextField.getText());
 						if(cliente != null) {
 							novaVenda.setCliente(cliente);
 							botao.setText("Conta");
@@ -219,7 +224,7 @@ public class JanelaDaConta {
                 // cadastrar
 				try{
 					if(ValidacaoDeParametros.valida(cpfField.getText()) && userNameTextField2.getText().equals("")){
-						ControleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
+						controleDeCadastroDeClientes.cadastrarCliente(new Cliente(userNameTextField2.getText(), cpfField.getText(), cepField.getText()));
 						janelaDaConta.remove(cadastroPanel);
 						janelaDaConta.add(loginPanel, BorderLayout.CENTER);
 						janelaDaConta.repaint();
@@ -280,7 +285,7 @@ public class JanelaDaConta {
                 public void actionPerformed(ActionEvent e) {
                     //exibir histórico de compra
 					try{
-						historicoTextArea.setText(ControleDeVendas.listarVendasPorCliente(novaVenda.getCliente().getCPF()));
+						historicoTextArea.setText(controleDeVendas.listarVendasPorCliente(novaVenda.getCliente().getCPF()));
 					}catch(IOException ioe) {
 						ioe.printStackTrace();
 					}

@@ -13,6 +13,17 @@ public class Jogo extends Produto{
         this.generos = new TreeSet<String>(generos);
     }
 
+    @Override
+    public boolean equals(Produto outro) {
+		if(!(outro instanceof Jogo))
+			return false;
+
+		if(super.equals(outro) && generos.equals(((Jogo)outro).getGeneros()))
+			return true;
+		
+		return false;
+    }
+
 	public void setGeneros(Set<String> generos) {
 		this.generos = generos;
 	}

@@ -11,6 +11,16 @@ public class Console extends Produto{
 		super(nome, preco, qntNoEstoque,  descricao, plataforma);
 		this.memoria = memoria;
 	}
+
+	public boolean equals(Produto outro) {
+		if(!(outro instanceof Console))
+			return false;
+		
+		if(super.equals(outro) && this.memoria.equals(((Console)outro).getMemoria()))
+			return true;
+		
+		return false;
+	}
 	
 	public void setMemoria(String memoria) {
 		this.memoria = memoria;
