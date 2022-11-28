@@ -11,7 +11,7 @@ public abstract class Produto implements Serializable{
 	private float preco;
     private String id;
     private String descricao;
-    private Set<String> plataforma;
+    private Set<String> plataforma; // Mudar plataforma para "String". Um jogo para plataformas diferentes podem ter quantidades e preços diferentes
 	private boolean cadastroAtivo;
 	private int qntNoEstoque;
 

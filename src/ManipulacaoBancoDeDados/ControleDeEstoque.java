@@ -21,6 +21,7 @@ public class ControleDeEstoque {
 		this.caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "Estoque.ser";
 		this.caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "EstoqueTemp.ser";
 	}
+
 	public void cadastrarProdutoNoEstoque(Produto novoProduto) throws IOException {
 		ObjectIOMaster.verificarArquivo(caminhoBancoDeDados);
 
@@ -30,7 +31,7 @@ public class ControleDeEstoque {
 
 		try {
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
-				if(novoProduto.equals((Produto)produto))
+				if(((Produto)produto).equals(novoProduto))
 					throw new CadastroException();
 				
 				estoque.escrever(produto);
@@ -59,19 +60,18 @@ public class ControleDeEstoque {
 		}
 	}
 
-	public void reCadastrarProdutoNoEstoque(Produto novoProduto) throws IOException {
+	public void recadastrarProdutoNoEstoque(Produto novoProduto) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		Object produto;
 
 		try {
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
-	
-				if(novoProduto.equals((Produto)produto)) {
-					if(!novoProduto.getCadastroAtivo()){
+				if(((Produto)produto).equals(novoProduto)) {
+					if(!((Produto)produto).getCadastroAtivo()){
 						estoque.escrever(novoProduto);
 					}else
-						throw new CadastroException("Produto já cadastrado.");
+						throw new CadastroException("Produto " + novoProduto.getNome() + " com cadastro ativo.");
 				}else
 					estoque.escrever(produto);
 			}
@@ -83,7 +83,7 @@ public class ControleDeEstoque {
 			ObjectIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		}catch(CadastroException ce){
-			System.err.println("Produto já cadastrado.");
+			System.err.println("Falha no recadastramento: " + ce.getMessage());
 			
 			estoque.fecharArquivos();
 
@@ -97,6 +97,7 @@ public class ControleDeEstoque {
 		}
 	}
 
+	// Pedir, além do nome do produto, a plataforma.
 	public void excluirProduto(String nomeDoProduto) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
@@ -107,7 +108,7 @@ public class ControleDeEstoque {
 
 				if(((Produto)produto).getNome().equals(nomeDoProduto)) {
 					if(!((Produto)produto).getCadastroAtivo())
-						throw new CadastroException("Produto já excluído.");
+						throw new CadastroException("Produto " + ((Produto)produto).getNome() + " já excluído.");
 					else{
 						((Produto)produto).setCadastroAtivo(false);
 						estoque.escrever(produto);
@@ -123,7 +124,7 @@ public class ControleDeEstoque {
 			ObjectIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		}catch(CadastroException ce){
-			System.err.println("Produto já excluído.");
+			System.err.println("Falha na exclusão: " + ce.getMessage());
 			
 			estoque.fecharArquivos();
 
@@ -150,15 +151,15 @@ public class ControleDeEstoque {
 						estoque.fecharArquivos();
 						return (Produto)produto;
 					}else
-						throw new CadastroException("Produto excluído.");
+						throw new CadastroException("Produto " + ((Produto)produto).getNome() + " excluído.");
 			}
 		}
-			throw new EstoqueException("Produto não encontrado no estoque.");
+			throw new EstoqueException("Produto " + nomeDoProduto + " não cadastrado.");
 
 		}catch(CadastroException ce) {
-			ce.printStackTrace();
+			System.err.println("Falha na busca: " + ce.getMessage());
 		}catch(EstoqueException ee) {
-			ee.printStackTrace();
+			System.err.println("Falha na busca: " + ee.getMessage());
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally {
