@@ -1,12 +1,11 @@
 package TestesUnitarios;
 
-import static org.junit.Assert.assertArrayEquals;
-
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import RegrasDeNegocio.Venda;
 
@@ -19,7 +18,7 @@ public class UnitTestVenda {
 		Map<String, Integer> resultadoEsperado = new Hashtable<String, Integer>();
 		resultadoEsperado.put("The Witcher 3", 5);
 
-		Assert.assertEquals(resultadoEsperado, novaVenda.getCarrinho());
+		assertEquals(resultadoEsperado, novaVenda.getCarrinho());
 	}
 
 	@Test
@@ -31,7 +30,7 @@ public class UnitTestVenda {
 		Map<String, Integer> resultadoEsperado = new Hashtable<String, Integer>();
 		resultadoEsperado.put("The Witcher 3", 2);
 
-		Assert.assertEquals(resultadoEsperado, novaVenda.getCarrinho());
+		assertEquals(resultadoEsperado, novaVenda.getCarrinho());
 	}
 
 	@Test
@@ -42,7 +41,7 @@ public class UnitTestVenda {
 
 		Map<String, Integer> resultadoEsperado = new Hashtable<String, Integer>();
 
-		Assert.assertEquals(resultadoEsperado, novaVenda.getCarrinho());
+		assertEquals(resultadoEsperado, novaVenda.getCarrinho());
 	}
 
 	@Test

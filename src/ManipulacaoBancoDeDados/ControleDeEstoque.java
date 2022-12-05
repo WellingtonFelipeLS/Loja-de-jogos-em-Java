@@ -12,10 +12,12 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.function.Function;
 
 public class ControleDeEstoque {
 	private String caminhoBancoDeDados;
 	private String caminhoBancoDeDadosTemp;
+	private String formatoDeSaida = "Nome: %-20s		Quantidade No Estoque: %-10d		Preço: %-10.2f\n";
 
 	public ControleDeEstoque(String caminhoPastaBancoDeDados) {
 		this.caminhoBancoDeDados = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "Estoque.ser";
@@ -186,7 +188,7 @@ public class ControleDeEstoque {
 						estoque.escrever(produto);
 					}
 					else
-						throw new CadastroException("Produto excluído. Recadastre o produto para modificar sua quantidade.");
+						throw new CadastroException("Produto " + nomeDoProduto + " excluído. Recadastre o produto para modificar sua quantidade.");
 				}else
 					estoque.escrever(produto);
 			}
@@ -198,14 +200,14 @@ public class ControleDeEstoque {
 			ObjectIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		}catch(CadastroException ce) {
-			ce.printStackTrace();
+			System.err.println("Falha em inserir quantidade: " + ce.getMessage());
 			
 			estoque.fecharArquivos();
 
 			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
 		}catch(EstoqueException ee) {
-			ee.printStackTrace();
-			
+			System.err.println("Falha em inserir quantidade: " + ee.getMessage());
+
 			estoque.fecharArquivos();
 
 			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
@@ -231,13 +233,13 @@ public class ControleDeEstoque {
 					if(((Produto)produto).getCadastroAtivo()) {
 
 						if(qnt + ((Produto)produto).getQntNoEstoque() < 0) 
-							throw new EstoqueException("A quantidade no estoque não pode ser negativa.");
+							throw new EstoqueException("Não é possível retirar " + -qnt + " unidades. Existem apenas " + ((Produto)produto).getQntNoEstoque() + " em estoque.");
 
 						((Produto)produto).setQntNoEstoque(qnt + ((Produto)produto).getQntNoEstoque());
 						estoque.escrever(produto);
 					}
 					else
-						throw new CadastroException("Produto excluído. Recadastre o produto para modificar sua quantidade.");
+						throw new CadastroException("Produto " + nomeDoProduto + " excluído. Recadastre o produto para modificar sua quantidade.");
 				}else
 					estoque.escrever(produto);
 			}
@@ -249,14 +251,14 @@ public class ControleDeEstoque {
 			ObjectIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		}catch(CadastroException ce) {
-			ce.printStackTrace();
+			System.err.println("Falha em modificar quantidade: " + ce.getMessage());
 			
 			estoque.fecharArquivos();
 
 			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
 		}catch(EstoqueException ee) {
-			ee.printStackTrace();
-			
+			System.err.println("Falha em modificar quantidade: " + ee.getMessage());
+
 			estoque.fecharArquivos();
 
 			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
@@ -284,19 +286,9 @@ public class ControleDeEstoque {
 		ArrayList<String> nomesDosProdutos = new ArrayList<String>();
 
 		try{
-			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
-				// Operador XOR agindo como negação.
-
-				// Se val == true, a expressão no if é equivalente à 
-				// "!(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0)"
-				// Que, utilizando simplificações lógicas, é equivalente à
-				//"((!(Produto)produto).getCadastroAtivo() || ((Produto)produto).getQntNoEstoque() <= 0)"
-
-				// Se val == false, a expressão no if é equivalente à "Integer.valueOf(informacoesCliente[4]) == 1"
+			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass))
 				if(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) 
 					nomesDosProdutos.add(((Produto) produto).getNome());
-					
-			}
 
 			return nomesDosProdutos;
 
@@ -309,7 +301,7 @@ public class ControleDeEstoque {
 		return null;
 	}
 
-	private String prototipoListarProdutos(boolean val) throws IOException {
+	private String prototipoListarProdutos(Function<Produto, Boolean> func) throws IOException {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 		
 		Object produto;
@@ -317,19 +309,11 @@ public class ControleDeEstoque {
 
 		try{
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
-				// Operador XOR agindo como negação.
-
-				// Se val == true, a expressão no if é equivalente à 
-				// "!(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0)"
-				// Que, utilizando simplificações lógicas, é equivalente à
-				//"((!(Produto)produto).getCadastroAtivo() || ((Produto)produto).getQntNoEstoque() <= 0)"
-
-				// Se val == false, a expressão no if é equivalente à "Integer.valueOf(informacoesCliente[4]) == 1"
-				if((((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) ^ val) 
-					listaDosProdutos.append(String.format("Nome: %-20s		Quantidade No Estoque: %-10d		Preço: %-10.2f\n",
-																((Produto) produto).getNome(),
-																((Produto) produto).getQntNoEstoque(),
-																((Produto) produto).getPreco()));
+				if(func.apply((Produto)produto))
+					listaDosProdutos.append(String.format(formatoDeSaida,
+														 ((Produto) produto).getNome(),
+														 ((Produto) produto).getQntNoEstoque(),
+														 ((Produto) produto).getPreco()));
 					
 			}
 
@@ -345,11 +329,12 @@ public class ControleDeEstoque {
 	}
 
 	public String listarProdutosDisponiveis() throws IOException {
-		return prototipoListarProdutos(false);
+		return prototipoListarProdutos((produto) -> ((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0);
 	}
 
 	public String listarProdutosExcluidosOuForaDoEstoque() throws IOException {
-		return prototipoListarProdutos(true);
+		return prototipoListarProdutos((produto) -> !(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0));
+
 	}
 
 	public String listarProdutosCadastrados() throws IOException {
@@ -360,7 +345,7 @@ public class ControleDeEstoque {
 
 		try{
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) 
-				produtosCadastrados.append(String.format("Nome: %-20s		Quantidade No Estoque: %-10d		Preço: %-10.2f\n",
+				produtosCadastrados.append(String.format(formatoDeSaida,
 														((Produto) produto).getNome(),
 														((Produto) produto).getQntNoEstoque(),
 														((Produto) produto).getPreco()));
