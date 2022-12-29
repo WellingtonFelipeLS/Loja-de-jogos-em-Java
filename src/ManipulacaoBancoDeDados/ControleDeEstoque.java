@@ -144,24 +144,24 @@ public class ControleDeEstoque {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 
 		Object produto;
+		Produto produtoTemp;
 
 		try {
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
+				produtoTemp = (Produto) produto;
 
-				if(((Produto)produto).getNome().equals(nomeDoProduto)) {
-					if(((Produto)produto).getCadastroAtivo()){
+				if(produtoTemp.getNome().equals(nomeDoProduto)) {
+					if(produtoTemp.getCadastroAtivo()){
 						estoque.fecharArquivos();
-						return (Produto)produto;
+						return produtoTemp;
 					}else
-						throw new CadastroException("Produto " + ((Produto)produto).getNome() + " excluído.");
+						throw new CadastroException("Produto " + produtoTemp.getNome() + " excluído.");
 			}
 		}
 			throw new EstoqueException("Produto " + nomeDoProduto + " não cadastrado.");
 
-		}catch(CadastroException ce) {
+		}catch(CadastroException | EstoqueException ce) {
 			System.err.println("Falha na busca: " + ce.getMessage());
-		}catch(EstoqueException ee) {
-			System.err.println("Falha na busca: " + ee.getMessage());
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}finally {
@@ -175,17 +175,19 @@ public class ControleDeEstoque {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		Object produto;
+		Produto produtoTemp;
 
 		try {
 			if(qnt < 0)
 				throw new EstoqueException("A quantidade no estoque não pode ser negativa.");
 
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
+				produtoTemp = (Produto) produto;
 
-				if(((Produto)produto).getNome().equals(nomeDoProduto)) {
-					if(((Produto)produto).getCadastroAtivo()) {
-						((Produto)produto).setQntNoEstoque(qnt);
-						estoque.escrever(produto);
+				if(produtoTemp.getNome().equals(nomeDoProduto)) {
+					if(produtoTemp.getCadastroAtivo()) {
+						produtoTemp.setQntNoEstoque(qnt);
+						estoque.escrever(produtoTemp);
 					}
 					else
 						throw new CadastroException("Produto " + nomeDoProduto + " excluído. Recadastre o produto para modificar sua quantidade.");
@@ -199,15 +201,9 @@ public class ControleDeEstoque {
 
 			ObjectIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
-		}catch(CadastroException ce) {
+		}catch(CadastroException | EstoqueException ce) {
 			System.err.println("Falha em inserir quantidade: " + ce.getMessage());
 			
-			estoque.fecharArquivos();
-
-			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
-		}catch(EstoqueException ee) {
-			System.err.println("Falha em inserir quantidade: " + ee.getMessage());
-
 			estoque.fecharArquivos();
 
 			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
@@ -250,15 +246,9 @@ public class ControleDeEstoque {
 
 			ObjectIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
-		}catch(CadastroException ce) {
+		}catch(CadastroException | EstoqueException ce) {
 			System.err.println("Falha em modificar quantidade: " + ce.getMessage());
 			
-			estoque.fecharArquivos();
-
-			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
-		}catch(EstoqueException ee) {
-			System.err.println("Falha em modificar quantidade: " + ee.getMessage());
-
 			estoque.fecharArquivos();
 
 			ObjectIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
@@ -283,13 +273,17 @@ public class ControleDeEstoque {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 		
 		Object produto;
+		Produto produtoTemp;
 		ArrayList<String> nomesDosProdutos = new ArrayList<String>();
 
 		try{
-			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass))
-				if(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0) 
-					nomesDosProdutos.add(((Produto) produto).getNome());
-
+			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
+				produtoTemp = (Produto) produto;
+				
+				if(produtoTemp.getCadastroAtivo() && produtoTemp.getQntNoEstoque() > 0) 
+					nomesDosProdutos.add(produtoTemp.getNome());
+			}
+				
 			return nomesDosProdutos;
 
 		}catch(ClassNotFoundException cnfe) {
@@ -329,11 +323,13 @@ public class ControleDeEstoque {
 	}
 
 	public String listarProdutosDisponiveis() throws IOException {
-		return prototipoListarProdutos((produto) -> ((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0);
+		return prototipoListarProdutos((produto) -> 
+		produto.getCadastroAtivo() && produto.getQntNoEstoque() > 0);
 	}
 
 	public String listarProdutosExcluidosOuForaDoEstoque() throws IOException {
-		return prototipoListarProdutos((produto) -> !(((Produto)produto).getCadastroAtivo() && ((Produto)produto).getQntNoEstoque() > 0));
+		return prototipoListarProdutos((produto) -> 
+		!(produto.getCadastroAtivo() && produto.getQntNoEstoque() > 0));
 
 	}
 
@@ -341,17 +337,19 @@ public class ControleDeEstoque {
 		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
 		
 		Object produto;
+		Produto produtoTemp;
 		StringBuilder produtosCadastrados = new StringBuilder();
 
 		try{
-			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) 
+			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
+				produtoTemp = (Produto) produto;
 				produtosCadastrados.append(String.format(formatoDeSaida,
-														((Produto) produto).getNome(),
-														((Produto) produto).getQntNoEstoque(),
-														((Produto) produto).getPreco()));
+														 produtoTemp.getNome(),
+														 produtoTemp.getQntNoEstoque(),
+														 produtoTemp.getPreco()));
+			}
 
-			return produtosCadastrados.toString();
-				
+			return produtosCadastrados.toString();	
 
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
