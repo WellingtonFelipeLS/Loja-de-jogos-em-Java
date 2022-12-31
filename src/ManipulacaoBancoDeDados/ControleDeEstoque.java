@@ -34,7 +34,7 @@ public class ControleDeEstoque {
 		try {
 			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)){
 				if(((Produto)produto).equals(novoProduto))
-					throw new CadastroException();
+					throw new CadastroException("Produto de nome " + novoProduto.getNome() + " já cadastrado.");
 				
 				estoque.escrever(produto);
 			}
@@ -48,7 +48,7 @@ public class ControleDeEstoque {
 			ObjectIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
 		}catch(CadastroException ce) {
-			System.err.println("Produto de nome " + novoProduto.getNome() + " já cadastrado.");
+			System.err.println("Falha no cadastramento: " + ce.getMessage());
 			
 			estoque.fecharArquivos();
 
