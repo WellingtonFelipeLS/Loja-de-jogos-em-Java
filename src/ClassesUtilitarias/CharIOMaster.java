@@ -11,6 +11,9 @@ public class CharIOMaster extends IOMaster{
 
 	public CharIOMaster(String caminhoDoArquivo, char opcao, String separadorDeInformacoes) throws IOException{
 		switch(opcao){
+			case 'w':
+				setArquivoDeEscrita(new BufferedWriter(new FileWriter(caminhoDoArquivo, false)));
+				break;
 			case 'r':
 				setArquivoDeLeitura(new BufferedReader(new FileReader(caminhoDoArquivo)));
 				break;

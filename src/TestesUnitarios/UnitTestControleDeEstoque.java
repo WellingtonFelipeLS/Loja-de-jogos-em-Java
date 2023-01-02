@@ -26,7 +26,7 @@ public class UnitTestControleDeEstoque extends UnitTestClasseBase{
 	}
 
 	@Override
-	protected void populaBancoDeDados() throws IOException {
+	protected void popularBancoDeDados() throws IOException {
 		ControleDeEstoque controleDeEstoque = new ControleDeEstoque(super.getCaminhoParaPastaDoBancoDeDados());
 		controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("The Witcher 3", 30f, 100, "Jogo do Geralt", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Fantasia", "Acao", "Aventura")));
 		controleDeEstoque.cadastrarProdutoNoEstoque(new Console("PS5", 4000f, 100, "É um PS5", Set.of("PS5"), "1TB"));
@@ -52,7 +52,7 @@ public class UnitTestControleDeEstoque extends UnitTestClasseBase{
 		ControleDeEstoque controleDeEstoque = new ControleDeEstoque(super.getCaminhoParaPastaDoBancoDeDados());
 		controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("The Witcher 3", 30f, 100, "Jogo do Geralt", Set.of("PS4", "XBOX ONE", "PC"), Set.of("Fantasia", "Acao", "Aventura")));
 		
-		assertTrue(super.getMensagemDeErro().toString("UTF-8").contains("Falha no cadastramento: Produto de nome The Witcher 3 já cadastrado."));
+		assertTrue(super.getMensagemDeErro().toString().contains("Falha no cadastramento: Produto de nome The Witcher 3 já cadastrado."));
 	}
 
 	@Test

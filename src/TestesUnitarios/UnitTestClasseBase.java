@@ -13,29 +13,29 @@ public abstract class UnitTestClasseBase {
 	private static ByteArrayOutputStream mensagemDeErro;
 
 	@BeforeEach
-	private void prepararAmbiente() throws IOException {
+	private final void prepararAmbiente() throws IOException {
 		limparBancoDeDados();
-		populaBancoDeDados();
+		popularBancoDeDados();
 	}
 
 	@BeforeAll
-	private static void redirecionarMensagemDeErro() {
+	private final static void redirecionarMensagemDeErro() {
 		mensagemDeErro = new ByteArrayOutputStream();
 		System.setErr(new PrintStream(mensagemDeErro));
 	}
 
 	protected abstract void limparBancoDeDados() throws IOException;
-	protected abstract void populaBancoDeDados() throws IOException;
+	protected abstract void popularBancoDeDados() throws IOException;
 
-	public String getCaminhoParaPastaDoBancoDeDados() {
+	public final String getCaminhoParaPastaDoBancoDeDados() {
 		return caminhoParaPastaDoBancoDeDados;
 	}
 
-	public ByteArrayOutputStream getMensagemDeErro() {
+	public final ByteArrayOutputStream getMensagemDeErro() {
 		return mensagemDeErro;
 	}
 
-	public String getFileSeparator() {
+	public final String getFileSeparator() {
 		return fileSeparator;
 	}
 	

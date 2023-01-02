@@ -122,8 +122,6 @@ public class JanelaDaConta {
 						System.out.println("CPF inválido");
 				}catch(IOException ioe) {
 					ioe.printStackTrace();
-				}catch(CadastroException ce) {
-					System.out.println("Cliente excluido");
 				}catch(InvalidStateException iee) {
 					userCPFTextField.setText("CPF inválido");
 				}
@@ -240,9 +238,9 @@ public class JanelaDaConta {
 					ioe.printStackTrace();
 				}catch(InvalidStateException iee) {
 					cpfField.setText("CPF inválido");
-				}catch(CadastroException ce) {
+				}/*catch(CadastroException ce) {
 					cpfField.setText("CPF com cadastro ativo");
-				}
+				}*/
 				
 
             }

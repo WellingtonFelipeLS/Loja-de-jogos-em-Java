@@ -3,6 +3,7 @@ package ManipulacaoBancoDeDados;
 import ExceptionsCustomizadas.CadastroException;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 import ClassesUtilitarias.CharIOMaster;
 import RegrasDeNegocio.Cliente;
@@ -17,87 +18,104 @@ public class ControleDeCadastroDeClientes {
 		this.caminhoBancoDeDadosTemp = caminhoPastaBancoDeDados + System.getProperty("file.separator") + "RegistroDeClientesTemp.txt";
 	}
 
-	public void cadastrarCliente(Cliente novoCliente) throws IOException, CadastroException{
-		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp, separadorDeinformacoes);
+	public void cadastrarCliente(Cliente novoCliente) throws IOException{
+		CharIOMaster dadosDosClientes = new CharIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp, separadorDeinformacoes);
 
 		String cliente;
-		String[] informacoesCliente;
+		String[] informacoesNovoCliente = {novoCliente.getNome(), novoCliente.getCPF(), 
+			novoCliente.getCEP(), novoCliente.getId(), String.valueOf(1)};
+		String[] informacoesClienteNoBanco;
 
-		while((cliente = (String)ciomaster.ler()) != null){
-			informacoesCliente = cliente.split(separadorDeinformacoes);
-	
-			if(informacoesCliente[1].equals(novoCliente.getCPF())) {
-				if(Integer.valueOf(informacoesCliente[4]) == 1)
-					throw new CadastroException();
-				else{
-					informacoesCliente[0] = novoCliente.getNome();
-					informacoesCliente[2] = novoCliente.getCEP();
-					informacoesCliente[3] = novoCliente.getId();
-					informacoesCliente[4] = String.valueOf(1);
-				}
-			}
-			ciomaster.escrever(informacoesCliente);
-		}
-
-		ciomaster.fecharArquivos();
-		CharIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
-	}
-
-	public Cliente procurarCliente(String CPF) throws IOException, CadastroException{
-		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
+		try{
+			while((cliente = (String)dadosDosClientes.ler()) != null){
+				informacoesClienteNoBanco = cliente.split(separadorDeinformacoes);
 		
-		String cliente;
-		String[] informacoesCliente;
-
-		while((cliente = (String)ciomaster.ler()) != null){
-			informacoesCliente = cliente.split(separadorDeinformacoes);
-
-			if(CPF.equals(informacoesCliente[1])) {
-				if(Integer.valueOf(informacoesCliente[4]) == 1)
-					return new Cliente(informacoesCliente[0], informacoesCliente[1], informacoesCliente[2]);
-				else
-					throw new CadastroException("Cliente excluido");
-			}
+				if(informacoesClienteNoBanco[1].equals(novoCliente.getCPF()))
+					if(Integer.valueOf(informacoesClienteNoBanco[4]) == 1)
+						throw new CadastroException("Cliente com CPF " + novoCliente.getCPF() + " já cadastrado.");
 				
-		}
-		ciomaster.fecharArquivos();
-		return null;
-	}
-
-	public void excluirCliente(String CPF) throws IOException{
-		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp, separadorDeinformacoes);
-
-		String cliente;
-		String[] informacoesCliente;
-
-		try {
-			while((cliente = (String)ciomaster.ler()) != null){
-				informacoesCliente = cliente.split(separadorDeinformacoes);
-	
-				if(informacoesCliente[1].equals(CPF)) {
-					if(Integer.valueOf(informacoesCliente[4]).equals(0)){
-						throw new CadastroException("Cliente já excluído.");
-					}else
-						informacoesCliente[4] = String.valueOf(0);
-				}
-				
-				ciomaster.escrever(informacoesCliente);
+				dadosDosClientes.escrever(informacoesClienteNoBanco);
 			}
 
-			ciomaster.fecharArquivos();
+			dadosDosClientes.escrever(informacoesNovoCliente);
+
+			dadosDosClientes.fecharArquivos();
 
 			CharIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
 
-		}catch(CadastroException ce){
-			ce.printStackTrace();
-			
-			ciomaster.fecharArquivos();
+		}catch(CadastroException ce) {
+			System.err.println("Falha no cadastramento: " + ce.getMessage());
+
+			dadosDosClientes.fecharArquivos();
 
 			CharIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
 		}
 	}
 
-	private String prototipoListarClientes(boolean val) throws IOException{
+	public Cliente procurarCliente(String CPF) throws IOException {
+		CharIOMaster dadosDosClientes = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
+		
+		String cliente;
+		String[] informacoesCliente;
+
+		try {
+			while((cliente = (String)dadosDosClientes.ler()) != null){
+				informacoesCliente = cliente.split(separadorDeinformacoes);
+
+				if(CPF.equals(informacoesCliente[1])) {
+					if(Integer.valueOf(informacoesCliente[4]) == 1)
+						return new Cliente(informacoesCliente[0], informacoesCliente[1], informacoesCliente[2]);
+					else
+						throw new CadastroException("Cliente com CPF " + CPF + " excluído.");
+				}
+			}
+
+			dadosDosClientes.fecharArquivos();
+		}catch(CadastroException ce) {
+			System.err.println("Falha na busca: " + ce.getMessage());
+
+			dadosDosClientes.fecharArquivos();
+
+			CharIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
+		}
+
+		return null;
+	}
+
+	public void excluirCliente(String CPF) throws IOException{
+		CharIOMaster dadosDosClientes = new CharIOMaster(caminhoBancoDeDados, caminhoBancoDeDadosTemp, separadorDeinformacoes);
+
+		String cliente;
+		String[] informacoesCliente;
+
+		try {
+			while((cliente = (String)dadosDosClientes.ler()) != null){
+				informacoesCliente = cliente.split(separadorDeinformacoes);
+	
+				if(informacoesCliente[1].equals(CPF)) {
+					if(Integer.valueOf(informacoesCliente[4]).equals(0)){
+						throw new CadastroException("Cliente com CPF " + CPF + " já excluído.");
+					}else
+						informacoesCliente[4] = String.valueOf(0);
+				}
+				
+				dadosDosClientes.escrever(informacoesCliente);
+			}
+
+			dadosDosClientes.fecharArquivos();
+
+			CharIOMaster.renomearESobrescreverArquivo(caminhoBancoDeDados, caminhoBancoDeDadosTemp);
+
+		}catch(CadastroException ce){
+			System.err.println("Falha na exclusão: " + ce.getMessage());
+			
+			dadosDosClientes.fecharArquivos();
+
+			CharIOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
+		}
+	}
+
+	private String prototipoListarClientes(Function<Integer,Boolean> func) throws IOException{
 		CharIOMaster ciomaster = new CharIOMaster(caminhoBancoDeDados, 'r', separadorDeinformacoes);
 
 		String cliente;
@@ -108,10 +126,7 @@ public class ControleDeCadastroDeClientes {
 		while((cliente = (String)ciomaster.ler()) != null){
 			informacoesCliente = cliente.split(separadorDeinformacoes);
 
-			// Operador XOR agindo como negação.
-			// Se val == true, a expressão no if é equivalente à "!(Integer.valueOf(informacoesCliente[4]) == 1)"
-			// Se val == false, a expressão no if é equivalente à "Integer.valueOf(informacoesCliente[4]) == 1"
-			if((Integer.valueOf(informacoesCliente[4]) == 1) ^ val)
+			if(func.apply(Integer.valueOf(informacoesCliente[4])))
 				listaClientes.append(String.format("Nome: %-20s		CPF: %-10s 		CEP:%-10s \n", 
 													informacoesCliente[0], 
 													informacoesCliente[1], 
@@ -125,11 +140,11 @@ public class ControleDeCadastroDeClientes {
 	}
 
 	public String listarClientesCadastrados() throws IOException{
-		return prototipoListarClientes(false);
+		return prototipoListarClientes((cadastroAtivo) -> cadastroAtivo == 1);
 	}
 
 	public String listarClientesExcluidos() throws IOException{
-		return prototipoListarClientes(true);
+		return prototipoListarClientes((cadastroInativo) -> cadastroInativo == 0);
 	}
 
 	public static void main(String[] args) {
@@ -145,8 +160,6 @@ public class ControleDeCadastroDeClientes {
 			controleDeCadastroDeClientes.listarClientesExcluidos();
 		}catch(IOException e){
 			System.out.println("Falha na comunicação com o banco de dados.");
-		}catch(CadastroException ce) {
-			ce.printStackTrace();
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package RegrasDeNegocio;
 
 import ClassesUtilitarias.IdGenerator;
+import ExceptionsCustomizadas.CadastroException;
 
 import java.io.Serializable;
 // Código para a validação de cpf adquirido em: https://github.com/caelum/caelum-stella/wiki/Downloads-do-caelum-stella
@@ -10,21 +11,18 @@ public final class Cliente implements Serializable{
 	private String id;
 	private String CPF;
 	private String CEP;
-	private boolean eAnonimo;
 
 	public Cliente() {
 		this.nome = "Cliente Anonimo";
-		this.CPF = "";
-		this.CEP = "";
-		this.eAnonimo = true;
 	}
 	
 	public Cliente(String nome, String CPF, String CEP) {
 		this.nome = nome;
+		/*if (CPF == null)
+			throw CadastroException("CPF inválido");*/
 		this.CPF = CPF;
 		this.CEP = CEP;
 		this.id = IdGenerator.gerarId();
-		this.eAnonimo = false;
 	}
 
 	public String getNome() {
@@ -51,7 +49,7 @@ public final class Cliente implements Serializable{
 	}
 
 	public String imprimirInformacoes() {
-		if(eAnonimo)
+		if(this.CPF == null)
 			return "Nome: " + nome + '\n';
 		else
 			return "Nome: " +  nome + '\n' + "CPF: " +  CPF + '\n' + "CEP: " +  CEP + '\n';
