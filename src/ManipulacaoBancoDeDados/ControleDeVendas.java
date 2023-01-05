@@ -2,7 +2,6 @@ package ManipulacaoBancoDeDados;
 
 import java.io.IOException;
 
-import java.util.Date;
 import java.util.Map;
 
 import RegrasDeNegocio.Venda;
@@ -13,7 +12,7 @@ import ClassesUtilitarias.IOMaster;
 import ClassesUtilitarias.ObjectIOMaster;
 
 
-public class ControleDeVendas{
+public class ControleDeVendas {
 	private String caminhoBancoDeDados;
 	private String caminhoBancoDeDadosTemp;
 	private ControleDeEstoque controleDeEstoque;
@@ -39,7 +38,7 @@ public class ControleDeVendas{
 			while(!((venda = registroDeVendas.ler()) instanceof EOFIndicatorClass))
 				registroDeVendas.escrever(venda);
 
-			novaVenda.setDataDaCompra(new Date());
+			novaVenda.setDataDaCompra();
 			
 			registroDeVendas.escrever(novaVenda);
 
@@ -51,6 +50,7 @@ public class ControleDeVendas{
 			cnfe.printStackTrace();
 
 			registroDeVendas.fecharArquivos();
+
 			IOMaster.deletarArquivo(caminhoBancoDeDadosTemp);
 		}
 	}

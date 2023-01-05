@@ -13,7 +13,7 @@ import ClassesUtilitarias.IdGenerator;
 
 import java.util.Hashtable;
 
-public class Venda implements Serializable{
+public class Venda implements Serializable {
 	private Cliente cliente;
 	private String idVenda;
 	private Date dataDaCompra;
@@ -33,8 +33,12 @@ public class Venda implements Serializable{
 		return cliente;
 	}
 
-	public void setDataDaCompra(Date dataDaCompra) {
-		this.dataDaCompra = dataDaCompra;
+	public String getIdVenda() {
+		return this.idVenda;
+	}
+
+	public void setDataDaCompra() {
+		this.dataDaCompra = new Date();
 	}
 
 	public void limparCarrinho() {
@@ -148,5 +152,9 @@ public class Venda implements Serializable{
 		notaFiscal.append(imprimirSeparadorDeNotaFiscal(n));
 
 		return notaFiscal.toString();
+	}
+
+	public boolean equals(Venda outraVenda) {
+		return this.idVenda.equals(outraVenda.getIdVenda());
 	}
 }
