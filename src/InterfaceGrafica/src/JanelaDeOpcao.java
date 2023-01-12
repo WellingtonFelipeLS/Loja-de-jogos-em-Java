@@ -6,7 +6,7 @@ import ClassesUtilitarias.ValidacaoDeParametros;
 import ManipulacaoBancoDeDados.ControleDeCadastroDeClientes;
 import ManipulacaoBancoDeDados.ControleDeEstoque;
 import ManipulacaoBancoDeDados.ControleDeVendas;
-import RegrasDeNegocio.Produtos.EnumCategoriaDeProdutos;
+import RegrasDeNegocio.Produtos.CategoriaDeProdutos;
 import br.com.caelum.stella.validation.InvalidStateException;
 import RegrasDeNegocio.Produtos.*;
 
@@ -58,7 +58,7 @@ public class JanelaDeOpcao {
                 painelDeVisualizacao.add(painelSuperiorCadastrarProduto, BorderLayout.NORTH);
 
 
-                String[] listaTipoProduto = EnumCategoriaDeProdutos.getCategoriasDeProduto();
+                String[] listaTipoProduto = CategoriaDeProdutos.getCategoriasDeProduto();
                 JComboBox cadastrarProdutoBox = new JComboBox(listaTipoProduto);
                 painelSuperiorCadastrarProduto.add(cadastrarProdutoBox);
                 cadastrarProdutoBox.addActionListener(new ActionListener() {
@@ -958,7 +958,7 @@ public class JanelaDeOpcao {
                 try{
 					listarTodasVendasTextArea.setText(controleDeVendas.listarVendas());
 				}catch(IOException ioe) {
-					System.out.println("FALHA");
+					ioe.printStackTrace();
 				}
             }
         });

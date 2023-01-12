@@ -229,7 +229,7 @@ public class ControleDeEstoque {
 					if(((Produto)produto).getCadastroAtivo()) {
 
 						if(qnt + ((Produto)produto).getQntNoEstoque() < 0) 
-							throw new EstoqueException("Não é possível retirar " + -qnt + " unidades. Existem apenas " + ((Produto)produto).getQntNoEstoque() + " em estoque.");
+							throw new EstoqueException("Não é possível retirar " + -qnt + " unidades do produto " + nomeDoProduto + ". Existem apenas " + ((Produto)produto).getQntNoEstoque() + " em estoque.");
 
 						((Produto)produto).setQntNoEstoque(qnt + ((Produto)produto).getQntNoEstoque());
 						estoque.escrever(produto);

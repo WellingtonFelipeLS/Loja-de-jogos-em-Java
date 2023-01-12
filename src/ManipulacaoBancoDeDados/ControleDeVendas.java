@@ -116,17 +116,17 @@ public class ControleDeVendas {
 			venda3.setCliente(cliente2);
 			venda3.adicionarProdutoAoCarrinho("PS5", 1);
 			venda3.adicionarProdutoAoCarrinho("God Of War", 1);
-			venda3.adicionarProdutoAoCarrinho("The Last Of Us", 1);
+			//venda3.adicionarProdutoAoCarrinho("The Last Of Us", 1);
 			controleDeVendas.cadastrarVenda(venda3);
 
 			Venda venda4 = new Venda();
 			venda4.adicionarProdutoAoCarrinho("The Witcher 3", 20);
-			venda4.adicionarProdutoAoCarrinho("Redragon Kumara", 20);
+			//venda4.adicionarProdutoAoCarrinho("Redragon Kumara", 20);
 			controleDeVendas.cadastrarVenda(venda4);
 
 			controleDeVendas.listarVendas();
 			System.out.println("**********************************************");
-			controleDeVendas.listarVendasPorCliente("42484425074");
+			//controleDeVendas.listarVendasPorCliente("42484425074");
 		}catch(IOException ioe) {
 			ioe.printStackTrace();
 		}

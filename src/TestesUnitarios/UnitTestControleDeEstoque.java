@@ -170,7 +170,7 @@ public class UnitTestControleDeEstoque extends UnitTestClasseBase{
 		ControleDeEstoque controleDeEstoque = new ControleDeEstoque(super.getCaminhoParaPastaDoBancoDeDados());
 		controleDeEstoque.retirarQntDoEstoque("The Witcher 3", 120);
 		
-		assertTrue(super.getMensagemDeErro().toString().contains("Falha em modificar quantidade: Não é possível retirar 120 unidades. Existem apenas 100 em estoque."));
+		assertTrue(super.getMensagemDeErro().toString().contains("Falha em modificar quantidade: Não é possível retirar 120 unidades do produto The Witcher 3. Existem apenas 100 em estoque."));
 	}
 
 	@Test

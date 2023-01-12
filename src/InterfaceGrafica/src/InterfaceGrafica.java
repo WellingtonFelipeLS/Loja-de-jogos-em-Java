@@ -1,6 +1,7 @@
 package InterfaceGrafica.src;
 
 import RegrasDeNegocio.Venda;
+import RegrasDeNegocio.Produtos.CategoriaDeProdutos;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.image.BufferedImage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class InterfaceGrafica implements MouseListener{
@@ -20,29 +22,30 @@ public class InterfaceGrafica implements MouseListener{
 	private ControleDeEstoque controleDeEstoque;
 	private ControleDeVendas controleDeVendas;
 	private ControleDeCadastroDeClientes controleDeCadastroDeClientes;
+	private String fileSeparator = System.getProperty("file.separator");
 
     public InterfaceGrafica() {
 		this.novaVenda = new Venda();
-		this.controleDeEstoque = new ControleDeEstoque("src" + System.getProperty("file.separator") + "BancoDeDados");
-		this.controleDeVendas = new ControleDeVendas(controleDeEstoque, "src" + System.getProperty("file.separator") + "BancoDeDados");
-		this.controleDeCadastroDeClientes = new ControleDeCadastroDeClientes("src" + System.getProperty("file.separator") + "BancoDeDados");
+		this.controleDeEstoque = new ControleDeEstoque("src" + fileSeparator + "BancoDeDados");
+		this.controleDeVendas = new ControleDeVendas(controleDeEstoque, "src" + fileSeparator + "BancoDeDados");
+		this.controleDeCadastroDeClientes = new ControleDeCadastroDeClientes("src" + fileSeparator + "BancoDeDados");
 
 		JFrame interfacePrincipal = criarInterfacePrincipal();
-		JPanel painelSuperior = criarPainelSuperior();
-		JPanel painelPrincipal = criarPainelPrincipal();
+		JPanel painelSuperior = criarPainel(new FlowLayout(FlowLayout.CENTER), Color.DARK_GRAY);
+		JPanel painelPrincipal = criarPainel(new GridBagLayout(), Color.GRAY);
+		painelPrincipal.setPreferredSize(new Dimension(1280, 720));
 
 		JScrollPane scrollPane = new JScrollPane(painelPrincipal);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-		JComboBox marcadoresNomes = criarComboBox(painelPrincipal, gbc);
+		JComboBox<String> marcadoresNomes = criarComboBox(painelPrincipal, gbc);
 		JButton botaoDeBusca = criarBotaoDeBusca(marcadoresNomes);
         JButton botaoDeOpcao = criarBotaoDeOpcao();
 		JButton botaoDoCarrinho = criarBotaoDoCarrinho();
-		JButton botaoDeCompra = criarBotaoDeConta();
-
+		JButton botaoDeLogin = criarBotaoDeLogin();
 
         interfacePrincipal.add(painelSuperior, BorderLayout.NORTH);
 		interfacePrincipal.add(scrollPane, BorderLayout.CENTER);
@@ -50,18 +53,10 @@ public class InterfaceGrafica implements MouseListener{
         painelSuperior.add(marcadoresNomes);
 		painelSuperior.add(botaoDeBusca);
 
-        //totalLabel
-        JLabel totalLabel = new JLabel();
-        totalLabel.setPreferredSize(new Dimension(85, 20));
-        totalLabel.setForeground(Color.WHITE);
-        totalLabel.setEnabled(false);
-        painelSuperior.add(totalLabel);
-
         painelSuperior.add(botaoDeOpcao);
 		painelSuperior.add(botaoDoCarrinho);
-		painelSuperior.add(botaoDeCompra);
+		painelSuperior.add(botaoDeLogin);
 
-        //String[] lista = {"Xcom", "Xcom 2", "Red Dead Redemption", "Red Dead Redemption 2", "Civilization 6", "Diablo 3"};
         try{
 			exporProdutos(controleDeEstoque.listarNomeDosProdutosDisponiveis(), painelPrincipal, gbc);
 		}catch(IOException ioe) {
@@ -81,15 +76,15 @@ public class InterfaceGrafica implements MouseListener{
 		return interfacePrincipal;
 	}
 
-	private JPanel criarPainelSuperior() {
+	private JPanel criarPainel(LayoutManager layoutManager, Color backgroundColor) {
         JPanel painelSuperior = new JPanel();
-        painelSuperior.setLayout(new FlowLayout(FlowLayout.CENTER));
-        painelSuperior.setBackground(Color.DARK_GRAY);
+        painelSuperior.setLayout(layoutManager);
+        painelSuperior.setBackground(backgroundColor);
 
 		return painelSuperior;
 	}
 
-	private JButton criarBotaoDeBusca(JComboBox caixaDeBusca) {
+	private JButton criarBotaoDeBusca(JComboBox<String> caixaDeBusca) {
         JButton botaoDeBusca = new JButton( "pesquisar" );
         botaoDeBusca.addActionListener(new ActionListener() {
 			@Override
@@ -126,7 +121,7 @@ public class InterfaceGrafica implements MouseListener{
 		return botaoDoCarrinho;
 	}
 
-    private JButton criarBotaoDeConta() {
+    private JButton criarBotaoDeLogin() {
         JButton contaButton = new JButton( "Login" );
         contaButton.addActionListener(new ActionListener() {
             @Override
@@ -138,31 +133,22 @@ public class InterfaceGrafica implements MouseListener{
         return contaButton;
     }
 
-
-	private JPanel criarPainelPrincipal() {
-        JPanel painelPrincipal = new JPanel();
-        painelPrincipal.setLayout(new GridBagLayout());
-        painelPrincipal.setBackground(Color.GRAY);
-
-		return painelPrincipal;
-	}
-
-    private JComboBox criarComboBox(JPanel painelPrincipal, GridBagConstraints gbc) {
-        String[] marcadores = {"", "Jogo", "Console", "Fone", "Mouse", "TecladoMecanico"};
-        JComboBox comboBox = new JComboBox(marcadores);
+    private JComboBox<String> criarComboBox(JPanel painelPrincipal, GridBagConstraints gbc) {
+        String[] marcadores = CategoriaDeProdutos.getCategoriasDeProduto();
+        JComboBox<String> comboBox = new JComboBox<String>(marcadores);
         comboBox.setPreferredSize(new Dimension(300, 25));
 		comboBox.setEditable(true);
         comboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 				try{
-				ArrayList<String> lista = (comboBox.getSelectedItem().toString().equals("")) ?
-								controleDeEstoque.listarNomeDosProdutosDisponiveis() :
-								controleDeEstoque.listarProdutosPorCategoria(comboBox.getSelectedItem().toString());
+				ArrayList<String> listaDeNomesDosProdutos = (comboBox.getSelectedItem().toString().equals(CategoriaDeProdutos.QUALQUER.toString())) ?
+										   			 		 controleDeEstoque.listarNomeDosProdutosDisponiveis() :
+										   			 		 controleDeEstoque.listarProdutosPorCategoria(comboBox.getSelectedItem().toString());
 
-				exporProdutos(lista,painelPrincipal, gbc);
+				exporProdutos(listaDeNomesDosProdutos,painelPrincipal, gbc);
 				}catch(IOException ioe) {
-					System.out.println("FALHA");
+					System.out.println("Falha na comunicação com o banco de dados");
 				}
 				
             }
@@ -170,66 +156,67 @@ public class InterfaceGrafica implements MouseListener{
         return comboBox;
     }
 
-    private void exporProdutos(ArrayList<String> lista, JPanel painelPrincipal, GridBagConstraints gbc) {
-        painelPrincipal.removeAll();
-		painelPrincipal.repaint();
-		painelPrincipal.revalidate();
+	private void atualizarPainel(JPanel painel) {
+		painel.removeAll();
+		painel.repaint();
+		painel.revalidate();
+	}
 
-		int x = 0, y = 0, ultimo = 0;
-        JLabel[] listaJLabel = new JLabel[0];
-        JLabel[] listaJLabelNome = new JLabel[0];
-        for (String i: lista) {
-            gbc.gridx = x;
-            gbc.gridy = y;
-            try {
-                if (listaJLabel.length == ultimo) {
+	private void adicionarAcoesNaImagem(JLabel imagem, String nome) {
+		imagem.setName(nome);
+		imagem.addMouseListener(this);
+        imagem.setToolTipText(nome);
+	}
 
-                    JLabel[] listaAux = new JLabel[ultimo + 1];
-                    System.arraycopy(listaJLabel, 0, listaAux, 0, listaJLabel.length);
-                    listaJLabel = listaAux;
+	private void adicionarImagemAoPainel(JPanel painel, JLabel imagem, JLabel nome, GridBagConstraints gbc) {
+		painel.add(imagem, gbc);
+		gbc.gridy++;
+		painel.add(nome, gbc);
+		gbc.gridy--;
+	}
 
-                    listaAux = new JLabel[ultimo + 1];
-                    System.arraycopy(listaJLabelNome, 0, listaAux, 0, listaJLabelNome.length);
-                    listaJLabelNome = listaAux;
-                }
-                listaJLabel[ultimo] = getImage(i);
-                painelPrincipal.add(listaJLabel[ultimo], gbc);
+    private void exporProdutos(ArrayList<String> listaDeNomesDosProdutos, JPanel painelPrincipal, GridBagConstraints gbc) {
+		atualizarPainel(painelPrincipal);
 
-                gbc.gridy = y + 1;
-                listaJLabelNome[ultimo] = new JLabel(i);
-                painelPrincipal.add(listaJLabelNome[ultimo], gbc);
-                if (x % 4 == 0 && x != 0) {
-                    x = 0;
-                    y += 2;
-                } else {
-                    x += 1;
-                }
-            } catch (IOException ex) {
-                System.out.println("Error " + i);
+		// Espaço entre as imagens alterado dinamicamente com a mudança de tamanho da janela
+		gbc.weightx = 1.0;
+
+		int numeroDeColunas = 10;
+		int numeroDeLinhas = listaDeNomesDosProdutos.size() % numeroDeColunas == 0 ? listaDeNomesDosProdutos.size() / numeroDeColunas 
+																				   : listaDeNomesDosProdutos.size() / numeroDeColunas + 1;
+     
+		Iterator<String> iterListaDeProdutos = listaDeNomesDosProdutos.iterator();
+		JLabel imagem, nome;
+		String tempNomeProduto = null;
+		for (gbc.gridy = 0; gbc.gridy < numeroDeLinhas * 2; gbc.gridy += 2) {
+			try {
+				for (gbc.gridx = 0; gbc.gridx < numeroDeColunas && iterListaDeProdutos.hasNext(); gbc.gridx++) {
+					tempNomeProduto =  iterListaDeProdutos.next();
+
+					imagem = pegarImagem(tempNomeProduto);
+					nome = new JLabel(tempNomeProduto);
+
+					adicionarAcoesNaImagem(imagem, tempNomeProduto);
+					adicionarImagemAoPainel(painelPrincipal, imagem, nome, gbc);
+				}
+			}catch (IOException ex) {
+                System.out.println("Falha no carregamento da imagem do produto: " + tempNomeProduto);
             }
-            ultimo += 1;
-        }
-
-        x = 0;
-        for (int i = 0; i < listaJLabel.length; i++) {
-            listaJLabel[i].setName(listaJLabelNome[i].getText());
-            listaJLabel[i].addMouseListener(this);
-            listaJLabel[i].setToolTipText(listaJLabel[i].getText());
-        }
+		}
     }
 
-	private JLabel getImage(String name) throws IOException {
+	private JLabel pegarImagem(String nome) throws IOException {
         
-        BufferedImage image = ImageIO.read(Objects.requireNonNull(this.getClass().getResource( "/InterfaceGrafica"
-                + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + name + ".png")));
+        BufferedImage imagem = ImageIO.read(Objects.requireNonNull(
+										   this.getClass().getResource( "/InterfaceGrafica" + fileSeparator + "img" + fileSeparator + nome + ".png")));
 
-        BufferedImage imageResized = new BufferedImage(130, 130, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = imageResized.createGraphics();
+        BufferedImage imagemRedimensionada = new BufferedImage(130, 130, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = imagemRedimensionada.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2.drawImage(image, 0, 0, 130, 130, null);
+        g2.drawImage(imagem, 0, 0, 130, 130, null);
         g2.dispose();
 
-        return new JLabel(new ImageIcon(imageResized));
+        return new JLabel(new ImageIcon(imagemRedimensionada));
 
     }
 
