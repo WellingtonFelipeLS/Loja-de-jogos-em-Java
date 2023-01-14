@@ -15,13 +15,13 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.util.Objects;
 
-public class JanelaDaConta {
+public class JanelaDeLogin {
 	private Venda novaVenda;
 	ControleDeCadastroDeClientes controleDeCadastroDeClientes;
 	ControleDeVendas controleDeVendas;
 
 
-    JanelaDaConta(JButton botao, Venda novaVenda, ControleDeVendas controleDeVendas, ControleDeCadastroDeClientes controleDeCadastroDeClientes) {
+    JanelaDeLogin(JButton botao, Venda novaVenda, ControleDeVendas controleDeVendas, ControleDeCadastroDeClientes controleDeCadastroDeClientes) {
 		this.novaVenda = novaVenda;
 		this.controleDeCadastroDeClientes = controleDeCadastroDeClientes;
 		this.controleDeVendas = controleDeVendas;
@@ -316,6 +316,6 @@ public class JanelaDaConta {
     }
 
     public static void main(String[] args) {
-        new InterfaceGrafica();
+        new JanelaPrincipal();
     }
 }

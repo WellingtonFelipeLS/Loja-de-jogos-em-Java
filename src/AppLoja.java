@@ -1,7 +1,7 @@
-import InterfaceGrafica.src.InterfaceGrafica;
+import InterfaceGrafica.src.JanelaPrincipal;
 
 public class AppLoja {
 	public static void main(String[] args) {
-		new InterfaceGrafica();
+		new JanelaPrincipal();
 	}
 }
