@@ -20,9 +20,9 @@ import java.io.IOException;
 public class UtilitariosDeInterfaceGrafica {
 	private static String fileSeparator = System.getProperty("file.separator");
 
-	public static JLabel procurarImagemDoProduto(String name, int largura, int altura) throws IOException{
+	public static JLabel procurarImagemDoProduto(String nome, int largura, int altura) throws IOException{
 		BufferedImage imagem = ImageIO.read(new File("src" + fileSeparator + "InterfaceGrafica"
-                    + fileSeparator + "img" + fileSeparator + name + ".png"));
+                    + fileSeparator + "img" + fileSeparator + nome + ".png"));
 
 		BufferedImage imagemRedimensionada = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = imagemRedimensionada.createGraphics();

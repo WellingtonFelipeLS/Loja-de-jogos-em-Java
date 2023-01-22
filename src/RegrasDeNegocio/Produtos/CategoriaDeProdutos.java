@@ -7,7 +7,7 @@ public enum CategoriaDeProdutos {
 	JOGO("Jogo"), 
 	CONSOLE("Console"), 
 	FONE("Fone"), 
-	TECLADO_MECANICO("Teclado Mecânico"), 
+	TECLADO("Teclado"), 
 	MOUSE("Mouse");
 
 	private String nome;

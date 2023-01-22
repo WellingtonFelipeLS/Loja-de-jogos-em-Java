@@ -568,7 +568,7 @@ public class JanelaDeOpcao {
 									String tipoDeSwitch = switchTecladoField.getText();
 
 									try{
-										controleDeEstoque.cadastrarProdutoNoEstoque(new TecladoMecanico(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, tipoDeSwitch));
+										controleDeEstoque.cadastrarProdutoNoEstoque(new Teclado(nome, preco, qntNoEstoque, descricao, plataformas, temBluetooth, tipoDeSwitch));
 										painelDeVisualizacao.removeAll();
 										painelDeVisualizacao.repaint();
 										painelDeVisualizacao.revalidate();

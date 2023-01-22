@@ -385,6 +385,31 @@ public class ControleDeEstoque {
 		return null;
 	}
 
+	public ArrayList<String> listarProdutosPorNome(String parteDoNome) throws IOException {
+		ObjectIOMaster estoque = new ObjectIOMaster(caminhoBancoDeDados, 'r');
+
+		ArrayList<String> nomeProdutos = new ArrayList<String>();
+		
+		Object produto;
+		String nomeDoProduto;
+		try{
+			while(!((produto = estoque.ler()) instanceof EOFIndicatorClass)) {
+				nomeDoProduto = ((Produto) produto).getNome().toLowerCase();
+				if((nomeDoProduto.contains(parteDoNome.toLowerCase())))
+					nomeProdutos.add(((Produto) produto).getNome());
+			}
+				
+			return nomeProdutos;
+
+		}catch(ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
+		}finally {
+			estoque.fecharArquivos();
+		}
+
+		return null;
+	}
+
 	public static void main(String[] args) {
 		try{
 
@@ -396,7 +421,7 @@ public class ControleDeEstoque {
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("God Of War", 50f, 100, "Jogo do Kratos", Set.of("PS4", "PS5"), Set.of("Mitologia", "Acao", "Aventura")));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Console("PS5", 4000f, 100, "É um PS5", Set.of("PS5"), "1TB"));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Console("XBOX Series X", 3500f, 150, "É um XBOX", Set.of("XBOX Series X"), "2TB"));
-			controleDeEstoque.cadastrarProdutoNoEstoque(new TecladoMecanico("Redragon Kumara", 219.9f, 35, "Teclado mecânico gamer", Set.of("PC"), false, "Blue"));
+			controleDeEstoque.cadastrarProdutoNoEstoque(new Teclado("Redragon Kumara", 219.9f, 35, "Teclado mecânico gamer", Set.of("PC"), false, "Blue"));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Mouse("Razer Viper Mini", 400f, 20, "Mouse bonito", Set.of("PC"), false, String.valueOf(8500)));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Fone("Warrior Kaden", 150f, 250, "Fone confortável", Set.of("PC"), false, "108DB", true));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("Xcom", 45f, 100, "Jogo de estratégia futurista", Set.of("PS3", "XBOX 360", "PC"), Set.of("FPS", "Estratégia")));
@@ -416,7 +441,7 @@ public class ControleDeEstoque {
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("Marvel Midnight Sons", 350f, 10, "Jogo do MCU de rpg tático", Set.of("PC"), Set.of("Estratégia", "Acao", "rpg")));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Console("Steam Deck", 4000f, 100, "É um Steam Deck", Set.of("PC"), "1TB"));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Console("Nintendo Switch", 3500f, 150, "É um Nintendo Switch", Set.of("Nintendo Switch"), "128GB"));
-			controleDeEstoque.cadastrarProdutoNoEstoque(new TecladoMecanico("Spk 8404", 500f, 35, "Teclado mecânico gamer", Set.of("PC"), false, "Blue"));
+			controleDeEstoque.cadastrarProdutoNoEstoque(new Teclado("Spk 8404", 500f, 35, "Teclado mecânico gamer", Set.of("PC"), false, "Blue"));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Mouse("Warrior MO262", 40f, 20, "Mouse bonito", Set.of("PC"), false, String.valueOf(3200)));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("Diablo 3", 80f, 1200, "Jogo de rpg da Blizzard", Set.of("PC"), Set.of("Estrategia", "rpg", "Aventura")));
 			controleDeEstoque.cadastrarProdutoNoEstoque(new Jogo("Diablo 4", 280f, 1200, "Jogo de rpg da Blizzard", Set.of("PC"), Set.of("Estrategia", "rpg", "Aventura")));

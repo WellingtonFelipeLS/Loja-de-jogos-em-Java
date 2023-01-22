@@ -5,7 +5,9 @@ import RegrasDeNegocio.Produtos.CategoriaDeProdutos;
 
 import ClassesUtilitarias.UtilitariosDeInterfaceGrafica;
 
-import ManipulacaoBancoDeDados.*;
+import ManipulacaoBancoDeDados.ControleDeCadastroDeClientes;
+import ManipulacaoBancoDeDados.ControleDeEstoque;
+import ManipulacaoBancoDeDados.ControleDeVendas;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,7 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.text.JTextComponent;
 
 import java.awt.FlowLayout;
 import java.awt.Color;
@@ -22,6 +26,10 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.ActionEvent;
 
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
@@ -108,7 +116,6 @@ public class JanelaPrincipal implements MouseListener{
 				ArrayList<String> listaDeNomesDosProdutos = (comboBox.getSelectedItem().toString().equals(CategoriaDeProdutos.QUALQUER.toString())) ?
 										   			 		 controleDeEstoque.listarNomeDosProdutosDisponiveis() :
 										   			 		 controleDeEstoque.listarProdutosPorCategoria(comboBox.getSelectedItem().toString());
-
 				exporProdutos(listaDeNomesDosProdutos,painelPrincipal);
 				}catch(IOException ioe) {
 					System.out.println("Falha na comunicação com o banco de dados");
@@ -116,6 +123,19 @@ public class JanelaPrincipal implements MouseListener{
 				
             }
         );
+
+		JTextField editor = (JTextField) comboBox.getEditor().getEditorComponent();
+		editor.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent event) {
+				try {
+					ArrayList<String> lista = controleDeEstoque.listarProdutosPorNome(comboBox.getSelectedItem().toString());
+					exporProdutos(lista, painelPrincipal);
+				} catch (IOException ex) {
+					System.out.print("FALHA NA COMUNICAÇÃO COM O BANCO DE DADOS");
+				}
+			}
+		});
         return comboBox;
     }
 

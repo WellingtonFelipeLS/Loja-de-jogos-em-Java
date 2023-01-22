@@ -1,16 +1,31 @@
 package InterfaceGrafica.src;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 
-import RegrasDeNegocio.Venda;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.GridBagLayout;
+import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.MouseInfo;
+import java.awt.ComponentOrientation;
+import java.awt.Point;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import java.io.IOException;
 
 import ManipulacaoBancoDeDados.ControleDeEstoque;
+
 import RegrasDeNegocio.Produtos.Produto;
+import RegrasDeNegocio.Venda;
 
 import ClassesUtilitarias.UtilitariosDeInterfaceGrafica;
 
@@ -57,18 +72,12 @@ public class JanelaDoProduto {
 			gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 			painelPrincipal.add(botaoDeCancelar, gbc);
 
-			JButton botaoDeAdiconarAoCarrinho = criarBotaoDeAdicionarAoCarrinho(
-				nome, campoDaQuantidade, novaVenda, interfaceDoProduto, String.valueOf(produto.getPreco()));
+			JButton botaoDeAdiconarAoCarrinho = criarBotaoDeAdicionarAoCarrinho(nome, campoDaQuantidade, novaVenda);
+			
 			gbc.anchor = GridBagConstraints.FIRST_LINE_END;
 			painelPrincipal.add(botaoDeAdiconarAoCarrinho, gbc);
 
-			campoDaQuantidade.addKeyListener(new KeyListener() {
-				@Override
-				public void keyTyped(KeyEvent e) {}
-
-				@Override
-				public void keyPressed(KeyEvent e) {}
-
+			campoDaQuantidade.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					try {
@@ -120,9 +129,9 @@ public class JanelaDoProduto {
 		return espacoParaADescricao;
 	}
 
-	private JButton criarBotaoDeAdicionarAoCarrinho(String nome, JTextField campoDeQuantidade, Venda novaVenda, JFrame interfaceDoProduto, String price) {
+	private JButton criarBotaoDeAdicionarAoCarrinho(String nome, JTextField campoDaQuantidade, Venda novaVenda) {
 		JButton botaoDeAdicionarAoCarrinho = UtilitariosDeInterfaceGrafica.criarBotao("Adicionar",
-			e -> novaVenda.adicionarProdutoAoCarrinho(nome, Integer.parseInt(campoDeQuantidade.getText())));
+			e -> novaVenda.adicionarProdutoAoCarrinho(nome, Integer.parseInt(campoDaQuantidade.getText())));
 			
 		botaoDeAdicionarAoCarrinho.setEnabled(false);
 		return botaoDeAdicionarAoCarrinho;
